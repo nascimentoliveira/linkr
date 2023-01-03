@@ -16,9 +16,6 @@ export default function App() {
   const [token, setToken] = useState(localStorage.getItem("authToken"));
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
-  const [userId, setUserId] = useState("");
-  const [control,setControl] = useState(false);
-  const [load,setLoad] = useState(false);
 
   useEffect(()=>{
       if(window.location.pathname !== "/" && window.location.pathname !== "/signup"){
@@ -49,13 +46,7 @@ export default function App() {
       image,
       setImage,
       name,
-      setName,
-      userId,
-      setUserId,
-      control,
-      setControl,
-      load,
-      setLoad
+      setName
   };
 
   return (
