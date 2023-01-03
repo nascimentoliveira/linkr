@@ -7,7 +7,7 @@ export default function Navbar() {
       <Logo>linkr</Logo>
       <Profile>
         <button><SlArrowDown /></button>
-        <img alt='User picture'/>
+        <img src='https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745' alt='User'/>
       </Profile>
     </Container>
   );
@@ -51,7 +51,6 @@ const Profile = styled.div`
     width: 53px;
     height: 53px;
     border-radius: 26.5px;
-    background-color: #FFFFFF;
   }
 
   svg {
