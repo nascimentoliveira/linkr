@@ -40,14 +40,12 @@ export default function Login() {
             password,
         };
         console.log(process.env.REACT_APP_BASE_URL);
-        const promise = axios.post(`${process.env.REACT_APP_BASE_URL}/`, body);
+        const promise = axios.post(`/`, body);
 
         promise.then((res) => {
             setLoad(false);
-            localStorage.setItem("authToken", res.data.token);
             setImage(res.data.image);
             setName(res.data.name);
-            setToken(localStorage.getItem("authToken"));
             navigate("/timeline");
         });
 
