@@ -1,13 +1,30 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
+
 import styled from "styled-components";
+import { useState } from "react";
+import { TiHeartFullOutline } from "react-icons/ti";
 
 export default function PostCard() {
+  const [selecionado, setSelecionado] = useState(false);
+  let like = selecionado === true;
+  let deslike = selecionado === false;
+
   return (
     <Container>
-      <img
-        src="https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
-        alt="User"
-      />
-      <div>
+      <Left>
+        <img
+          src="https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
+          alt="User"
+        />
+        <Likes>
+          <HeartIcon>
+            <TiHeartFullOutline></TiHeartFullOutline>
+          </HeartIcon>
+          <p> xx likes </p>
+        </Likes>
+      </Left>
+
+      <Infos>
         <h1>Fulano</h1>
         <h2>
           Muito maneiro esse tutorial de Material UI com React, deem uma olhada!
@@ -27,10 +44,57 @@ export default function PostCard() {
             alt="Url Image"
           />
         </Link>
-      </div>
+      </Infos>
     </Container>
   );
 }
+
+const Left = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 140px;
+
+  img {
+    width: 53px;
+    height: 53px;
+    border-radius: 26.5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    object-fit: cover;
+    cursor: pointer;
+  }
+
+  p {
+    font-size: 10px;
+  }
+`;
+
+const Likes = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80px;
+  justify-content: center;
+`;
+
+const HeartIcon = styled.div`
+  font-size: 26px;
+  color: #ffffff;
+  margin-top: 15px;
+  margin-bottom: 4px;
+  cursor: pointer;
+`;
+
+const Infos = styled.div`
+  margin-left: 8px;
+  margin-top: 5px;
+`;
 
 const Container = styled.section`
   width: 100%;
@@ -39,28 +103,20 @@ const Container = styled.section`
   background-color: #171717;
   font-family: "Lato", sans-serif;
   font-weight: 400;
-  margin-top: 30px;
+  margin-bottom: 30px;
   display: flex;
   justify-content: space-between;
   padding: 20px;
-  img {
-    width: 50px;
-    height: 50px;
-    border-radius: 26.5px;
-    margin-right: 20px;
+
+  h1 {
+    color: white;
+    font-size: 19px;
+    margin-bottom: 7px;
   }
-  > div {
-    width: 503px;
-    h1 {
-      color: white;
-      font-size: 19px;
-      margin-bottom: 7px;
-    }
-    h2 {
-      color: #b7b7b7;
-      font-size: 17px;
-      margin-bottom: 7px;
-    }
+  h2 {
+    color: #b7b7b7;
+    font-size: 17px;
+    margin-bottom: 7px;
   }
 
   @media (max-width: 610px) {
@@ -100,10 +156,10 @@ const Link = styled.button`
       font-size: 11px;
       color: #9b9595;
     }
-    h4{
-        color:#CECECE;
-        font-size: 11px;
-        line-height: 13.2px;
+    h4 {
+      color: #cecece;
+      font-size: 11px;
+      line-height: 13.2px;
     }
   }
 `;

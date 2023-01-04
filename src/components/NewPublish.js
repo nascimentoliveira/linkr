@@ -94,6 +94,7 @@ const Container = styled.section`
   display: flex;
   justify-content: space-between;
   padding: 20px;
+  margin-bottom: 30px;
 
   img {
     width: 50px;
