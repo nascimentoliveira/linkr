@@ -1,18 +1,28 @@
 import styled from "styled-components";
+import { useEffect, useState } from "react";
+import { Link, resolvePath } from "react-router-dom";
 
-export default function PostCard() {
+
+export default function PostCard({ post }) {
+  const { text, url, username, picture } = post;
+  
+  useEffect(() => {
+    // urlMetadata(url)
+    //   .then((metadata) => {
+    //     console.log(metadata);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+  }, []);
+
   return (
     <Container>
-      <img
-        src="https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
-        alt="User"
-      />
+      <img src={picture} alt="User" />
       <div>
-        <h1>Fulano</h1>
-        <h2>
-          Muito maneiro esse tutorial de Material UI com React, deem uma olhada!
-        </h2>
-        <Link>
+        <h1>{username}</h1>
+        <h2>{text}</h2>
+        <UrlBox>
           <div>
             <h3>Como aplicar o Material UI em um projeto React</h3>
             <p>
@@ -26,7 +36,7 @@ export default function PostCard() {
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOEIXpZcXR-N8OH_q0Dj2ou6Vr1U69t4kM-w&usqp=CAU"
             alt="Url Image"
           />
-        </Link>
+        </UrlBox>
       </div>
     </Container>
   );
@@ -65,10 +75,11 @@ const Container = styled.section`
 
   @media (max-width: 610px) {
     border-radius: 0px;
+    margin-top: 15px;
   }
 `;
 
-const Link = styled.button`
+const UrlBox = styled.button`
   width: 100%;
   height: 70%;
   border-radius: 11px;
@@ -100,10 +111,10 @@ const Link = styled.button`
       font-size: 11px;
       color: #9b9595;
     }
-    h4{
-        color:#CECECE;
-        font-size: 11px;
-        line-height: 13.2px;
+    h4 {
+      color: #cecece;
+      font-size: 11px;
+      line-height: 13.2px;
     }
   }
 `;
