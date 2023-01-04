@@ -2,10 +2,6 @@ import Navbar from "../components/Navbar.js";
 import View from "../components/View.js";
 import NewPublish from "../components/NewPublish.js";
 import PostCard from "../components/PostCard.js";
-import axios from "axios";
-import styled from "styled-components";
-import { useEffect, useState } from "react";
-import { ThreeDots } from "react-loader-spinner";
 
 export default function Timeline() {
   const [loading, setLoading] = useState(false);
@@ -43,6 +39,10 @@ export default function Timeline() {
         ) : (
           posts.map((p) => <PostCard post={p} key={p.id} />)
         )}
+        <PostCard />
+        <PostCard /* dupliquei um postcard só para testar o scroll 
+                  da timeline enquanto o post ainda está estático */
+        />
       </View>
     </>
   );
