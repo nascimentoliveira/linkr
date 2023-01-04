@@ -18,10 +18,16 @@ export default function NewPublish() {
   function newPost(e) {
     e.preventDefault();
     setFormEnabled(false);
+    
+    if (!form.text) {
+      delete form.text;
+    }
+
     axios.post(ROUTES.POSTS_ROUTE, form)
       .then(() => {
         Swal.fire({
           position: 'center',
+          background: '#151515',
           icon: 'success',
           title: 'Link publicado com sucesso!',
           showConfirmButton: false,
@@ -32,6 +38,7 @@ export default function NewPublish() {
       })
       .catch(() => {
         Swal.fire({
+          background: '#151515',
           icon: 'error',
           title: 'Oops...',
           text: 'Houve um erro ao publicar seu link!'
@@ -67,7 +74,7 @@ export default function NewPublish() {
 
           <Button 
             type='submit' 
-            title={formEnabled ? 'Fazer login' : 'aguarde...'}
+            title={formEnabled ? 'Publish' : 'Publishing...'}
             disabled={!formEnabled}
           >
             {formEnabled ? 'Publish' : 'Publishing...'}
