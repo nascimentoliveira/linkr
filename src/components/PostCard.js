@@ -2,14 +2,10 @@
 
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { Link, resolvePath } from "react-router-dom";
-
+import { TiHeartFullOutline } from "react-icons/ti";
 
 export default function PostCard({ post }) {
   const { text, url, username, picture } = post;
-  import { useState } from "react";
-import { TiHeartFullOutline } from "react-icons/ti";
-
 
   useEffect(() => {
     // urlMetadata(url)
@@ -45,7 +41,6 @@ import { TiHeartFullOutline } from "react-icons/ti";
         <h2>
           Muito maneiro esse tutorial de Material UI com React, deem uma olhada!
         </h2>
-        <Link>
       <img src={picture} alt="User" />
       <div>
         <h1>{username}</h1>
@@ -64,10 +59,12 @@ import { TiHeartFullOutline } from "react-icons/ti";
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOEIXpZcXR-N8OH_q0Dj2ou6Vr1U69t4kM-w&usqp=CAU"
             alt="Url Image"
           />
+          
         </UrlBox>
+        </div>
       </Infos>
     </Container>
-  );
+  )
 }
 
 const Left = styled.div`
