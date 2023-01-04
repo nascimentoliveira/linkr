@@ -4,10 +4,11 @@ import styled from "styled-components";
 import { useState } from "react";
 import { TiHeartFullOutline } from "react-icons/ti";
 
+
 export default function PostCard() {
   const [selecionado, setSelecionado] = useState(false);
-  let like = selecionado === true;
-  let deslike = selecionado === false;
+  const red = "#AC0000";
+  const white = "#C0C0C0";
 
   return (
     <Container>
@@ -17,7 +18,7 @@ export default function PostCard() {
           alt="User"
         />
         <Likes>
-          <HeartIcon>
+          <HeartIcon onClick={() => setSelecionado(!selecionado)} color={selecionado === false ?  white : red}>
             <TiHeartFullOutline></TiHeartFullOutline>
           </HeartIcon>
           <p> xx likes </p>
@@ -54,7 +55,7 @@ const Left = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #fff;
+  color: #C0C0C0;
   font-size: 22px;
   font-weight: 900;
   margin-bottom: 140px;
@@ -85,7 +86,7 @@ const Likes = styled.div`
 
 const HeartIcon = styled.div`
   font-size: 26px;
-  color: #ffffff;
+  color: ${props => props.color};
   margin-top: 15px;
   margin-bottom: 4px;
   cursor: pointer;
