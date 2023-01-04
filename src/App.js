@@ -13,33 +13,10 @@ import UserContext from './contexts/userContext';
 import axios from 'axios';
 
 export default function App() {
-  const [token, setToken] = useState(localStorage.getItem("authToken"));
+  const [token, setToken] = useState("");
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
 
-  useEffect(()=>{
-      if(window.location.pathname !== "/" && window.location.pathname !== "/signup"){
-          getUserData();
-      }
-  },[])
-
-  async function getUserData(){
-      if(token){
-          const config = {
-              headers: {
-                  Authorization: `Bearer ${token}`,
-              },
-          };
-          try{
-              const result = await axios.get(`/data`,config);
-              setImage(result.data.picture);
-              setName(result.data.username);
-          }catch(e){
-              localStorage.setItem("authToken", "");
-              window.location.reload();
-          }
-      }
-  }
   const userContext = {
       token,
       setToken,
