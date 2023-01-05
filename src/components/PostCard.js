@@ -34,7 +34,9 @@ export default function PostCard({ post }) {
 
         <Infos>
           <h1>{username}</h1>
-          <h2>asdioapsdipasoidpoasidpoasiopdiasopidopasipodiaspoidpoasidopasipodiasopida</h2>
+          <h2>
+            {text}
+          </h2>
           <UrlBox onClick={(e) => openInNewTab(url)}>
             <UrlInfos>
               <h3>{title}</h3>
@@ -112,7 +114,7 @@ const Container = styled.section`
   display: flex;
   justify-content: space-between;
   padding: 20px 20px 20px 5px;
-  
+
   h1 {
     color: white;
     font-size: 19px;
@@ -122,7 +124,6 @@ const Container = styled.section`
     color: #b7b7b7;
     font-size: 17px;
     margin-bottom: 7px;
-    
   }
 
   @media (max-width: 610px) {
@@ -160,7 +161,7 @@ const UrlInfos = styled.div`
   align-items: flex-start;
   justify-content: space-around;
   padding: 2%;
- 
+
   position: relative;
   h3 {
     font-size: 16px;
@@ -171,8 +172,8 @@ const UrlInfos = styled.div`
     color: #9b9595;
     white-space: wrap;
 
-  max-width: 100%;
-  overflow: hidden;
+    max-width: 100%;
+    overflow: hidden;
   }
   > h4 {
     color: #cecece;
