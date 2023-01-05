@@ -34,7 +34,7 @@ export default function PostCard({ post }) {
 
         <Infos>
           <h1>{username}</h1>
-          <h2>asdioapsdipasoidpoasidpoasiopdiasopidopasipodiaspoidpoasidopasipodiasopida</h2>
+          <h2>{text}</h2>
           <UrlBox onClick={(e) => openInNewTab(url)}>
             <UrlInfos>
               <h3>{title}</h3>

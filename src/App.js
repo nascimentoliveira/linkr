@@ -3,8 +3,8 @@ import {useState, useEffect } from 'react'
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Timeline from './pages/Timeline.js';
-/* import HashTag from './pages/HashTag.js';
 import UserPosts from './pages/UserPosts.js';
+/* import HashTag from './pages/HashTag.js';
 import NotFound from './pages/NotFound.js'; */
 
 import './assets/styles/reset.css';
@@ -34,8 +34,9 @@ export default function App() {
           <Route path='/' element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/timeline' element={<Timeline />} />
+          <Route path='/user/:id' element={<UserPosts />} />
           {/* <Route path='/hashtag/:hashtag' element={<HashTag />} />
-            <Route path='/user/:id' element={<UserPosts />} />
+            
             <Route path="*" element={<NotFound />} /> */}
         </Routes>
       </UserContext.Provider>

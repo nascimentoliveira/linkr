@@ -2,18 +2,21 @@ import axios from "axios";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
+import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar.js";
 import View from "../components/View.js";
-import NewPublish from "../components/NewPublish.js";
 import PostCard from "../components/PostCard.js";
 
-export default function Timeline() {
+export default function UserPosts() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+  const [username, setUsername] = useState();
+  const { id } = useParams();
 
   async function fetchData() {
-    const { data } = await axios.get("http://localhost:4000/timeline");
+    const { data } = await axios.get(`http://localhost:4000/user/${id}`);
     setPosts(data);
+    setUsername(data[0].username);
     setLoading(false);
   }
 
@@ -25,8 +28,7 @@ export default function Timeline() {
     <>
       <Navbar />
       <View>
-        <span>timeline</span>
-        <NewPublish />
+        <span>{loading ? null : username + "`s posts"}</span>
         {loading ? (
           <Loading>
             <ThreeDots
