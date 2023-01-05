@@ -1,15 +1,16 @@
+import axios from "axios";
+import styled from "styled-components";
+import { useEffect, useState } from "react";
+import { ThreeDots } from "react-loader-spinner";
 import Navbar from "../components/Navbar.js";
 import View from "../components/View.js";
 import NewPublish from "../components/NewPublish.js";
 import PostCard from "../components/PostCard.js";
-import { useEffect,useState } from "react";
-import axios from "axios";
-import { ThreeDots } from "react-loader-spinner";
-import styled from "styled-components";
 
 export default function Timeline() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+  console.log(posts);
 
   async function fetchData() {
     const { data } = await axios.get("http://localhost:4000/timeline");
@@ -18,9 +19,9 @@ export default function Timeline() {
   }
 
   useEffect(() => {
-    setLoading(true);
     fetchData();
   }, []);
+
   return (
     <>
       <Navbar />
@@ -40,13 +41,11 @@ export default function Timeline() {
               visible={true}
             />
           </Loading>
+        ) : posts.length === 0 ? (
+          <span>There are no posts yet.</span>
         ) : (
           posts.map((p) => <PostCard post={p} key={p.id} />)
         )}
-        {/* <PostCard />
-        <PostCard /* dupliquei um postcard só para testar o scroll 
-                  da timeline enquanto o post ainda está estático */
-        /> */}
       </View>
     </>
   );
