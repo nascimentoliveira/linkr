@@ -202,6 +202,10 @@ const Container = styled.div`
     line-height: 33px;
     cursor: pointer;
   }
+
+  &:hover {
+    filter: brightness(130%);
+  }
 }
 
 @media only screen and (min-width: 768px) {

@@ -229,6 +229,10 @@ const Button = styled.button`
   outline: none;
   cursor: pointer;
 
+  &:hover {
+    filter: brightness(130%);
+  }
+
   &:disabled {
     filter: grayscale(60%);
     cursor: default;
