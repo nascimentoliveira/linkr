@@ -10,11 +10,38 @@ export default function PostCard({ post }) {
   const { id, text, url, username, picture, title, description, image } = post;
   const [selecionado, setSelecionado] = useState(false);
   const [countLikes, setCountLikes] = useState(0);
+  const [allLikes, setAllLikes] = useState([]);
 
   const red = "#AC0000";
   const white = "#C0C0C0";
 
   useEffect(() => {
+    const promise = axios.get(`${routes.URL}/likes`);
+
+    promise.then(({ data }) => {
+      setAllLikes(data);
+    });
+
+    promise.catch((e) => {
+      console.error(e.data);
+    });
+  }, []);
+
+  let likesFilter = allLikes.find(
+    (like) => like.postId === id && like.userId === 2
+  );
+
+  useEffect(() => {
+    if (likesFilter) {
+      setSelecionado(true);
+    } else {
+      setSelecionado(false);
+    }
+  }, [likesFilter]);
+  
+
+  useEffect(() => {
+    console.log(countLikes, id)
     const postId = id;
     const promise = axios.get(`${routes.URL}/likes/count/${postId}`);
 
