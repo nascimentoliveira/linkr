@@ -1,14 +1,22 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
 import ROUTES from '../constants';
+import UserContext from '../contexts/userContext.js';
 
 export default function NewPublish() {
 
   const [formEnabled, setFormEnabled] = useState(true);
   const [form, setForm] = useState({ url: '', text: '' });
+  const { user, token } = useContext(UserContext);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
 
   function handleForm(e) {
     const { name, value } = e.target;
@@ -23,25 +31,25 @@ export default function NewPublish() {
       delete form.text;
     }
 
-    axios.post(ROUTES.POSTS_ROUTE, form)
-      .then(() => {
+    axios.post(ROUTES.POSTS_ROUTE, form, config)
+      .then(res => {
         Swal.fire({
           position: 'center',
           background: '#151515',
           icon: 'success',
-          title: 'Link publicado com sucesso!',
+          title: res.data.message,
           showConfirmButton: false,
           timer: 1500
         });
         setForm({ url: '', text: '' });
         setFormEnabled(true);
       })
-      .catch(() => {
+      .catch(err => {
         Swal.fire({
           background: '#151515',
           icon: 'error',
           title: 'Oops...',
-          text: 'Houve um erro ao publicar seu link!'
+          text: err.response.data.message
         });
         setFormEnabled(true);
       });
@@ -49,7 +57,7 @@ export default function NewPublish() {
 
   return (
     <Container>
-      <img src='https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745' alt='User'/>
+      <img src={user.picture} alt={`${user.username} photo`} />
       <div>
         <Message>What are you going to share today?</Message>
         <Form onSubmit={newPost}>
