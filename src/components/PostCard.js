@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/img-redundant-alt */
 
 import styled from "styled-components";
@@ -5,12 +6,16 @@ import axios from "axios";
 import routes from "../constants";
 import { useState, useEffect } from "react";
 import { TiHeartFullOutline } from "react-icons/ti";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 export default function PostCard({ post }) {
   const { id, text, url, username, picture, title, description, image } = post;
   const [selecionado, setSelecionado] = useState(false);
   const [countLikes, setCountLikes] = useState(0);
   const [allLikes, setAllLikes] = useState([]);
+  const [namesLike, setNamesLike] = useState([]);
+  const [result, setResult] = useState("");
 
   const red = "#AC0000";
   const white = "#C0C0C0";
@@ -38,10 +43,8 @@ export default function PostCard({ post }) {
       setSelecionado(false);
     }
   }, [likesFilter]);
-  
 
   useEffect(() => {
-    console.log(countLikes, id)
     const postId = id;
     const promise = axios.get(`${routes.URL}/likes/count/${postId}`);
 
@@ -53,6 +56,53 @@ export default function PostCard({ post }) {
       console.error(e.data);
     });
   }, [selecionado]);
+
+  useEffect(() => {
+    const postId = id;
+    const promise = axios.get(`${routes.URL}/likes/${postId}`);
+
+    promise.then(({ data }) => {
+      setNamesLike(data);
+      console.log(namesLike);
+    });
+
+    promise.catch((e) => {
+      console.error(e.data);
+    });
+  }, [countLikes]);
+
+  useEffect(() => {
+    let getName = [];
+    for (let i = 0; i < namesLike.length; i++) {
+      getName.push(namesLike[i].username);
+    }
+
+    let res = "";
+    if (namesLike.length === 0) {
+      res = null;
+      setResult(res);
+    } else if (namesLike.length === 1 && selecionado) {
+      res = "You liked";
+      setResult(res);
+    } else if (getName.length === 1 && !selecionado) {
+      res = `Liked by ${getName[0]}`;
+      setResult(res);
+    } else if (namesLike.length === 2 && selecionado) {
+      res = `You and ${getName[0]} liked`;
+      setResult(res);
+    } else if (getName.length === 2 && !selecionado) {
+      res = `${getName[0]} e ${getName[1]} liked`;
+      setResult(res);
+    } else if (namesLike.length >= 3 && selecionado) {
+      res = `You, ${getName[0]} and other ${countLikes - 2} people liked`;
+      setResult(res);
+    } else if (getName.length >= 3 && !selecionado) {
+      res = `${getName[0]}, ${getName[1]} and other ${
+        countLikes - 2
+      } people liked`;
+      setResult(res);
+    }
+  }, [namesLike]);
 
   function like(postId) {
     const promise = axios.post(`${routes.URL}/likes/${postId}`, postId);
@@ -96,7 +146,13 @@ export default function PostCard({ post }) {
             >
               <TiHeartFullOutline></TiHeartFullOutline>
             </HeartIcon>
-            <p> {countLikes} likes </p>
+            <a id="custom-inline-styles"> {countLikes} likes </a>
+            <Tooltip
+              anchorId="custom-inline-styles"
+              place="bottom"
+              style={{ color: "white", fontSize: "12px" }}
+              content={countLikes ? `${result}` : null}
+            />
           </Likes>
         </Left>
 
@@ -149,6 +205,10 @@ const Likes = styled.div`
   align-items: center;
   width: 80px;
   justify-content: center;
+
+  a {
+    font-size: 12px;
+  }
 `;
 
 const HeartIcon = styled.div`
