@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar.js";
 import View from "../components/View.js";
 import PostCard from "../components/PostCard.js";
+import routes from "../constants.js";
 
 export default function UserPosts() {
   const [loading, setLoading] = useState(true);
@@ -13,11 +14,10 @@ export default function UserPosts() {
   const [username, setUsername] = useState();
   const { id } = useParams();
   async function fetchData() {
-    const { data,status } = await axios.get(`http://localhost:4000/user/${id}`);
-    if(status === 204){
-        setLoading(false)
+    const { data, status } = await axios.get(`${routes.URL}/user/${id}`);
+    if (status === 204) {
+      setLoading(false);
     }
-    
     setPosts(data);
     setUsername(data[0].username);
     setLoading(false);

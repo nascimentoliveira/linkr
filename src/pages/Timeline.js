@@ -6,13 +6,14 @@ import Navbar from "../components/Navbar.js";
 import View from "../components/View.js";
 import NewPublish from "../components/NewPublish.js";
 import PostCard from "../components/PostCard.js";
+import routes from "../constants.js";
 
 export default function Timeline() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
 
   async function fetchData() {
-    const { data } = await axios.get("http://localhost:4000/timeline");
+    const { data } = await axios.get(`${routes.URL}/timeline`);
     setPosts(data);
     setLoading(false);
   }
