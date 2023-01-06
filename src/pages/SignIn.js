@@ -30,7 +30,7 @@ export default function Login() {
         background: '#151515',
         text: 'Log in to enter the application!',
         showConfirmButton: false,
-        timer: 2000
+        timer: 1200
       });
     }
   }, []);
