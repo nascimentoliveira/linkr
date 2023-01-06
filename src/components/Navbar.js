@@ -15,11 +15,12 @@ export default function Navbar() {
   async function logout() {
     await(Swal.fire({
       position: 'center',
+      background: '#151515',
       icon: 'question',
-      title: 'Deseja realmente sair da aplicação?',
+      title: 'Do you really want to exit the application?',
       showCancelButton: true,
-      cancelButtonText: 'Não',
-      confirmButtonText: 'Sim, desejo sair',
+      cancelButtonText: 'Not',
+      confirmButtonText: 'Yes, I want to leave',
     })).then(result => {
       if (result.isConfirmed) {
         localStorage.removeItem('Linkr');

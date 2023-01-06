@@ -28,7 +28,7 @@ export default function Login() {
       Swal.fire({
         icon: 'info',
         background: '#151515',
-        text: 'Faça login para entrar na aplicação!',
+        text: 'Log in to enter the application!',
         showConfirmButton: false,
         timer: 2000
       });
