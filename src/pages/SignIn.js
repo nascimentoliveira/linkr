@@ -28,9 +28,9 @@ export default function Login() {
       Swal.fire({
         icon: 'info',
         background: '#151515',
-        text: 'Faça login para entrar na aplicação!',
+        text: 'Log in to enter the application!',
         showConfirmButton: false,
-        timer: 2000
+        timer: 1200
       });
     }
   }, []);
@@ -201,6 +201,10 @@ const Container = styled.div`
     font-size: 22px;
     line-height: 33px;
     cursor: pointer;
+  }
+
+  &:hover {
+    filter: brightness(130%);
   }
 }
 
