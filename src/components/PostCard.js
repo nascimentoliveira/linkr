@@ -1,16 +1,51 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 
 import styled from "styled-components";
-import { useState } from "react";
+import axios from "axios";
+import routes from "../constants";
+import { useState, useEffect } from "react";
 import { TiHeartFullOutline } from "react-icons/ti";
 
 export default function PostCard({ post }) {
-  const { text, url, username, picture, title, description, image } = post;
-
+  const { id, text, url, username, picture, title, description, image } = post;
   const [selecionado, setSelecionado] = useState(false);
+  const [countLikes, setCountLikes] = useState(0);
 
   const red = "#AC0000";
   const white = "#C0C0C0";
+
+  useEffect(() => {
+    const postId = id;
+    const promise = axios.get(`${routes.URL}/likes/count/${postId}`);
+
+    promise.then(({ data }) => {
+      setCountLikes(data);
+    });
+
+    promise.catch((e) => {
+      console.error(e.data);
+    });
+  }, [selecionado]);
+
+  function like(postId) {
+    const promise = axios.post(`${routes.URL}/likes/${postId}`, postId);
+    promise.then(() => {
+      setSelecionado(true);
+    });
+    promise.catch((e) => {
+      console.error(e);
+    });
+  }
+
+  function dislike(postId) {
+    const promise = axios.delete(`${routes.URL}/dislikes/${postId}`);
+    promise.then(() => {
+      setSelecionado(false);
+    });
+    promise.catch((e) => {
+      console.error(e);
+    });
+  }
 
   function openInNewTab(url) {
     window.open(url);
@@ -23,12 +58,18 @@ export default function PostCard({ post }) {
           <img src={picture} alt="User" />
           <Likes>
             <HeartIcon
-              onClick={() => setSelecionado(!selecionado)}
+              onClick={() => {
+                if (selecionado === false) {
+                  like(id);
+                } else if (selecionado === true) {
+                  dislike(id);
+                }
+              }}
               color={selecionado === false ? white : red}
             >
               <TiHeartFullOutline></TiHeartFullOutline>
             </HeartIcon>
-            <p> xx likes </p>
+            <p> {countLikes} likes </p>
           </Likes>
         </Left>
 
@@ -112,7 +153,7 @@ const Container = styled.section`
   display: flex;
   justify-content: space-between;
   padding: 20px 20px 20px 5px;
-  
+
   h1 {
     color: white;
     font-size: 19px;
@@ -122,7 +163,6 @@ const Container = styled.section`
     color: #b7b7b7;
     font-size: 17px;
     margin-bottom: 7px;
-    
   }
 
   @media (max-width: 610px) {
@@ -160,7 +200,7 @@ const UrlInfos = styled.div`
   align-items: flex-start;
   justify-content: space-around;
   padding: 2%;
- 
+
   position: relative;
   h3 {
     font-size: 16px;
@@ -171,8 +211,8 @@ const UrlInfos = styled.div`
     color: #9b9595;
     white-space: wrap;
 
-  max-width: 100%;
-  overflow: hidden;
+    max-width: 100%;
+    overflow: hidden;
   }
   > h4 {
     color: #cecece;
