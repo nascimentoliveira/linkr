@@ -12,9 +12,12 @@ export default function UserPosts() {
   const [posts, setPosts] = useState([]);
   const [username, setUsername] = useState();
   const { id } = useParams();
-
   async function fetchData() {
-    const { data } = await axios.get(`http://localhost:4000/user/${id}`);
+    const { data,status } = await axios.get(`http://localhost:4000/user/${id}`);
+    if(status === 204){
+        setLoading(false)
+    }
+    
     setPosts(data);
     setUsername(data[0].username);
     setLoading(false);
@@ -28,7 +31,7 @@ export default function UserPosts() {
     <>
       <Navbar />
       <View>
-        <span>{loading ? null : username + "`s posts"}</span>
+        <span>{loading ? null : username ? username + "`s posts" : null}</span>
         {loading ? (
           <Loading>
             <ThreeDots
