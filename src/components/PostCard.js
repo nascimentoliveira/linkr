@@ -4,49 +4,48 @@ import styled from "styled-components";
 import { useState } from "react";
 import { TiHeartFullOutline } from "react-icons/ti";
 
+export default function PostCard({ post }) {
+  const { text, url, username, picture, title, description, image } = post;
 
-export default function PostCard() {
   const [selecionado, setSelecionado] = useState(false);
+
   const red = "#AC0000";
   const white = "#C0C0C0";
 
-  return (
-    <Container>
-      <Left>
-        <img
-          src="https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
-          alt="User"
-        />
-        <Likes>
-          <HeartIcon onClick={() => setSelecionado(!selecionado)} color={selecionado === false ?  white : red}>
-            <TiHeartFullOutline></TiHeartFullOutline>
-          </HeartIcon>
-          <p> xx likes </p>
-        </Likes>
-      </Left>
+  function openInNewTab(url) {
+    window.open(url);
+  }
 
-      <Infos>
-        <h1>Fulano</h1>
-        <h2>
-          Muito maneiro esse tutorial de Material UI com React, deem uma olhada!
-        </h2>
-        <Link>
-          <div>
-            <h3>Como aplicar o Material UI em um projeto React</h3>
-            <p>
-              Hey! I have moved this tutorial to my personal blog. Same content,
-              new location. Sorry about making you click through to another
-              page.
-            </p>
-            <h4>https://medium.com/@pshrmn/a-simple-react-router</h4>
-          </div>
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOEIXpZcXR-N8OH_q0Dj2ou6Vr1U69t4kM-w&usqp=CAU"
-            alt="Url Image"
-          />
-        </Link>
-      </Infos>
-    </Container>
+  return (
+    <>
+      <Container>
+        <Left>
+          <img src={picture} alt="User" />
+          <Likes>
+            <HeartIcon
+              onClick={() => setSelecionado(!selecionado)}
+              color={selecionado === false ? white : red}
+            >
+              <TiHeartFullOutline></TiHeartFullOutline>
+            </HeartIcon>
+            <p> xx likes </p>
+          </Likes>
+        </Left>
+
+        <Infos>
+          <h1>{username}</h1>
+          <h2>{text}</h2>
+          <UrlBox onClick={(e) => openInNewTab(url)}>
+            <UrlInfos>
+              <h3>{title}</h3>
+              <p>{description}</p>
+              <h4>{url}</h4>
+            </UrlInfos>
+            <img src={image} alt="Url Image" />
+          </UrlBox>
+        </Infos>
+      </Container>
+    </>
   );
 }
 
@@ -55,7 +54,7 @@ const Left = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #C0C0C0;
+  color: #c0c0c0;
   font-size: 22px;
   font-weight: 900;
   margin-bottom: 140px;
@@ -86,15 +85,20 @@ const Likes = styled.div`
 
 const HeartIcon = styled.div`
   font-size: 26px;
-  color: ${props => props.color};
+  color: ${(props) => props.color};
   margin-top: 15px;
   margin-bottom: 4px;
   cursor: pointer;
 `;
 
 const Infos = styled.div`
-  margin-left: 8px;
   margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 const Container = styled.section`
@@ -107,8 +111,8 @@ const Container = styled.section`
   margin-bottom: 30px;
   display: flex;
   justify-content: space-between;
-  padding: 20px;
-
+  padding: 20px 20px 20px 5px;
+  
   h1 {
     color: white;
     font-size: 19px;
@@ -118,49 +122,61 @@ const Container = styled.section`
     color: #b7b7b7;
     font-size: 17px;
     margin-bottom: 7px;
+    
   }
 
   @media (max-width: 610px) {
     border-radius: 0px;
+    margin-top: 15px;
   }
 `;
 
-const Link = styled.button`
-  width: 100%;
-  height: 70%;
+const UrlBox = styled.button`
+  /* width: 100%; */
+  height: 60%;
   border-radius: 11px;
   border: 1px solid #4d4d4d;
   background-color: #171717;
   display: flex;
   justify-content: space-between;
   padding: 0;
+  cursor: pointer;
+
   img {
     height: 100%;
     width: 30%;
     margin: 0;
     border-radius: 0px 11px 11px 0px;
+    object-fit: cover;
   }
-  div {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding: 5%;
-    h3 {
-      font-size: 16px;
-      color: #cecece;
-    }
-    p {
-      font-size: 11px;
-      color: #9b9595;
-    }
-    h4 {
-      color: #cecece;
-      font-size: 11px;
-      line-height: 13.2px;
-    }
+`;
+
+const UrlInfos = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  align-items: flex-start;
+  justify-content: space-around;
+  padding: 2%;
+ 
+  position: relative;
+  h3 {
+    font-size: 16px;
+    color: #cecece;
+  }
+  p {
+    font-size: 11px;
+    color: #9b9595;
+    white-space: wrap;
+
+  max-width: 100%;
+  overflow: hidden;
+  }
+  > h4 {
+    color: #cecece;
+    font-size: 11px;
+    line-height: 13.2px;
   }
 `;
