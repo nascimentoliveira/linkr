@@ -37,7 +37,7 @@ export default function SignUp() {
         showConfirmButton: false,
         timer: 1500
       });
-      navigate('/signin');
+      navigate('/');
     })
     .catch(err => {
       Swal.fire({
@@ -105,7 +105,7 @@ export default function SignUp() {
           </button>
         </form>
         <div className='back'>
-          <h1 onClick={() => navigate('/signin')}>Switch back to log in</h1>
+          <h1 onClick={() => navigate('/')}>Switch back to log in</h1>
         </div>
       </div>
     </Container>

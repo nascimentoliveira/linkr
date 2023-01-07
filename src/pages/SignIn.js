@@ -64,7 +64,7 @@ export default function Login() {
         });
         if (err.response.status === 401) {
           localStorage.removeItem('Linkr');
-          navigate('/signin');
+          navigate('/');
         }
         setFormEnabled(true);
       });
