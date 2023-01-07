@@ -33,7 +33,7 @@ export default function Navbar() {
 
   return (
     <Container>
-      <Logo onClick={() => navigate('/')}>linkr</Logo>
+      <Logo onClick={() => navigate('/timeline')}>linkr</Logo>
       <Profile
         title={showLogout ? 'Close options' : 'Show options'}
         onClick={() => setshowLogout(!showLogout)}
