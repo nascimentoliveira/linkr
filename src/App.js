@@ -1,37 +1,31 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import {useState, useEffect } from 'react'
-import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
+import { useState } from 'react'
+
+import SignIn from './pages/SignIn.js';
+import SignUp from './pages/SignUp.js';
 import Timeline from './pages/Timeline.js';
 import UserPosts from './pages/UserPosts.js';
-/* import HashTag from './pages/HashTag.js';
-import NotFound from './pages/NotFound.js'; */
-
 import './assets/styles/reset.css';
 import './assets/styles/style.css';
-import UserContext from './contexts/userContext';
-import axios from 'axios';
+import UserContext from './contexts/userContext.js';
 
 export default function App() {
   const [token, setToken] = useState("");
-  const [image, setImage] = useState("");
-  const [name, setName] = useState("");
+  const [user, setUser] = useState({ username: '', picture: '', email: '' });
 
   const userContext = {
-      token,
-      setToken,
-      image,
-      setImage,
-      name,
-      setName
+    token,
+    setToken,
+    user, 
+    setUser
   };
 
   return (
     <BrowserRouter>
       <UserContext.Provider value={userContext}>
         <Routes>
-          {/* <Route index element={<Navigate replace to='/signin' />} /> */}
-          <Route path='/' element={<SignIn />} />
+          <Route index element={<Navigate replace to='/signin' />} />
+          <Route path='/signin' element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/timeline' element={<Timeline />} />
           <Route path='/user/:id' element={<UserPosts />} />

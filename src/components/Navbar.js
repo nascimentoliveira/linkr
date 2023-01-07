@@ -1,13 +1,45 @@
+import { SlArrowDown, SlArrowUp } from 'react-icons/sl';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import styled from 'styled-components';
-import { SlArrowDown } from 'react-icons/sl';
+
+import UserContext from '../contexts/userContext.js';
 
 export default function Navbar() {
+
+  const { user } = useContext(UserContext);
+  const [showLogout, setshowLogout] = useState(false);
+  const navigate = useNavigate();
+
+  async function logout() {
+    await(Swal.fire({
+      position: 'center',
+      background: '#151515',
+      icon: 'question',
+      title: 'Do you really want to exit the application?',
+      showCancelButton: true,
+      cancelButtonText: 'Not',
+      confirmButtonText: 'Yes, I want to leave',
+    })).then(result => {
+      if (result.isConfirmed) {
+        localStorage.removeItem('Linkr');
+        navigate('/');
+      } else {
+        setshowLogout(false);
+      }
+    })
+  }
+
   return (
     <Container>
-      <Logo>linkr</Logo>
+      <Logo onClick={() => navigate('/')}>linkr</Logo>
       <Profile>
-        <button><SlArrowDown /></button>
-        <img src='https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745' alt='User'/>
+        <ArrowButton onClick={() => setshowLogout(!showLogout)}>
+          {showLogout ? <SlArrowUp /> : <SlArrowDown />}
+        </ArrowButton>
+        {showLogout ? <Logout onClick={logout}><button>Logout</button></Logout> : <></>}
+        <img src={user.picture} alt={`${user.username} photo`} />
       </Profile>
     </Container>
   );
@@ -40,22 +72,52 @@ const Profile = styled.div`
   display: flex;
   justify-content: center;
 
-  button {
-    background-color: transparent;
-    outline: none;
-    border: none;
-    cursor: pointer;
-  }
-
   img {
     width: 53px;
     height: 53px;
     border-radius: 26.5px;
   }
+`;
+
+const ArrowButton = styled.button`
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
 
   svg {
     color: #FFFFFF;
     font-size: 20px;
   }
+`;
 
+const Logout = styled.div`
+  width: 150px;
+  height: 47px;
+  background-color: #171717;
+  border-radius: 0px 0px 0px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 72px;
+  right: 0px;
+
+  &:hover {
+    filter: brightness(130%);
+  }
+
+  button {
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 20px;
+    color: #FFFFFF;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
 `;
