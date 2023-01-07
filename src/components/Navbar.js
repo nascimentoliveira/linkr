@@ -13,7 +13,7 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   async function logout() {
-    await(Swal.fire({
+    await (Swal.fire({
       position: 'center',
       background: '#151515',
       icon: 'question',
@@ -33,14 +33,29 @@ export default function Navbar() {
 
   return (
     <Container>
-      <Logo onClick={() => navigate('/')}>linkr</Logo>
-      <Profile>
-        <ArrowButton onClick={() => setshowLogout(!showLogout)}>
-          {showLogout ? <SlArrowUp /> : <SlArrowDown />}
-        </ArrowButton>
-        {showLogout ? <Logout onClick={logout}><button>Logout</button></Logout> : <></>}
+      <Logo onClick={() => navigate('/timeline')}>linkr</Logo>
+      <Profile
+        title={showLogout ? 'Close options' : 'Show options'}
+        onClick={() => setshowLogout(!showLogout)}
+      >
+        {showLogout ? <SlArrowUp /> : <SlArrowDown />}
         <img src={user.picture} alt={`${user.username} photo`} />
+        {showLogout ?
+          <Logout title='Logout' onClick={logout}>
+            <button>Logout</button>
+          </Logout>
+          :
+          <></>
+        }
       </Profile>
+      {showLogout ?
+        <Close
+          showLogout={showLogout}
+          onClick={() => setshowLogout(!showLogout)}
+        />
+        :
+        <></>
+      }
     </Container>
   );
 }
@@ -56,7 +71,7 @@ const Container = styled.nav`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 2;
 `;
 
 const Logo = styled.span`
@@ -72,23 +87,19 @@ const Logo = styled.span`
 const Profile = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
+  cursor: pointer;
 
   img {
     width: 53px;
     height: 53px;
     border-radius: 26.5px;
   }
-`;
-
-const ArrowButton = styled.button`
-  background-color: transparent;
-  outline: none;
-  border: none;
-  cursor: pointer;
 
   svg {
     color: #FFFFFF;
     font-size: 20px;
+    margin-right: 17px;
   }
 `;
 
@@ -103,12 +114,16 @@ const Logout = styled.div`
   position: fixed;
   top: 72px;
   right: 0px;
+  z-index: 2;
+  animation: entry 1s ease 0s 1 normal forwards;
+  cursor: pointer;
 
   &:hover {
     filter: brightness(130%);
   }
 
   button {
+    width: 100%;
     font-family: 'Lato', sans-serif;
     font-weight: 700;
     font-size: 17px;
@@ -117,8 +132,32 @@ const Logout = styled.div`
     outline: none;
     border: none;
     background-color: transparent;
+    cursor: pointer;
+
     &:hover {
       transform: scale(1.1);
     }
   }
+
+  @keyframes entry {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+const Close = styled.div`
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  cursor: default;
 `;
