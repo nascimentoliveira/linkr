@@ -29,8 +29,7 @@ export default function Login() {
         icon: 'info',
         background: '#151515',
         text: 'Log in to enter the application!',
-        showConfirmButton: false,
-        timer: 1200
+        timer: 2000
       });
     }
   }, []);
