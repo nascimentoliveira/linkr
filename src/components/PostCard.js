@@ -1,13 +1,11 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable jsx-a11y/img-redundant-alt */
-
 import styled from "styled-components";
 import axios from "axios";
 import routes from "../constants";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { TiHeartFullOutline } from "react-icons/ti";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
+import UserContext from "../contexts/userContext";
 
 export default function PostCard({ post }) {
   const { id, text, url, username, picture, title, description, image } = post;
@@ -16,6 +14,12 @@ export default function PostCard({ post }) {
   const [allLikes, setAllLikes] = useState([]);
   const [namesLike, setNamesLike] = useState([]);
   const [result, setResult] = useState("");
+  const {token} = useContext(UserContext)
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
 
   const red = "#AC0000";
   const white = "#C0C0C0";
@@ -110,7 +114,7 @@ export default function PostCard({ post }) {
       setSelecionado(true);
     });
     promise.catch((e) => {
-      console.error(e);
+      console.error(e,'a');
     });
   }
 
@@ -259,7 +263,6 @@ const Container = styled.section`
 `;
 
 const UrlBox = styled.button`
-  /* width: 100%; */
   height: 60%;
   border-radius: 11px;
   border: 1px solid #4d4d4d;

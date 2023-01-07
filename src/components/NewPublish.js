@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import ROUTES from '../constants';
 import UserContext from '../contexts/userContext.js';
 
-export default function NewPublish() {
+export default function NewPublish({setRender,render}) {
 
   const [formEnabled, setFormEnabled] = useState(true);
   const [form, setForm] = useState({ url: '', text: '' });
@@ -43,6 +43,7 @@ export default function NewPublish() {
         });
         setForm({ url: '', text: '' });
         setFormEnabled(true);
+        setRender(!render)
       })
       .catch(err => {
         Swal.fire({

@@ -1,18 +1,22 @@
 import axios from "axios";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar.js";
 import View from "../components/View.js";
 import PostCard from "../components/PostCard.js";
 import routes from "../constants.js";
+import UserContext from "../contexts/userContext.js";
 
 export default function UserPosts() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
   const [username, setUsername] = useState();
   const { id } = useParams();
+  const {user,token} = useContext(UserContext);
+
+
   async function fetchData() {
     const { data, status } = await axios.get(`${routes.URL}/user/${id}`);
     if (status === 204) {
