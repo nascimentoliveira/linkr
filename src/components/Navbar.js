@@ -28,7 +28,7 @@ export default function Navbar() {
       } else {
         setshowLogout(false);
       }
-    })
+    });
   }
 
   return (

@@ -20,38 +20,59 @@ export default function SignUp() {
 
    function handleForm(e) {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm({ ...form, [name]: value.trim() });
   }
 
   const navigate = useNavigate();
 
+  function checkForm() {
+    const emptyFields = Object.keys(form).filter(key => form[key].trim() === '');
+    if (emptyFields.length > 0) {
+      const last = emptyFields.pop();
+      Swal.fire({
+        icon: 'warning',
+        background: '#151515',
+        text: (`
+        ${(emptyFields.length > 0 ? emptyFields.join(', ') + ' and ' : '') + last} 
+        ${emptyFields.length > 0 ? 'fields' : 'field'} 
+        needs to be filled`
+        .replace('email', 'e-mail'))
+      });
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   function signUp(e) {
     e.preventDefault();
-    axios.post(ROUTES.SIGN_UP_ROUTE, form)
-    .then(res => {
-      Swal.fire({
-        position: 'center',
-        icon: 'success',
-        background: '#151515',
-        title: res.data.message,
-        showConfirmButton: false,
-        timer: 1500
+    if (checkForm()) {
+      axios.post(ROUTES.SIGN_UP_ROUTE, form)
+      .then(res => {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          background: '#151515',
+          title: res.data.message,
+          showConfirmButton: false,
+          timer: 1500
+        });
+        navigate('/');
+      })
+      .catch(err => {
+        Swal.fire({
+          icon: 'error',
+          background: '#151515',
+          title: 'Oops...',
+          text: err.response.data.message
+        });
+        setForm({
+          ...form,
+          password: ''
+        });
+        setFormEnabled(true);
       });
-      navigate('/signin');
-    })
-    .catch(err => {
-      Swal.fire({
-        icon: 'error',
-        background: '#151515',
-        title: 'Oops...',
-        text: err.response.data.message
-      });
-      setForm({
-        ...form,
-        password: ''
-      });
-      setFormEnabled(true);
-    });
+    }
   }
 
   return (
@@ -66,8 +87,6 @@ export default function SignUp() {
             value={form.email}
             onChange={handleForm}
             disabled={!formEnabled}
-            required
-            
           />
           <input
             type='password'
@@ -76,7 +95,6 @@ export default function SignUp() {
             value={form.password}
             onChange={handleForm}
             disabled={!formEnabled}
-            required
           />
           <input
             type='text'
@@ -85,7 +103,6 @@ export default function SignUp() {
             value={form.username}
             onChange={handleForm}
             disabled={!formEnabled}
-            required
           />
           <input
             type='text'
@@ -94,7 +111,6 @@ export default function SignUp() {
             value={form.picture}
             onChange={handleForm}
             disabled={!formEnabled}
-            required
           />
           <button 
             type='submit' 
@@ -105,7 +121,7 @@ export default function SignUp() {
           </button>
         </form>
         <div className='back'>
-          <h1 onClick={() => navigate('/signin')}>Switch back to log in</h1>
+          <h1 onClick={() => navigate('/')}>Switch back to log in</h1>
         </div>
       </div>
     </Container>

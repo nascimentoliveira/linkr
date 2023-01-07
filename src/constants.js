@@ -1,5 +1,5 @@
 const POSTS_ROUTE = 'http://localhost:4000/posts';
-const SIGN_IN_ROUTE = 'http://localhost:4000/signin';
+const SIGN_IN_ROUTE = 'http://localhost:4000/';
 const SIGN_UP_ROUTE = 'http://localhost:4000/signup';
 const TIMELINE_ROUTE = 'http://localhost:4000/timeline';
 const URL = 'http://localhost:4000';
