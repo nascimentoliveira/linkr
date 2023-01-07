@@ -13,7 +13,7 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   async function logout() {
-    await(Swal.fire({
+    await (Swal.fire({
       position: 'center',
       background: '#151515',
       icon: 'question',
@@ -38,7 +38,16 @@ export default function Navbar() {
         <ArrowButton onClick={() => setshowLogout(!showLogout)}>
           {showLogout ? <SlArrowUp /> : <SlArrowDown />}
         </ArrowButton>
-        {showLogout ? <Logout onClick={logout}><button>Logout</button></Logout> : <></>}
+        {showLogout ?
+          <>
+            <Logout onClick={logout}>
+              <button>Logout</button>
+            </Logout>
+            <Close onClick={() => setshowLogout(!showLogout)} />
+          </>
+          :
+          <></>
+        }
         <img src={user.picture} alt={`${user.username} photo`} />
       </Profile>
     </Container>
@@ -56,7 +65,7 @@ const Container = styled.nav`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 2;
 `;
 
 const Logo = styled.span`
@@ -103,6 +112,7 @@ const Logout = styled.div`
   position: fixed;
   top: 72px;
   right: 0px;
+  z-index: 2;
 
   &:hover {
     filter: brightness(130%);
@@ -121,4 +131,13 @@ const Logout = styled.div`
       transform: scale(1.1);
     }
   }
+`;
+
+const Close = styled.div`
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
 `;
