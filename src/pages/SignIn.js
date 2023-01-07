@@ -36,38 +36,54 @@ export default function Login() {
 
   function handleForm(e) {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm({ ...form, [name]: value.trim() });
+  }
+
+  function checkForm() {
+    const emptyFields = Object.keys(form).filter(key => form[key].trim() === '');
+    if (emptyFields.length > 0) {
+      const last = emptyFields.pop();
+      Swal.fire({
+        icon: 'warning',
+        background: '#151515',
+        text: (`
+        ${(emptyFields.length > 0 ? emptyFields.join(', ') + ' and ' : '') + last} 
+        ${emptyFields.length > 0 ? 'fields' : 'field'} 
+        needs to be filled`
+        .replace('email', 'e-mail'))
+      });
+      return false;
+    } else {
+      return true;
+    }
   }
 
   function signIn(e) {
     e.preventDefault();
-    setFormEnabled(false);
-    axios.post(ROUTES.SIGN_IN_ROUTE, form)
-      .then(res => {
-        console.log(res);
-        localStorage.setItem('Linkr', JSON.stringify(res.data));
-        setToken(res.data.token);
-        delete res.data.token;
-        setUser(res.data);
-        navigate('/timeline');
-      })
-      .catch(err => {
-        Swal.fire({
-          icon: 'error',
-          background: '#151515',
-          title: 'Oops...',
-          text: err.response.data.message
+    if (checkForm()) {
+      setFormEnabled(false);
+      axios.post(ROUTES.SIGN_IN_ROUTE, form)
+        .then(res => {
+          localStorage.setItem('Linkr', JSON.stringify(res.data));
+          setToken(res.data.token);
+          delete res.data.token;
+          setUser(res.data);
+          navigate('/timeline');
+        })
+        .catch(err => {
+          Swal.fire({
+            icon: 'error',
+            background: '#151515',
+            title: 'Oops...',
+            text: err.response.data.message
+          });
+          setForm({
+            ...form,
+            password: ''
+          });
+          setFormEnabled(true);
         });
-        setForm({
-          ...form,
-          password: ''
-        });
-        if (err.response.status === 401) {
-          localStorage.removeItem('Linkr');
-          navigate('/');
-        }
-        setFormEnabled(true);
-      });
+    }
   }
 
   return (
@@ -82,7 +98,6 @@ export default function Login() {
             value={form.email}
             onChange={handleForm}
             disabled={!formEnabled}
-            required
           />
           <input
             type='password'
@@ -91,7 +106,6 @@ export default function Login() {
             value={form.password}
             onChange={handleForm}
             disabled={!formEnabled}
-            required
           />
 
           <button

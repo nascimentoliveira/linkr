@@ -24,8 +24,7 @@ export default function App() {
     <BrowserRouter>
       <UserContext.Provider value={userContext}>
         <Routes>
-          <Route index element={<Navigate replace to='/signin' />} />
-          <Route path='/signin' element={<SignIn />} />
+          <Route index element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/timeline' element={<Timeline />} />
           <Route path='/user/:id' element={<UserPosts />} />
