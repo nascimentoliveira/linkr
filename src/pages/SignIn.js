@@ -44,6 +44,7 @@ export default function Login() {
     setFormEnabled(false);
     axios.post(ROUTES.SIGN_IN_ROUTE, form)
       .then(res => {
+        console.log(res);
         localStorage.setItem('Linkr', JSON.stringify(res.data));
         setToken(res.data.token);
         delete res.data.token;
