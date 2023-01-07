@@ -66,6 +66,7 @@ const Logo = styled.span`
   line-height: 54px;
   color: #FFFFFF;
   padding: 0px 10px;
+  cursor: pointer;
 `;
 
 const Profile = styled.div`
