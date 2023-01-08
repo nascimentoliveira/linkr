@@ -36,8 +36,6 @@ export default function Hashtag() {
       });
   }, [hashtag]);
 
-  console.log(posts)
-
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
