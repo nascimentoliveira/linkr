@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-import ROUTES from '../constants';
+import ROUTES from '../constants.js';
 import UserContext from '../contexts/userContext.js';
-import Hashtag from './Hashtag';
-import Spinner from './Spinner';
+import Hashtag from './Hashtag.js';
+import Spinner from './Spinner.js';
 
 export default function Sidebar() {
 
