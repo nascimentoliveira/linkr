@@ -1,26 +1,40 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import styled from "styled-components";
 import axios from "axios";
 import routes from "../constants";
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
 import { TiHeartFullOutline } from "react-icons/ti";
-import { Tooltip } from "react-tooltip";
+import { CgTrash } from "react-icons/cg";
+import { TiPencil } from "react-icons/ti";
+import { Tooltip, TooltipWrapper } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 import "react-tooltip/dist/react-tooltip.css";
 import UserContext from "../contexts/userContext";
 
 export default function PostCard({ post }) {
-  const { id, text, url, username, picture, title, description, image, userId } = post;
+  const {
+    id,
+    text,
+    url,
+    username,
+    picture,
+    title,
+    description,
+    image,
+    userId,
+  } = post;
+
   const [selecionado, setSelecionado] = useState(false);
   const [countLikes, setCountLikes] = useState(0);
   const [allLikes, setAllLikes] = useState([]);
   const [namesLike, setNamesLike] = useState([]);
   const [result, setResult] = useState("");
-  const {token} = useContext(UserContext)
+  const { token } = useContext(UserContext);
   const navigate = useNavigate();
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
   };
 
   const red = "#AC0000";
@@ -111,12 +125,12 @@ export default function PostCard({ post }) {
   }, [namesLike]);
 
   function like(postId) {
-    const promise = axios.post(`${routes.URL}/likes/${postId}`, postId);
+    const promise = axios.post(`${routes.URL}/likes/${postId}`);
     promise.then(() => {
       setSelecionado(true);
     });
     promise.catch((e) => {
-      console.error(e,'a');
+      console.error(e, "a");
     });
   }
 
@@ -134,15 +148,15 @@ export default function PostCard({ post }) {
     window.open(url);
   }
 
-  function goToProfile(){
-    navigate(`/user/${userId}`)
+  function goToProfile() {
+    navigate(`/user/${userId}`);
   }
 
   return (
     <>
       <Container>
         <Left>
-          <img src={picture} alt="User" onClick={goToProfile}/>
+          <img src={picture} alt="User" onClick={goToProfile} />
           <Likes>
             <HeartIcon
               onClick={() => {
@@ -156,10 +170,12 @@ export default function PostCard({ post }) {
             >
               <TiHeartFullOutline></TiHeartFullOutline>
             </HeartIcon>
-            <a id="custom-inline-styles"> {countLikes} likes </a>
+            <TooltipWrapper>
+              <a id="custom-inline-styles"> {countLikes} likes </a>
+            </TooltipWrapper>
             <Tooltip
               anchorId="custom-inline-styles"
-              place="bottom"
+              place="top"
               style={{ color: "white", fontSize: "12px" }}
               content={countLikes ? `${result}` : null}
             />
@@ -167,7 +183,23 @@ export default function PostCard({ post }) {
         </Left>
 
         <Infos>
-          <h1 onClick={goToProfile}>{username}</h1>
+          <Cont>
+            <h1 onClick={goToProfile}>{username}</h1>
+            <Icons>
+              <TiPencil
+                style={{ cursor: "pointer", color: "white" }}
+                // onClick={() => setIsEditing(!isEditing)}
+              ></TiPencil>
+              <CgTrash
+                style={{ cursor: "pointer", color: "white" }}
+                // onClick={() => {
+                //   setDeletionData({ id, publicationId, index });
+                //   setIsModalOpen(true);
+                // }}
+              ></CgTrash>
+            </Icons>
+          </Cont>
+
           <h2>{text}</h2>
           <UrlBox onClick={(e) => openInNewTab(url)}>
             <UrlInfos>
@@ -182,6 +214,20 @@ export default function PostCard({ post }) {
     </>
   );
 }
+
+const Icons = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 40px;
+`;
+const Cont = styled.div`
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
 
 const Left = styled.div`
   display: flex;
