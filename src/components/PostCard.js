@@ -183,7 +183,7 @@ export default function PostCard({ post }) {
         </Left>
 
         <Infos>
-          <Cont>
+          <EditRem>
             <h1 onClick={goToProfile}>{username}</h1>
             <Icons>
               <TiPencil
@@ -198,7 +198,7 @@ export default function PostCard({ post }) {
                 // }}
               ></CgTrash>
             </Icons>
-          </Cont>
+          </EditRem>
 
           <h2>{text}</h2>
           <UrlBox onClick={(e) => openInNewTab(url)}>
@@ -219,8 +219,9 @@ const Icons = styled.div`
   display: flex;
   justify-content: space-between;
   width: 40px;
+  font-size: 17px;
 `;
-const Cont = styled.div`
+const EditRem = styled.div`
   margin-top: 5px;
   display: flex;
   justify-content: space-between;
@@ -271,7 +272,7 @@ const HeartIcon = styled.div`
   font-size: 26px;
   color: ${(props) => props.color};
   margin-top: 15px;
-  margin-bottom: 4px;
+  margin-bottom: -10px;
   cursor: pointer;
 `;
 
