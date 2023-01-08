@@ -147,8 +147,6 @@ export default function PostCard({ post }) {
     navigate(`/user/${userId}`)
   }
 
-  console.log(description)
-
   return (
     <>
       <Container>
