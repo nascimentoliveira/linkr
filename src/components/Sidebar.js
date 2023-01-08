@@ -42,7 +42,7 @@ export default function Sidebar() {
       <Container>
         <h1>trending</h1>
         <hr />
-        <HashtagsList loading={loading}>
+        <HashtagsList load={loading}>
           <Spinner color='#333333'/>
         </HashtagsList>
       </Container>
@@ -52,7 +52,7 @@ export default function Sidebar() {
       <Container>
         <h1 title='Trending hashtags'>trending</h1>
         <hr />
-        <HashtagsList loading={loading}>
+        <HashtagsList load={loading}>
           {topHashtags.map(hashtag =>
             <Hashtag hashtag={hashtag} key={hashtag.id} />
           )}
@@ -86,7 +86,7 @@ const Container = styled.aside`
 
 const HashtagsList = styled.ul`
   padding: 17px 16px;
-  display: ${props => props.loading ? 'flex' : 'default'};
-  justify-content: ${props => props.loading ? 'center' : 'default'};
-  align-items: ${props => props.loading ? 'center' : 'default'};
+  display: ${props => props.load ? 'flex' : 'default'};
+  justify-content: ${props => props.load ? 'center' : 'default'};
+  align-items: ${props => props.load ? 'center' : 'default'};
 `;
