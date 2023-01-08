@@ -5,8 +5,8 @@ import routes from "../constants";
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
 import { TiHeartFullOutline } from "react-icons/ti";
-import { CgTrash } from "react-icons/cg";
-import { TiPencil } from "react-icons/ti";
+import { FaTrash } from "react-icons/fa";
+import { GoPencil } from "react-icons/go";
 import { Tooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import "react-tooltip/dist/react-tooltip.css";
@@ -96,7 +96,6 @@ export default function PostCard({ post }) {
     for (let i = 0; i < namesLike.length; i++) {
       getName.push(namesLike[i].username);
     }
-
     let res = "";
     if (namesLike.length === 0) {
       res = null;
@@ -157,6 +156,7 @@ export default function PostCard({ post }) {
       <Container>
         <Left>
           <img src={picture} alt="User" onClick={goToProfile} />
+
           <Likes>
             <HeartIcon
               onClick={() => {
@@ -170,6 +170,7 @@ export default function PostCard({ post }) {
             >
               <TiHeartFullOutline></TiHeartFullOutline>
             </HeartIcon>
+
             <TooltipWrapper>
               <a id="custom-inline-styles"> {countLikes} likes </a>
             </TooltipWrapper>
@@ -185,22 +186,21 @@ export default function PostCard({ post }) {
         <Infos>
           <EditRem>
             <h1 onClick={goToProfile}>{username}</h1>
+
             <Icons>
-              <TiPencil
+              <GoPencil
                 style={{ cursor: "pointer", color: "white" }}
-                // onClick={() => setIsEditing(!isEditing)}
-              ></TiPencil>
-              <CgTrash
+                // onClick={() => }
+              ></GoPencil>
+              <FaTrash
                 style={{ cursor: "pointer", color: "white" }}
-                // onClick={() => {
-                //   setDeletionData({ id, publicationId, index });
-                //   setIsModalOpen(true);
-                // }}
-              ></CgTrash>
+                // onClick={() => {}}
+              ></FaTrash>
             </Icons>
           </EditRem>
 
           <h2>{text}</h2>
+
           <UrlBox onClick={(e) => openInNewTab(url)}>
             <UrlInfos>
               <h3>{title}</h3>
@@ -214,21 +214,6 @@ export default function PostCard({ post }) {
     </>
   );
 }
-
-const Icons = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 40px;
-  font-size: 17px;
-`;
-const EditRem = styled.div`
-  margin-top: 5px;
-  display: flex;
-  justify-content: space-between;
-  word-wrap: break-word;
-  text-overflow: ellipsis;
-  overflow: hidden;
-`;
 
 const Left = styled.div`
   display: flex;
@@ -362,4 +347,19 @@ const UrlInfos = styled.div`
     font-size: 11px;
     line-height: 13.2px;
   }
+`;
+
+const Icons = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 35px;
+  font-size: 12px;
+`;
+const EditRem = styled.div`
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
