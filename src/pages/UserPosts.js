@@ -16,9 +16,14 @@ export default function UserPosts() {
   const { id } = useParams();
   const {user,token} = useContext(UserContext);
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
 
   async function fetchData() {
-    const { data, status } = await axios.get(`${routes.URL}/user/${id}`);
+    const { data, status } = await axios.get(`${routes.URL}/user/${id}`,config);
     if (status === 204) {
       setLoading(false);
     }

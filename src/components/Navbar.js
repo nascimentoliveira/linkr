@@ -1,30 +1,46 @@
-import { SlArrowDown, SlArrowUp } from 'react-icons/sl';
-import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
-import styled from 'styled-components';
+import { SlArrowDown, SlArrowUp } from "react-icons/sl";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { DebounceInput } from "react-debounce-input";
+import styled from "styled-components";
+import axios from "axios";
+import ROUTES from "../constants.js";
 
-import UserContext from '../contexts/userContext.js';
+import UserContext from "../contexts/userContext.js";
 
 export default function Navbar() {
-
   const { user } = useContext(UserContext);
   const [showLogout, setshowLogout] = useState(false);
+  const [search, setSearch] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    searchUser();
+    if (search.length < 3) {
+      setSearchResult([]);
+    }
+  }, [search]);
+
+  async function searchUser() {
+    const { data } = await axios.post(`${ROUTES.URL}/search`, { search });
+    setSearchResult(data);
+  }
+
   async function logout() {
-    await (Swal.fire({
-      position: 'center',
-      background: '#151515',
-      icon: 'question',
-      title: 'Do you really want to exit the application?',
+    await Swal.fire({
+      position: "center",
+      background: "#151515",
+      icon: "question",
+      title: "Do you really want to exit the application?",
       showCancelButton: true,
-      cancelButtonText: 'Not',
-      confirmButtonText: 'Yes, I want to leave',
-    })).then(result => {
+      cancelButtonText: "Not",
+      confirmButtonText: "Yes, I want to leave",
+    }).then((result) => {
       if (result.isConfirmed) {
-        localStorage.removeItem('Linkr');
-        navigate('/');
+        localStorage.removeItem("Linkr");
+        navigate("/");
       } else {
         setshowLogout(false);
       }
@@ -33,29 +49,43 @@ export default function Navbar() {
 
   return (
     <Container>
-      <Logo onClick={() => navigate('/timeline')}>linkr</Logo>
+      <Logo onClick={() => navigate("/timeline")}>linkr</Logo>
+      <form>
+        <DebounceInput
+          element={CustomSearchBox}
+          type="text"
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search for people or friends"
+          minLength={3}
+          debounceTimeout={300}
+        />
+          {searchResult.length > 0
+            ? searchResult.map((r) => <SearchResult>{r.username}</SearchResult>)
+            : null}
+      </form>
       <Profile
-        title={showLogout ? 'Close options' : 'Show options'}
+        title={showLogout ? "Close options" : "Show options"}
         onClick={() => setshowLogout(!showLogout)}
       >
         {showLogout ? <SlArrowUp /> : <SlArrowDown />}
         <img src={user.picture} alt={`${user.username} photo`} />
-        {showLogout ?
-          <Logout title='Logout' onClick={logout}>
+        {showLogout ? (
+          <Logout title="Logout" onClick={logout}>
             <button>Logout</button>
           </Logout>
-          :
+        ) : (
           <></>
-        }
+        )}
       </Profile>
-      {showLogout ?
+
+      {showLogout ? (
         <Close
           showLogout={showLogout}
           onClick={() => setshowLogout(!showLogout)}
         />
-        :
+      ) : (
         <></>
-      }
+      )}
     </Container>
   );
 }
@@ -72,16 +102,37 @@ const Container = styled.nav`
   top: 0;
   left: 0;
   z-index: 2;
+  form{
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const Logo = styled.span`
-  font-family: 'Passion One', cursive;
+  font-family: "Passion One", cursive;
   font-weight: 700;
   font-size: 49px;
   line-height: 54px;
-  color: #FFFFFF;
+  color: #ffffff;
   padding: 0px 10px;
   cursor: pointer;
+`;
+
+const CustomSearchBox = styled.input`
+  width: 563px;
+  height: 45px;
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+`;
+
+const SearchArea = styled.div``;
+
+const SearchResult = styled.option`
+position: absolute;
 `;
 
 const Profile = styled.div`
@@ -97,7 +148,7 @@ const Profile = styled.div`
   }
 
   svg {
-    color: #FFFFFF;
+    color: #ffffff;
     font-size: 20px;
     margin-right: 17px;
   }
@@ -124,11 +175,11 @@ const Logout = styled.div`
 
   button {
     width: 100%;
-    font-family: 'Lato', sans-serif;
+    font-family: "Lato", sans-serif;
     font-weight: 700;
     font-size: 17px;
     line-height: 20px;
-    color: #FFFFFF;
+    color: #ffffff;
     outline: none;
     border: none;
     background-color: transparent;

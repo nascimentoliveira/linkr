@@ -17,11 +17,7 @@ export default function PostCard({ post }) {
   const [result, setResult] = useState("");
   const {token} = useContext(UserContext)
   const navigate = useNavigate();
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  };
+  
 
   const red = "#AC0000";
   const white = "#C0C0C0";
