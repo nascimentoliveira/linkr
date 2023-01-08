@@ -50,7 +50,7 @@ export default function Sidebar() {
   } else {
     return (
       <Container>
-        <h1>trending</h1>
+        <h1 title='Trending hashtags'>trending</h1>
         <hr />
         <HashtagsList loading={loading}>
           {topHashtags.map(hashtag =>
@@ -67,6 +67,7 @@ const Container = styled.aside`
   height: fit-content;
   background: #171717;
   border-radius: 16px;
+  cursor: default;
 
   h1 {
     font-family: 'Oswald', sans-serif;
