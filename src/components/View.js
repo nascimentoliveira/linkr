@@ -19,6 +19,20 @@ const View = styled.main`
     justify-content: space-between;
   }
 
+  ::-webkit-scrollbar {
+    width: 1px;
+  }
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #444;
+    box-shadow: 0 0 1px 1px #111, inset 0 0 4px rgba(0,0,0,0.3);
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: linear-gradient(left, #3e3e3e, #111, #000);
+    box-shadow: inset 0 0 1px 1px #646464;
+  }
+
   @media (max-width: 950px) {
     max-width: 610px;
     aside {

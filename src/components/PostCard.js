@@ -79,7 +79,6 @@ export default function PostCard({ post }) {
 
     promise.then(({ data }) => {
       setNamesLike(data);
-      console.log(namesLike);
     });
 
     promise.catch((e) => {
@@ -120,17 +119,17 @@ export default function PostCard({ post }) {
   }, [namesLike]);
 
   function like(postId) {
-    const promise = axios.post(`${routes.URL}/likes/${postId}`, postId);
+    const promise = axios.post(`${routes.URL}/likes/${postId}`, postId,config,);
     promise.then(() => {
       setSelecionado(true);
     });
     promise.catch((e) => {
-      console.error(e, 'a');
+      console.error(e);
     });
   }
 
   function dislike(postId) {
-    const promise = axios.delete(`${routes.URL}/dislikes/${postId}`);
+    const promise = axios.delete(`${routes.URL}/dislikes/${postId}`,config);
     promise.then(() => {
       setSelecionado(false);
     });
@@ -148,10 +147,9 @@ export default function PostCard({ post }) {
   }
 
   return (
-    <>
       <Container>
         <Left>
-          <img src={picture} alt="User" onClick={goToProfile} />
+          <img src={picture} alt="User" onClick={()=>goToProfile(userId)} />
           <Likes>
             <HeartIcon
               onClick={() => {
@@ -196,7 +194,6 @@ export default function PostCard({ post }) {
           </UrlBox>
         </Infos>
       </Container>
-    </>
   );
 }
 
@@ -253,15 +250,21 @@ const Infos = styled.div`
   justify-content: space-around;
   word-wrap: break-word;
   text-overflow: ellipsis;
-  overflow: hidden;
+  overflow-y:auto;
   h1{
     cursor: pointer;
+    margin-bottom: 8px;
   }
+  span {
+    padding: 0;
+    margin-bottom: 5px;
+  }
+
 `;
 
 const Container = styled.section`
   width: 100%;
-  min-height: 276px;
+  height: auto;
   border-radius: 16px;
   background-color: #171717;
   font-family: "Lato", sans-serif;
