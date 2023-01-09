@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import axios from "axios";
 import routes from "../constants";
+import { ReactTagify } from "react-tagify";
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
 import { TiHeartFullOutline } from "react-icons/ti";
@@ -15,8 +16,17 @@ export default function PostCard({ post }) {
   const [allLikes, setAllLikes] = useState([]);
   const [namesLike, setNamesLike] = useState([]);
   const [result, setResult] = useState("");
-  const {token} = useContext(UserContext)
+  const { token } = useContext(UserContext)
   const navigate = useNavigate();
+
+  const tagStyle = {
+    fontFamily: 'Lato, sans-serif',
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: 700,
+    cursor: 'pointer'
+  };
+
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -103,9 +113,8 @@ export default function PostCard({ post }) {
       res = `You, ${getName[0]} and other ${countLikes - 2} people liked`;
       setResult(res);
     } else if (getName.length >= 3 && !selecionado) {
-      res = `${getName[0]}, ${getName[1]} and other ${
-        countLikes - 2
-      } people liked`;
+      res = `${getName[0]}, ${getName[1]} and other ${countLikes - 2
+        } people liked`;
       setResult(res);
     }
   }, [namesLike]);
@@ -116,7 +125,7 @@ export default function PostCard({ post }) {
       setSelecionado(true);
     });
     promise.catch((e) => {
-      console.error(e,'a');
+      console.error(e, 'a');
     });
   }
 
@@ -134,7 +143,7 @@ export default function PostCard({ post }) {
     window.open(url);
   }
 
-  function goToProfile(){
+  function goToProfile() {
     navigate(`/user/${userId}`)
   }
 
@@ -142,7 +151,7 @@ export default function PostCard({ post }) {
     <>
       <Container>
         <Left>
-          <img src={picture} alt="User" onClick={goToProfile}/>
+          <img src={picture} alt="User" onClick={goToProfile} />
           <Likes>
             <HeartIcon
               onClick={() => {
@@ -168,7 +177,15 @@ export default function PostCard({ post }) {
 
         <Infos>
           <h1 onClick={goToProfile}>{username}</h1>
-          <h2>{text}</h2>
+          <ReactTagify
+            tagStyle={tagStyle}
+            tagClicked={(tag, e) => {
+              navigate(`/hashtag/${tag.substr(1)}`);
+              e.stopPropagation();
+            }}
+          >
+            <h2>{text}</h2>
+          </ReactTagify>
           <UrlBox onClick={(e) => openInNewTab(url)}>
             <UrlInfos>
               <h3>{title}</h3>
