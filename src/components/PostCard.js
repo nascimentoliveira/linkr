@@ -2,6 +2,7 @@
 import styled from "styled-components";
 import axios from "axios";
 import routes from "../constants";
+import { ReactTagify } from "react-tagify";
 import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router";
 import { TiHeartFullOutline } from "react-icons/ti";
@@ -215,9 +216,15 @@ export default function PostCard({ post }) {
               ></FaTrash>
             </Icons>
           </EditRem>
-
-          <h2>{text}</h2>
-
+          <ReactTagify
+            tagStyle={tagStyle}
+            tagClicked={(tag, e) => {
+              navigate(`/hashtag/${tag.substr(1)}`);
+              e.stopPropagation();
+            }}
+          >
+            <h2>{text}</h2>
+          </ReactTagify>
           <UrlBox onClick={(e) => openInNewTab(url)}>
             <UrlInfos>
               <h3>{title}</h3>
