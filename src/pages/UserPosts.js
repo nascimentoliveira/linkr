@@ -30,10 +30,11 @@ export default function UserPosts() {
     );
     if (status === 204) {
       setLoading(false);
-    }
+    } else {
     setPosts(data);
     setUsername(data[0].username);
     setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -61,7 +62,7 @@ export default function UserPosts() {
                 />
               </Loading>
             ) : posts.length === 0 ? (
-              <h1>There are no posts yet.</h1>
+              <h6>There are no posts yet.</h6>
             ) : (
               posts.map((p) => <PostCard post={p} key={p.id} />)
             )}
@@ -77,6 +78,14 @@ const Container = styled.article`
   display: flex;
   flex-direction: column;
   align-items: center;
+  h6 {
+    padding: 43px 0px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 43px;
+    line-height: 64px;
+    color: #FFFFFF;
+  }
 `;
 
 const Loading = styled.div`
