@@ -2,13 +2,12 @@
 import styled from "styled-components";
 import axios from "axios";
 import routes from "../constants";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router";
 import { TiHeartFullOutline } from "react-icons/ti";
 import { FaTrash } from "react-icons/fa";
 import { GoPencil } from "react-icons/go";
 import { Tooltip, TooltipWrapper } from "react-tooltip";
-import "react-tooltip/dist/react-tooltip.css";
 import "react-tooltip/dist/react-tooltip.css";
 import UserContext from "../contexts/userContext";
 
@@ -30,12 +29,19 @@ export default function PostCard({ post }) {
   const [allLikes, setAllLikes] = useState([]);
   const [namesLike, setNamesLike] = useState([]);
   const [result, setResult] = useState("");
+  const [edit, setEdit] = useState(false);
+  const [notEdit, setNotEdit] = useState(false);
   const { token } = useContext(UserContext);
   const navigate = useNavigate();
+  const inputRef = useRef(null);
 
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
+  const config = {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
   };
+
+  const objeto = {};
 
   const red = "#AC0000";
   const white = "#C0C0C0";
@@ -55,6 +61,12 @@ export default function PostCard({ post }) {
   let likesFilter = allLikes.find(
     (like) => like.postId === id && like.userId === 2
   );
+  
+  useEffect(() => {
+    if (edit) {
+      inputRef.current.focus();
+    } 
+  }, [edit, notEdit]);
 
   useEffect(() => {
     if (likesFilter) {
@@ -124,7 +136,7 @@ export default function PostCard({ post }) {
   }, [namesLike]);
 
   function like(postId) {
-    const promise = axios.post(`${routes.URL}/likes/${postId}`);
+    const promise = axios.post(`${routes.URL}/likes/${postId}`, objeto, config);
     promise.then(() => {
       setSelecionado(true);
     });
@@ -134,7 +146,7 @@ export default function PostCard({ post }) {
   }
 
   function dislike(postId) {
-    const promise = axios.delete(`${routes.URL}/dislikes/${postId}`);
+    const promise = axios.delete(`${routes.URL}/dislikes/${postId}`, config);
     promise.then(() => {
       setSelecionado(false);
     });
@@ -190,7 +202,7 @@ export default function PostCard({ post }) {
             <Icons>
               <GoPencil
                 style={{ cursor: "pointer", color: "white" }}
-                // onClick={() => }
+                onClick={() => setEdit(!edit)}
               ></GoPencil>
               <FaTrash
                 style={{ cursor: "pointer", color: "white" }}
