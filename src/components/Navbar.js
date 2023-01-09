@@ -16,10 +16,12 @@ export default function Navbar() {
   const [searchResult, setSearchResult] = useState([]);
   const navigate = useNavigate();
 
+
   useEffect(() => {
-    searchUser();
     if (search.length < 3) {
       setSearchResult([]);
+    } else {
+      searchUser();
     }
   }, [search]);
 
@@ -47,22 +49,35 @@ export default function Navbar() {
     });
   }
 
+  function goToProfile(id) {
+    navigate(`/user/${id}`);
+  }
+
   return (
     <Container>
       <Logo onClick={() => navigate("/timeline")}>linkr</Logo>
-      <form>
+      <SearchArea>
         <DebounceInput
-          element={CustomSearchBox}
+          element={InputArea}
           type="text"
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search for people or friends"
           minLength={3}
           debounceTimeout={300}
+          placeholder={"Search for people and friends"}
         />
-          {searchResult.length > 0
-            ? searchResult.map((r) => <SearchResult>{r.username}</SearchResult>)
+        <ul>
+          {searchResult.length != 0
+            ? searchResult.map(({ id, picture, username }) => {
+                return (
+                  <SearchResult onClick={() => goToProfile(id)} key={id}>
+                    <img src={picture} alt="User" />
+                    {username}
+                  </SearchResult>
+                );
+              })
             : null}
-      </form>
+        </ul>
+      </SearchArea>
       <Profile
         title={showLogout ? "Close options" : "Show options"}
         onClick={() => setshowLogout(!showLogout)}
@@ -87,7 +102,7 @@ export default function Navbar() {
         <></>
       )}
     </Container>
-  );
+  )
 }
 
 const Container = styled.nav`
@@ -102,10 +117,6 @@ const Container = styled.nav`
   top: 0;
   left: 0;
   z-index: 2;
-  form{
-    display: flex;
-    flex-direction: column;
-  }
 `;
 
 const Logo = styled.span`
@@ -118,21 +129,71 @@ const Logo = styled.span`
   cursor: pointer;
 `;
 
-const CustomSearchBox = styled.input`
-  width: 563px;
-  height: 45px;
+const InputArea = styled.input`
+  width: 100%;
   border-radius: 8px;
   background-color: #fff;
   padding: 10px;
   display: flex;
   justify-content: space-between;
   position: relative;
+  border: none;
+  outline: none;
+  ::placeholder {
+    display: flex;
+    justify-content: space-between;
+    color: #c6c6c6;
+    font-size: 19px;
+  }
+  &:focus {
+    outline: none;
+    border-radius: 8px 8px 0 0 ;
+  }
 `;
 
-const SearchArea = styled.div``;
+const SearchArea = styled.div`
+  position: relative;
+  width: 400px;
+  height: 45px;
+  ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: auto;
+    position: absolute;
+    width: 100%;
+    li:last-child {
+      border-radius: 0 0 8px 8px;
+    }
+  }
+   @media (max-width:610px) {
+    position: absolute;
+    top: 85px; 
+    width: 95%;
+    left: auto;
+    right: auto;
+  } 
+`;
 
-const SearchResult = styled.option`
-position: absolute;
+const SearchResult = styled.li`
+  cursor: pointer;
+  width: 100%;
+  background-color: #e7e7e7;
+  height: 55px;
+  padding: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: #515151;
+  font-family: "Lato", sans-serif;
+  font-size: 19px;
+  font-weight: 400;
+  img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
 `;
 
 const Profile = styled.div`

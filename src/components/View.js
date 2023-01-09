@@ -28,7 +28,7 @@ const View = styled.main`
   }
 
   @media (max-width: 610px) {
-    padding-top: 72px;
+    padding-top: 122px;
     > h1 {
       padding: 19px 17px;
     }
