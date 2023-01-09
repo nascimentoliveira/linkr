@@ -25,6 +25,7 @@ export default function Timeline() {
 
   async function fetchData() {
     const { data } = await axios.get(routes.TIMELINE_ROUTE,config);
+    console.log(data)
     setPosts(data);
     setLoading(false);
   }
