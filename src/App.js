@@ -1,7 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
-
-
+import { useState, useEffect } from 'react'
 import SignIn from './pages/SignIn.js';
 import SignUp from './pages/SignUp.js';
 import Timeline from './pages/Timeline.js';
@@ -13,14 +11,23 @@ import './assets/styles/style.css';
 import UserContext from './contexts/userContext.js';
 
 export default function App() {
+  // const tokenStorage = JSON.parse(localStorage.getItem("token"));
+  // const [token, setToken] = useState(tokenStorage);
   const [token, setToken] = useState("");
   const [user, setUser] = useState({ username: '', picture: '', email: '' });
+
+  // useEffect(() => {
+  //   if (tokenStorage) {
+  //     setToken(tokenStorage);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const userContext = {
     token,
     setToken,
     user, 
-    setUser
+    setUser 
   };
 
   return (

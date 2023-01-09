@@ -1,36 +1,51 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import styled from "styled-components";
 import axios from "axios";
 import routes from "../constants";
-import { ReactTagify } from "react-tagify";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router";
 import { TiHeartFullOutline } from "react-icons/ti";
-import { Tooltip } from "react-tooltip";
+import { FaTrash } from "react-icons/fa";
+import { GoPencil } from "react-icons/go";
+import { Tooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import UserContext from "../contexts/userContext";
 
 export default function PostCard({ post }) {
-  const { id, text, url, username, picture, title, description, image, userId } = post;
+  const {
+    id,
+    text,
+    url,
+    username,
+    picture,
+    title,
+    description,
+    image,
+    userId,
+  } = post;
+
   const [selecionado, setSelecionado] = useState(false);
   const [countLikes, setCountLikes] = useState(0);
   const [allLikes, setAllLikes] = useState([]);
   const [namesLike, setNamesLike] = useState([]);
   const [result, setResult] = useState("");
+  const [edit, setEdit] = useState(false);
+  const [notEdit, setNotEdit] = useState(false);
   const { token } = useContext(UserContext)
   const navigate = useNavigate();
 
   const tagStyle = {
-    fontFamily: 'Lato, sans-serif',
-    color: '#FFFFFF',
+    fontFamily: "Lato, sans-serif",
+    color: "#FFFFFF",
     fontSize: 17,
     fontWeight: 700,
-    cursor: 'pointer'
+    cursor: "pointer",
   };
 
   const config = {
     headers: {
-      Authorization: `Bearer ${token}`
-    }
+      authorization: `Bearer ${token}`,
+    },
   };
 
   const red = "#AC0000";
@@ -51,6 +66,12 @@ export default function PostCard({ post }) {
   let likesFilter = allLikes.find(
     (like) => like.postId === id && like.userId === 2
   );
+
+  useEffect(() => {
+    if (edit) {
+      // inputRef.current.focus();
+    }
+  }, [edit, notEdit]);
 
   useEffect(() => {
     if (likesFilter) {
@@ -91,7 +112,6 @@ export default function PostCard({ post }) {
     for (let i = 0; i < namesLike.length; i++) {
       getName.push(namesLike[i].username);
     }
-
     let res = "";
     if (namesLike.length === 0) {
       res = null;
@@ -112,8 +132,9 @@ export default function PostCard({ post }) {
       res = `You, ${getName[0]} and other ${countLikes - 2} people liked`;
       setResult(res);
     } else if (getName.length >= 3 && !selecionado) {
-      res = `${getName[0]}, ${getName[1]} and other ${countLikes - 2
-        } people liked`;
+      res = `${getName[0]}, ${getName[1]} and other ${
+        countLikes - 2
+      } people liked`;
       setResult(res);
     }
   }, [namesLike]);
@@ -129,7 +150,8 @@ export default function PostCard({ post }) {
   }
 
   function dislike(postId) {
-    const promise = axios.delete(`${routes.URL}/dislikes/${postId}`,config);
+    const promise = axios.delete(`${routes.URL}/dislikes/${postId}`, config);
+
     promise.then(() => {
       setSelecionado(false);
     });
@@ -143,13 +165,14 @@ export default function PostCard({ post }) {
   }
 
   function goToProfile(userId) {
-    navigate(`/user/${userId}`)
+    navigate(`/user/${userId}`);
   }
 
   return (
       <Container>
         <Left>
           <img src={picture} alt="User" onClick={()=>goToProfile(userId)} />
+
           <Likes>
             <HeartIcon
               onClick={() => {
@@ -163,27 +186,38 @@ export default function PostCard({ post }) {
             >
               <TiHeartFullOutline></TiHeartFullOutline>
             </HeartIcon>
+
+          <TooltipWrapper>
             <a id="custom-inline-styles"> {countLikes} likes </a>
-            <Tooltip
-              anchorId="custom-inline-styles"
-              place="bottom"
-              style={{ color: "white", fontSize: "12px" }}
-              content={countLikes ? `${result}` : null}
-            />
-          </Likes>
-        </Left>
+          </TooltipWrapper>
+          <Tooltip
+            anchorId="custom-inline-styles"
+            place="top"
+            style={{ color: "white", fontSize: "12px" }}
+            content={countLikes ? `${result}` : null}
+          />
+        </Likes>
+      </Left>
 
         <Infos>
-          <h1 onClick={()=>goToProfile(userId)}>{username}</h1>
-          <ReactTagify
-            tagStyle={tagStyle}
-            tagClicked={(tag, e) => {
-              navigate(`/hashtag/${tag.substr(1)}`);
-              e.stopPropagation();
-            }}
-          >
-            <h2>{text}</h2>
-          </ReactTagify>
+
+          <EditRem>
+            <h1 onClick={goToProfile}>{username}</h1>
+
+            <Icons>
+              <GoPencil
+                style={{ cursor: "pointer", color: "white" }}
+                onClick={() => setEdit(!edit)}
+              ></GoPencil>
+              <FaTrash
+                style={{ cursor: "pointer", color: "white" }}
+                // onClick={() => {}}
+              ></FaTrash>
+            </Icons>
+          </EditRem>
+
+          <h2>{text}</h2>
+
           <UrlBox onClick={(e) => openInNewTab(url)}>
             <UrlInfos>
               <h3>{title}</h3>
@@ -239,7 +273,7 @@ const HeartIcon = styled.div`
   font-size: 26px;
   color: ${(props) => props.color};
   margin-top: 15px;
-  margin-bottom: 4px;
+  margin-bottom: -10px;
   cursor: pointer;
 `;
 
@@ -250,8 +284,8 @@ const Infos = styled.div`
   justify-content: space-around;
   word-wrap: break-word;
   text-overflow: ellipsis;
-  overflow-y:auto;
-  h1{
+  overflow-y: auto;
+  h1 {
     cursor: pointer;
     margin-bottom: 8px;
   }
@@ -259,7 +293,6 @@ const Infos = styled.div`
     padding: 0;
     margin-bottom: 5px;
   }
-
 `;
 
 const Container = styled.section`
@@ -338,4 +371,19 @@ const UrlInfos = styled.div`
     font-size: 11px;
     line-height: 13.2px;
   }
+`;
+
+const Icons = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 35px;
+  font-size: 12px;
+`;
+const EditRem = styled.div`
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
