@@ -202,7 +202,7 @@ export default function PostCard({ post }) {
         <Infos>
 
           <EditRem>
-            <h1 onClick={goToProfile}>{username}</h1>
+            <h1 onClick={()=>goToProfile(userId)}>{username}</h1>
 
             <Icons>
               <GoPencil
