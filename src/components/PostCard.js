@@ -143,7 +143,7 @@ export default function PostCard({ post }) {
     window.open(url);
   }
 
-  function goToProfile() {
+  function goToProfile(userId) {
     navigate(`/user/${userId}`)
   }
 
@@ -176,7 +176,7 @@ export default function PostCard({ post }) {
         </Left>
 
         <Infos>
-          <h1 onClick={goToProfile}>{username}</h1>
+          <h1 onClick={()=>goToProfile(userId)}>{username}</h1>
           <ReactTagify
             tagStyle={tagStyle}
             tagClicked={(tag, e) => {
@@ -254,6 +254,9 @@ const Infos = styled.div`
   word-wrap: break-word;
   text-overflow: ellipsis;
   overflow: hidden;
+  h1{
+    cursor: pointer;
+  }
 `;
 
 const Container = styled.section`

@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar.js";
 import View from "../components/View.js";
 import PostCard from "../components/PostCard.js";
+import Sidebar from "../components/Sidebar.js";
 import routes from "../constants.js";
 import UserContext from "../contexts/userContext.js";
 
@@ -14,11 +15,19 @@ export default function UserPosts() {
   const [posts, setPosts] = useState([]);
   const [username, setUsername] = useState();
   const { id } = useParams();
-  const {user,token} = useContext(UserContext);
+  const { token } = useContext(UserContext);
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   async function fetchData() {
-    const { data, status } = await axios.get(`${routes.URL}/user/${id}`);
+    const { data, status } = await axios.get(
+      `${routes.URL}/user/${id}`,
+      config
+    );
     if (status === 204) {
       setLoading(false);
     }
@@ -32,34 +41,53 @@ export default function UserPosts() {
   }, []);
 
   return (
-    <>
+    <Container>
       <Navbar />
       <View>
-        <span>{loading ? null : username ? username + "`s posts" : null}</span>
-        {loading ? (
-          <Loading>
-            <ThreeDots
-              height="100"
-              width="150"
-              radius="9"
-              color="#fff"
-              ariaLabel="three-dots-loading"
-              wrapperStyle={{}}
-              wrapperClassName=""
-              visible={true}
-            />
-          </Loading>
-        ) : posts.length === 0 ? (
-          <span>There are no posts yet.</span>
-        ) : (
-          posts.map((p) => <PostCard post={p} key={p.id} />)
-        )}
+        <h1>{loading ? null : username ? username + "`s posts" : null}</h1>
+        <div>
+          <Posts>
+            {loading ? (
+              <Loading>
+                <ThreeDots
+                  height="100"
+                  width="150"
+                  radius="9"
+                  color="#fff"
+                  ariaLabel="three-dots-loading"
+                  wrapperStyle={{}}
+                  wrapperClassName=""
+                  visible={true}
+                />
+              </Loading>
+            ) : posts.length === 0 ? (
+              <h1>There are no posts yet.</h1>
+            ) : (
+              posts.map((p) => <PostCard post={p} key={p.id} />)
+            )}
+          </Posts>
+          <Sidebar />
+        </div>
       </View>
-    </>
+    </Container>
   );
 }
+const Container = styled.article`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const Loading = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+const Posts = styled.div`
+  max-width: 610px;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 `;

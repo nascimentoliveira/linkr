@@ -17,8 +17,14 @@ export default function Timeline() {
   const [render, setRender] = useState(true)
   const { user, token } = useContext(UserContext);
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
+
   async function fetchData() {
-    const { data } = await axios.get(routes.TIMELINE_ROUTE);
+    const { data } = await axios.get(routes.TIMELINE_ROUTE,config);
     setPosts(data);
     setLoading(false);
   }
