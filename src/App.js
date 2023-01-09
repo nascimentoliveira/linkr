@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react'
-
+import { useState, useEffect } from 'react'
 import SignIn from './pages/SignIn.js';
 import SignUp from './pages/SignUp.js';
 import Timeline from './pages/Timeline.js';

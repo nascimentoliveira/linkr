@@ -3,7 +3,6 @@ import styled from "styled-components";
 import axios from "axios";
 import routes from "../constants";
 import { useState, useEffect, useContext, useRef } from "react";
-import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router";
 import { TiHeartFullOutline } from "react-icons/ti";
 import { FaTrash } from "react-icons/fa";
@@ -32,8 +31,7 @@ export default function PostCard({ post }) {
   const [result, setResult] = useState("");
   const [edit, setEdit] = useState(false);
   const [notEdit, setNotEdit] = useState(false);
-  const inputRef = useRef(null);
-  const { token } = useContext(UserContext);
+  const { token } = useContext(UserContext)
   const navigate = useNavigate();
 
   const tagStyle = {
@@ -49,8 +47,6 @@ export default function PostCard({ post }) {
       authorization: `Bearer ${token}`,
     },
   };
-
-  const objeto = {};
 
   const red = "#AC0000";
   const white = "#C0C0C0";
@@ -73,7 +69,7 @@ export default function PostCard({ post }) {
 
   useEffect(() => {
     if (edit) {
-      inputRef.current.focus();
+      // inputRef.current.focus();
     }
   }, [edit, notEdit]);
 
@@ -144,15 +140,18 @@ export default function PostCard({ post }) {
   }, [namesLike]);
 
   function like(postId) {
-    const promise = axios.post(`${routes.URL}/likes/${postId}`, postId, config);
+    const promise = axios.post(`${routes.URL}/likes/${postId}`, postId,config,);
     promise.then(() => {
       setSelecionado(true);
     });
-    promise.catch((e) => {});
+    promise.catch((e) => {
+      console.error(e);
+    });
   }
 
   function dislike(postId) {
     const promise = axios.delete(`${routes.URL}/dislikes/${postId}`, config);
+
     promise.then(() => {
       setSelecionado(false);
     });
@@ -170,22 +169,23 @@ export default function PostCard({ post }) {
   }
 
   return (
-    <Container>
-      <Left>
-        <img src={picture} alt="User" onClick={() => goToProfile(userId)} />
-        <Likes>
-          <HeartIcon
-            onClick={() => {
-              if (selecionado === false) {
-                like(id);
-              } else if (selecionado === true) {
-                dislike(id);
-              }
-            }}
-            color={selecionado === false ? white : red}
-          >
-            <TiHeartFullOutline></TiHeartFullOutline>
-          </HeartIcon>
+      <Container>
+        <Left>
+          <img src={picture} alt="User" onClick={()=>goToProfile(userId)} />
+
+          <Likes>
+            <HeartIcon
+              onClick={() => {
+                if (selecionado === false) {
+                  like(id);
+                } else if (selecionado === true) {
+                  dislike(id);
+                }
+              }}
+              color={selecionado === false ? white : red}
+            >
+              <TiHeartFullOutline></TiHeartFullOutline>
+            </HeartIcon>
 
           <TooltipWrapper>
             <a id="custom-inline-styles"> {countLikes} likes </a>
@@ -199,41 +199,35 @@ export default function PostCard({ post }) {
         </Likes>
       </Left>
 
-      <Infos>
-        <EditRem>
-          <h1 onClick={() => goToProfile(userId)}>{username}</h1>
+        <Infos>
 
-          <Icons>
-            <GoPencil
-              style={{ cursor: "pointer", color: "white" }}
-              onClick={() => setEdit(!edit)}
-            ></GoPencil>
-            <FaTrash
-              style={{ cursor: "pointer", color: "white" }}
-              // onClick={() => {}}
-            ></FaTrash>
-          </Icons>
-        </EditRem>
+          <EditRem>
+            <h1 onClick={goToProfile}>{username}</h1>
 
-        <ReactTagify
-          tagStyle={tagStyle}
-          tagClicked={(tag, e) => {
-            navigate(`/hashtag/${tag.substr(1)}`);
-            e.stopPropagation();
-          }}
-        >
+            <Icons>
+              <GoPencil
+                style={{ cursor: "pointer", color: "white" }}
+                onClick={() => setEdit(!edit)}
+              ></GoPencil>
+              <FaTrash
+                style={{ cursor: "pointer", color: "white" }}
+                // onClick={() => {}}
+              ></FaTrash>
+            </Icons>
+          </EditRem>
+
           <h2>{text}</h2>
-        </ReactTagify>
-        <UrlBox onClick={(e) => openInNewTab(url)}>
-          <UrlInfos>
-            <h3>{title}</h3>
-            <p>{description}</p>
-            <h4>{url}</h4>
-          </UrlInfos>
-          <img src={image} alt="Url Image" />
-        </UrlBox>
-      </Infos>
-    </Container>
+
+          <UrlBox onClick={(e) => openInNewTab(url)}>
+            <UrlInfos>
+              <h3>{title}</h3>
+              <p>{description}</p>
+              <h4>{url}</h4>
+            </UrlInfos>
+            <img src={image} alt="Url Image" />
+          </UrlBox>
+        </Infos>
+      </Container>
   );
 }
 
