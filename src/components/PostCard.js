@@ -3,6 +3,8 @@ import styled from "styled-components";
 import axios from "axios";
 import routes from "../constants";
 import { useState, useEffect, useContext, useRef } from "react";
+import { ReactTagify } from "react-tagify";
+
 import { useNavigate } from "react-router";
 import { TiHeartFullOutline } from "react-icons/ti";
 import { FaTrash } from "react-icons/fa";
@@ -31,9 +33,17 @@ export default function PostCard({ post }) {
   const [result, setResult] = useState("");
   const [edit, setEdit] = useState(false);
   const [notEdit, setNotEdit] = useState(false);
-  const { token } = useContext(UserContext);
-  const navigate = useNavigate();
   const inputRef = useRef(null);
+  const { token } = useContext(UserContext)
+  const navigate = useNavigate();
+
+  const tagStyle = {
+    fontFamily: 'Lato, sans-serif',
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: 700,
+    cursor: 'pointer'
+  };
 
   const config = {
     headers: {
@@ -95,7 +105,6 @@ export default function PostCard({ post }) {
 
     promise.then(({ data }) => {
       setNamesLike(data);
-      console.log(namesLike);
     });
 
     promise.catch((e) => {
@@ -128,25 +137,26 @@ export default function PostCard({ post }) {
       res = `You, ${getName[0]} and other ${countLikes - 2} people liked`;
       setResult(res);
     } else if (getName.length >= 3 && !selecionado) {
-      res = `${getName[0]}, ${getName[1]} and other ${
-        countLikes - 2
-      } people liked`;
+      res = `${getName[0]}, ${getName[1]} and other ${countLikes - 2
+        } people liked`;
       setResult(res);
     }
   }, [namesLike]);
 
   function like(postId) {
-    const promise = axios.post(`${routes.URL}/likes/${postId}`, objeto, config);
+    const promise = axios.post(`${routes.URL}/likes/${postId}`, postId,config,);
+
     promise.then(() => {
       setSelecionado(true);
     });
     promise.catch((e) => {
-      console.error(e, "a");
     });
   }
 
   function dislike(postId) {
+
     const promise = axios.delete(`${routes.URL}/dislikes/${postId}`, config);
+
     promise.then(() => {
       setSelecionado(false);
     });
@@ -159,16 +169,14 @@ export default function PostCard({ post }) {
     window.open(url);
   }
 
-  function goToProfile() {
+  function goToProfile(userId) {
     navigate(`/user/${userId}`);
   }
 
   return (
-    <>
       <Container>
         <Left>
-          <img src={picture} alt="User" onClick={goToProfile} />
-
+          <img src={picture} alt="User" onClick={()=>goToProfile(userId)} />
           <Likes>
             <HeartIcon
               onClick={() => {
@@ -197,7 +205,7 @@ export default function PostCard({ post }) {
 
         <Infos>
           <EditRem>
-            <h1 onClick={goToProfile}>{username}</h1>
+            <h1 onClick={()=>goToProfile(userId)}>{username}</h1>
 
             <Icons>
               <GoPencil
@@ -210,9 +218,15 @@ export default function PostCard({ post }) {
               ></FaTrash>
             </Icons>
           </EditRem>
-
-          <h2>{text}</h2>
-
+          <ReactTagify
+            tagStyle={tagStyle}
+            tagClicked={(tag, e) => {
+              navigate(`/hashtag/${tag.substr(1)}`);
+              e.stopPropagation();
+            }}
+          >
+            <h2>{text}</h2>
+          </ReactTagify>
           <UrlBox onClick={(e) => openInNewTab(url)}>
             <UrlInfos>
               <h3>{title}</h3>
@@ -223,7 +237,6 @@ export default function PostCard({ post }) {
           </UrlBox>
         </Infos>
       </Container>
-    </>
   );
 }
 
@@ -280,12 +293,21 @@ const Infos = styled.div`
   justify-content: space-around;
   word-wrap: break-word;
   text-overflow: ellipsis;
-  overflow: hidden;
+  overflow-y:auto;
+  h1{
+    cursor: pointer;
+    margin-bottom: 8px;
+  }
+  span {
+    padding: 0;
+    margin-bottom: 5px;
+  }
+
 `;
 
 const Container = styled.section`
   width: 100%;
-  min-height: 276px;
+  height: auto;
   border-radius: 16px;
   background-color: #171717;
   font-family: "Lato", sans-serif;

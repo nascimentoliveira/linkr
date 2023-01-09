@@ -1,16 +1,11 @@
 import styled from 'styled-components';
 
 const View = styled.main`
-  max-width: 610px;
-  width: 100%;
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
   padding-top: 60px;
-  cursor: default;
+  max-width: 950px;
+  width: 100%;
 
-  > span {
+  > h1 {
     padding: 43px 0px;
     font-family: 'Oswald', sans-serif;
     font-weight: 700;
@@ -19,9 +14,36 @@ const View = styled.main`
     color: #FFFFFF;
   }
 
+  > div {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  ::-webkit-scrollbar {
+    width: 1px;
+  }
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #444;
+    box-shadow: 0 0 1px 1px #111, inset 0 0 4px rgba(0,0,0,0.3);
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: linear-gradient(left, #3e3e3e, #111, #000);
+    box-shadow: inset 0 0 1px 1px #646464;
+  }
+
+  @media (max-width: 950px) {
+    max-width: 610px;
+    aside {
+      display: none;
+    }
+
+  }
+
   @media (max-width: 610px) {
-    padding-top: 72px;
-    > span {
+    padding-top: 122px;
+    > h1 {
       padding: 19px 17px;
     }
   }

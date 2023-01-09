@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-import ROUTES from '../constants';
+import ROUTES from '../constants.js';
 import UserContext from '../contexts/userContext.js';
-import Hashtag from './Hashtag';
+import Hashtag from './Hashtag.js';
+import Spinner from './Spinner.js';
 
 export default function Sidebar() {
 
@@ -36,17 +37,29 @@ export default function Sidebar() {
       });
   }, []);
 
-  return (
-    <Container>
-      <h1>trending</h1>
-      <hr />
-      <HashtagsList>
-        {topHashtags.map(hashtag =>
-          <Hashtag hashtag={hashtag} key={hashtag.id} />
-        )}
-      </HashtagsList>
-    </Container>
-  );
+  if (loading) {
+    return (
+      <Container>
+        <h1>trending</h1>
+        <hr />
+        <HashtagsList load={loading}>
+          <Spinner color='#333333'/>
+        </HashtagsList>
+      </Container>
+    );
+  } else {
+    return (
+      <Container>
+        <h1 title='Trending hashtags'>trending</h1>
+        <hr />
+        <HashtagsList load={loading}>
+          {topHashtags.map(hashtag =>
+            <Hashtag hashtag={hashtag} key={hashtag.id} />
+          )}
+        </HashtagsList>
+      </Container>
+    );
+  }
 }
 
 const Container = styled.aside`
@@ -54,6 +67,7 @@ const Container = styled.aside`
   height: fit-content;
   background: #171717;
   border-radius: 16px;
+  cursor: default;
 
   h1 {
     font-family: 'Oswald', sans-serif;
@@ -72,4 +86,7 @@ const Container = styled.aside`
 
 const HashtagsList = styled.ul`
   padding: 17px 16px;
+  display: ${props => props.load ? 'flex' : 'default'};
+  justify-content: ${props => props.load ? 'center' : 'default'};
+  align-items: ${props => props.load ? 'center' : 'default'};
 `;
