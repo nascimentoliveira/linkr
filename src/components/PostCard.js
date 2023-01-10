@@ -292,9 +292,9 @@ const Infos = styled.div`
   word-wrap: break-word;
   text-overflow: ellipsis;
   overflow-y: auto;
+  position: relative;
   h1 {
     cursor: pointer;
-    margin-bottom: 8px;
   }
   span {
     padding: 0;
@@ -313,11 +313,9 @@ const Container = styled.section`
   display: flex;
   justify-content: space-between;
   padding: 20px 20px 20px 5px;
-
   h1 {
     color: white;
     font-size: 19px;
-    margin-bottom: 7px;
   }
   h2 {
     color: #b7b7b7;
@@ -359,7 +357,6 @@ const UrlInfos = styled.div`
   align-items: flex-start;
   justify-content: space-around;
   padding: 2%;
-
   position: relative;
   h3 {
     font-size: 16px;
@@ -386,11 +383,9 @@ const Icons = styled.div`
   width: 35px;
   font-size: 12px;
 `;
+
 const EditRem = styled.div`
-  margin-top: 5px;
+  margin-bottom: 7px;
   display: flex;
   justify-content: space-between;
-  word-wrap: break-word;
-  text-overflow: ellipsis;
-  overflow: hidden;
 `;
