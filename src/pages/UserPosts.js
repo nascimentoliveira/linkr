@@ -1,57 +1,63 @@
-import { useEffect, useState, useContext } from 'react';
-import { ThreeDots } from 'react-loader-spinner';
-import axios from 'axios';
-import styled from 'styled-components';
+import axios from "axios";
+import styled from "styled-components";
+import { useContext, useEffect, useState } from "react";
+import { ThreeDots } from "react-loader-spinner";
+import { useParams } from "react-router-dom";
+import Navbar from "../components/Navbar.js";
+import View from "../components/View.js";
+import PostCard from "../components/PostCard.js";
+import Sidebar from "../components/Sidebar.js";
+import routes from "../constants.js";
+import UserContext from "../contexts/userContext.js";
 
-import Navbar from '../components/Navbar.js';
-import NewPublish from '../components/NewPublish.js';
-import PostCard from '../components/PostCard.js';
-import View from '../components/View.js';
-import routes from '../constants.js';
-import UserContext from '../contexts/userContext.js';
-import Sidebar from '../components/Sidebar.js';
-
-export default function Timeline() {
+export default function UserPosts() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
-  const [render, setRender] = useState(true)
+  const [username, setUsername] = useState();
+  const { id } = useParams();
   const { token } = useContext(UserContext);
 
   const config = {
     headers: {
-      Authorization: `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    },
   };
 
   async function fetchData() {
-    const { data } = await axios.get(routes.TIMELINE_ROUTE,config);
-    console.log(data)
+    const { data, status } = await axios.get(
+      `${routes.URL}/user/${id}`,
+      config
+    );
+    if (status === 204) {
+      setLoading(false);
+    } else {
     setPosts(data);
+    setUsername(data[0].username);
     setLoading(false);
+    }
   }
 
   useEffect(() => {
     fetchData();
-  }, [render]);
+  }, []);
 
   return (
     <Container>
       <Navbar />
       <View>
-        <h1>timeline</h1>
+        <h1>{loading ? null : username ? username + "`s posts" : null}</h1>
         <div>
           <Posts>
-            <NewPublish setRender={setRender} render={render} />
             {loading ? (
               <Loading>
                 <ThreeDots
-                  height='100'
-                  width='150'
-                  radius='9'
-                  color='#fff'
-                  ariaLabel='three-dots-loading'
+                  height="100"
+                  width="150"
+                  radius="9"
+                  color="#fff"
+                  ariaLabel="three-dots-loading"
                   wrapperStyle={{}}
-                  wrapperClassName=''
+                  wrapperClassName=""
                   visible={true}
                 />
               </Loading>
@@ -67,7 +73,6 @@ export default function Timeline() {
     </Container>
   );
 }
-
 const Container = styled.article`
   width: 100%;
   display: flex;
