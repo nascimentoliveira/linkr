@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -18,8 +19,9 @@ export default function Hashtag() {
   const [posts, setPosts] = useState([]);
   const { token } = useContext(UserContext);
   const hashtag = useParams();
+  const navigate = useNavigate();
 
-  useEffect(() => {
+  async function fetchData() {
     setLoading(true);
     axios.get(`${ROUTES.HASTAGS_ROUTE}/${hashtag.hashtag}`, config)
       .then(res => {
@@ -34,6 +36,22 @@ export default function Hashtag() {
         });
         setLoading(false);
       });
+  }
+
+  useEffect(() => {
+    if (!token) {
+      Swal.fire({
+        position: 'center',
+        background: '#151515',
+        icon: 'warning',
+        title: 'Please login with your account.',
+        showConfirmButton: false,
+        timer: 1200
+      });
+      navigate('/');
+    } else {
+      fetchData();
+    }
   }, [hashtag]);
 
   const config = {
@@ -42,7 +60,9 @@ export default function Hashtag() {
     }
   };
 
-  if (loading) {
+  if (!token) {
+    return;
+  } else if (loading) {
     return (
       <Container>
         <Navbar />
@@ -50,7 +70,7 @@ export default function Hashtag() {
           <h1>{'# ' + hashtag.hashtag}</h1>
           <div>
             <Posts>
-              <Spinner color='#FFFFFF' size='80'/>
+              <Spinner color='#FFFFFF' size='80' />
             </Posts>
             <Sidebar />
           </div>

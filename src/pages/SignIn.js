@@ -13,26 +13,16 @@ export default function Login() {
 
   const [formEnabled, setFormEnabled] = useState(true);
   const [form, setForm] = useState({ email: '', password: '' });
-  const { setToken, setUser } = useContext(UserContext);
+  const { token, setToken, setUser } = useContext(UserContext);
   
   const navigate = useNavigate();
 
   useEffect(() => {
-    const localData = JSON.parse(localStorage.getItem('Linkr'));
-    if (localData) {
-      setToken(localData.token);
-      delete localData.token;
-      setUser(localData);
+    if (token) {
       navigate('/timeline');
-    } else {
-      Swal.fire({
-        icon: 'info',
-        background: '#151515',
-        text: 'Log in to enter the application!',
-        timer: 2000
-      });
     }
   }, []);
+
 
   function handleForm(e) {
     const { name, value } = e.target;

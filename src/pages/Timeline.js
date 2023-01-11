@@ -1,5 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ThreeDots } from 'react-loader-spinner';
+import Swal from "sweetalert2";
 import axios from 'axios';
 import styled from 'styled-components';
 
@@ -16,6 +18,7 @@ export default function Timeline() {
   const [posts, setPosts] = useState([]);
   const [render, setRender] = useState(true)
   const { token } = useContext(UserContext);
+  const navigate = useNavigate();
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -23,48 +26,64 @@ export default function Timeline() {
   };
 
   async function fetchData() {
-    const { data } = await axios.get(routes.TIMELINE_ROUTE,config);
+    const { data } = await axios.get(routes.TIMELINE_ROUTE, config);
     setPosts(data);
     setLoading(false);
   }
 
   useEffect(() => {
-    fetchData();
+    if (!token) {
+      navigate('/');
+      Swal.fire({
+        position: 'center',
+        background: '#151515',
+        icon: 'warning',
+        title: 'Please login with your account.',
+        showConfirmButton: false,
+        timer: 1200
+      });
+
+    } else {
+      fetchData();
+    }
   }, [render]);
 
-  return (
-    <Container>
-      <Navbar />
-      <View>
-        <h1>timeline</h1>
-        <section>
-          <Posts>
-            <NewPublish setRender={setRender} render={render} />
-            {loading ? (
-              <Loading>
-                <ThreeDots
-                  height='100'
-                  width='150'
-                  radius='9'
-                  color='#fff'
-                  ariaLabel='three-dots-loading'
-                  wrapperStyle={{}}
-                  wrapperClassName=''
-                  visible={true}
-                />
-              </Loading>
-            ) : posts.length === 0 ? (
-              <h6>There are no posts yet.</h6>
-            ) : (
-              posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)
-            )}
-          </Posts>
-          <Sidebar render={render}/>
-        </section>
-      </View>
-    </Container>
-  );
+  if (token) {
+    return (
+      <Container>
+        <Navbar />
+        <View>
+          <h1>timeline</h1>
+          <section>
+            <Posts>
+              <NewPublish setRender={setRender} render={render} />
+              {loading ? (
+                <Loading>
+                  <ThreeDots
+                    height='100'
+                    width='150'
+                    radius='9'
+                    color='#fff'
+                    ariaLabel='three-dots-loading'
+                    wrapperStyle={{}}
+                    wrapperClassName=''
+                    visible={true}
+                  />
+                </Loading>
+              ) : posts.length === 0 ? (
+                <h6>There are no posts yet.</h6>
+              ) : (
+                posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)
+              )}
+            </Posts>
+            <Sidebar render={render} />
+          </section>
+        </View>
+      </Container>
+    );
+  }
 }
+
 
 const Container = styled.article`
   width: 100%;

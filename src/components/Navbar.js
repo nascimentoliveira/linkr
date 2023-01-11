@@ -10,12 +10,11 @@ import ROUTES from "../constants.js";
 import UserContext from "../contexts/userContext.js";
 
 export default function Navbar() {
-  const { user } = useContext(UserContext);
+  const { user, setUser, setToken } = useContext(UserContext);
   const [showLogout, setshowLogout] = useState(false);
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const navigate = useNavigate();
-
 
   useEffect(() => {
     if (search.length < 3) {
@@ -42,6 +41,8 @@ export default function Navbar() {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem("Linkr");
+        setUser();
+        setToken();
         navigate("/");
       } else {
         setshowLogout(false);
@@ -68,30 +69,34 @@ export default function Navbar() {
         <ul>
           {searchResult.length != 0
             ? searchResult.map(({ id, picture, username }) => {
-                return (
-                  <SearchResult onClick={() => goToProfile(id)} key={id}>
-                    <img src={picture} alt="User" />
-                    {username}
-                  </SearchResult>
-                );
-              })
+              return (
+                <SearchResult onClick={() => goToProfile(id)} key={id}>
+                  <img src={picture} alt="User" />
+                  {username}
+                </SearchResult>
+              );
+            })
             : null}
         </ul>
       </SearchArea>
-      <Profile
-        title={showLogout ? "Close options" : "Show options"}
-        onClick={() => setshowLogout(!showLogout)}
-      >
-        {showLogout ? <SlArrowUp /> : <SlArrowDown />}
-        <img src={user.picture} alt={`${user.username} photo`} />
-        {showLogout ? (
-          <Logout title="Logout" onClick={logout}>
-            <button>Logout</button>
-          </Logout>
-        ) : (
-          <></>
-        )}
-      </Profile>
+
+      {user ?
+        <Profile
+          title={showLogout ? "Close options" : "Show options"}
+          onClick={() => setshowLogout(!showLogout)}
+        >
+          {showLogout ? <SlArrowUp /> : <SlArrowDown />}
+          <img src={user?.picture} alt={`${user?.username} photo`} />
+          {showLogout ? (
+            <Logout title="Logout" onClick={logout}>
+              <button>Logout</button>
+            </Logout>
+          ) : (
+            <></>
+          )}
+        </Profile> :
+        <Profile></Profile>
+      }
 
       {showLogout ? (
         <Close
