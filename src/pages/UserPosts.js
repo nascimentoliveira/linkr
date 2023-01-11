@@ -14,6 +14,8 @@ export default function UserPosts() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
   const [username, setUsername] = useState();
+  const [picture, setPicture] = useState();
+  const [follows, setFollows] = useState()
   const { id } = useParams();
   const { token } = useContext(UserContext);
 
@@ -31,9 +33,10 @@ export default function UserPosts() {
     if (status === 204) {
       setLoading(false);
     } else {
-    setPosts(data);
-    setUsername(data[0].username);
-    setLoading(false);
+      setPosts(data);
+      setUsername(data[0].username);
+      setPicture(data[0].picture);
+      setLoading(false);
     }
   }
 
@@ -45,8 +48,16 @@ export default function UserPosts() {
     <Container>
       <Navbar />
       <View>
-        <h1>{loading ? null : username ? username + "`s posts" : null}</h1>
-        <div>
+        {loading ? null : (
+          <Header>
+            <div>
+              <img src={picture} />
+              <h1>{username ? username + "`s posts" : null}</h1>
+            </div>
+            <Button>Follow</Button>
+          </Header>
+        )}
+        <section>
           <Posts>
             {loading ? (
               <Loading>
@@ -68,7 +79,7 @@ export default function UserPosts() {
             )}
           </Posts>
           <Sidebar />
-        </div>
+        </section>
       </View>
     </Container>
   );
@@ -80,11 +91,11 @@ const Container = styled.article`
   align-items: center;
   h6 {
     padding: 43px 0px;
-    font-family: 'Oswald', sans-serif;
+    font-family: "Oswald", sans-serif;
     font-weight: 700;
     font-size: 43px;
     line-height: 64px;
-    color: #FFFFFF;
+    color: #ffffff;
   }
 `;
 
@@ -99,4 +110,61 @@ const Posts = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 80%;
+    padding-left:20px
+  }
+  img {
+    width: 53px;
+    height: 53px;
+    border-radius: 26.5px;
+    object-fit: cover;
+    margin-right: 20px;
+  }
+    h1 {
+    padding: 43px 0px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 43px;
+    line-height: 64px;
+    color: #FFFFFF;
+  }
+  @media (max-width:610px){
+    margin:0
+  }
+`;
+
+const Button = styled.button`
+  width: 112px;
+  height: 31px;
+  background-color: #1877F2;
+  border-radius: 5px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  color: #FFFFFF;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin-right: 7px;
+  &:hover {
+    filter: brightness(130%);
+  }
+
+  &:disabled {
+    filter: grayscale(60%);
+    cursor: default;
+  }
 `;

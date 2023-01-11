@@ -39,7 +39,7 @@ export default function Timeline() {
       <Navbar />
       <View>
         <h1>timeline</h1>
-        <div>
+        <section>
           <Posts>
             <NewPublish setRender={setRender} render={render} />
             {loading ? (
@@ -62,7 +62,7 @@ export default function Timeline() {
             )}
           </Posts>
           <Sidebar />
-        </div>
+        </section>
       </View>
     </Container>
   );
