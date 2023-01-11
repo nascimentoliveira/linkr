@@ -25,6 +25,10 @@ export default function NewPublish({ setRender, render }) {
     setForm({ ...form, [name]: value });
   }
 
+  function hashtagSeparator(str) {
+    return (str+' ').replace(/#/g, ' #').replace(/  #/g, ' #').replace(/ # /g, ' ').trim();
+  }
+
   function newPost(e) {
     e.preventDefault();
     setFormEnabled(false);
@@ -33,7 +37,7 @@ export default function NewPublish({ setRender, render }) {
       delete form.text;
     }
 
-    axios.post(ROUTES.POSTS_ROUTE, form, config)
+    axios.post(ROUTES.POSTS_ROUTE, { ...form, text: hashtagSeparator(form.text) }, config)
       .then(res => {
         Swal.fire({
           position: 'center',

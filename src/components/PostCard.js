@@ -13,7 +13,7 @@ import "react-tooltip/dist/react-tooltip.css";
 import Modal from "react-modal";
 import UserContext from "../contexts/userContext";
 
-export default function PostCard({ post, render, setRender}) {
+export default function PostCard({ post, render, setRender }) {
   const {
     id,
     text,
@@ -168,9 +168,8 @@ export default function PostCard({ post, render, setRender}) {
       res = `You, ${getName[0]} and other ${countLikes - 2} people liked`;
       setResult(res);
     } else if (getName.length >= 3 && !selecionado) {
-      res = `${getName[0]}, ${getName[1]} and other ${
-        countLikes - 2
-      } people liked`;
+      res = `${getName[0]}, ${getName[1]} and other ${countLikes - 2
+        } people liked`;
       setResult(res);
     }
   }, [namesLike]);
@@ -308,7 +307,7 @@ export default function PostCard({ post, render, setRender}) {
             ></GoPencil>
             <FaTrash
               style={{ cursor: "pointer", color: "white" }}
-              onClick={() => {toggleModalDelete()}}
+              onClick={() => { toggleModalDelete() }}
             ></FaTrash>
             <Modal
               isOpen={isOpenDelete}
@@ -365,23 +364,24 @@ export default function PostCard({ post, render, setRender}) {
         <ReactTagify
           tagStyle={tagStyle}
           tagClicked={(tag, e) => {
-            navigate(`/hashtag/${tag.substr(1)}`);
+            navigate(`/hashtag/${tag.substr(1).replace(/[^\w\s\']|_/g, '')}`);
             e.stopPropagation();
           }}
-        ></ReactTagify>
-        {edit ? (
-          <textarea
-            name="message"
-            ref={nameRef}
-            type="text"
-            value={message}
-            onKeyDown={submit}
-            onChange={(e) => setMessage(e.target.value)}
-            disabled={promiseReturned ? true : false}
-          />
-        ) : (
-          <h2>{text}</h2>
-        )}
+        >
+          {edit ? (
+            <textarea
+              name="message"
+              ref={nameRef}
+              type="text"
+              value={message}
+              onKeyDown={submit}
+              onChange={(e) => setMessage(e.target.value)}
+              disabled={promiseReturned ? true : false}
+            />
+          ) : (
+            <h2>{text}</h2>
+          )}
+        </ReactTagify>
         <UrlBox onClick={(e) => openInNewTab(url)}>
           <UrlInfos>
             <h3>{title}</h3>
