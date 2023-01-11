@@ -9,17 +9,21 @@ import PostCard from "../components/PostCard.js";
 import Sidebar from "../components/Sidebar.js";
 import routes from "../constants.js";
 import UserContext from "../contexts/userContext.js";
+import Swal from "sweetalert2";
 
 export default function UserPosts() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
-  const [username, setUsername] = useState();
-  const [picture, setPicture] = useState();
+  const [userPage, setUserPage] = useState({
+    username: undefined,
+    picture: undefined,
+  });
   const [follows, setFollows] = useState();
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const { id } = useParams();
   const { user, token } = useContext(UserContext);
-  const myId = user.id;
-  console.log(follows);
+  const myPage = user.userId === Number(id);
+  const { username, picture } = userPage;
 
   const config = {
     headers: {
@@ -37,23 +41,46 @@ export default function UserPosts() {
       setLoading(false);
     } else {
       setPosts(posts);
-      setUsername(posts[0].username);
-      setPicture(posts[0].picture);
+      const { username, picture } = posts[0];
+      setUserPage({ username, picture });
       setFollows(follows);
       setLoading(false);
     }
   }
 
-  async function follow() {
-    const { data } = await axios.get(`${routes.URL}/follow/${id}`, config);
-    console.log(data);
+  function follow() {
+    setButtonDisabled(true);
+    axios
+      .get(`${routes.URL}/follow/${id}`, config)
+      .then(setButtonDisabled(false), setFollows(true))
+      .catch((err) =>
+        Swal.fire({
+          background: "#151515",
+          icon: "error",
+          title: "Oops...",
+          text: err.response.data.message,
+        })
+      );
   }
 
-  async function unfollow() {}
+  function unfollow() {
+    setButtonDisabled(true);
+    axios
+      .delete(`${routes.URL}/follow/${id}`, config)
+      .then(setButtonDisabled(false), setFollows(false))
+      .catch((err) =>
+        Swal.fire({
+          background: "#151515",
+          icon: "error",
+          title: "Oops...",
+          text: err.response.data.message,
+        })
+      );
+  }
 
   useEffect(() => {
     fetchData();
-  });
+  }, []);
 
   return (
     <Container>
@@ -62,11 +89,17 @@ export default function UserPosts() {
         {loading ? null : (
           <Header>
             <div>
-              <img src={picture} alt="user"/>
-              <h1>{username ? username + "`s posts" : null}</h1>
+              <img src={picture} alt="user" />
+              <h1>
+                {myPage ? "My posts" : username ? username + "`s posts" : null}
+              </h1>
             </div>
-            {id === myId ? null : (
-              <Button follows={follows} onClick={follows ? unfollow : follow}>
+            {myPage ? null : (
+              <Button
+                follows={follows}
+                onClick={follows ? unfollow : follow}
+                disabled={buttonDisabled}
+              >
                 {follows ? "Unfollow" : "Follow"}
               </Button>
             )}
@@ -117,6 +150,7 @@ const Container = styled.article`
 const Loading = styled.div`
   display: flex;
   justify-content: center;
+  margin-top: 100px;
 `;
 
 const Posts = styled.div`
@@ -163,13 +197,13 @@ const Header = styled.div`
 const Button = styled.button`
   width: 112px;
   height: 31px;
-  background-color: #1877f2;
+  background-color: ${(props) => (props.follows ? "#FFFFFF" : "#1877F2")};
   border-radius: 5px;
   font-family: "Lato", sans-serif;
   font-weight: 700;
   font-size: 14px;
   line-height: 17px;
-  color: #ffffff;
+  color: ${(props) => (props.follows ? "#1877F2" : "#FFFFFF")};
   border: none;
   outline: none;
   cursor: pointer;
