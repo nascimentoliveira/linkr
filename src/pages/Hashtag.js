@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -18,22 +19,35 @@ export default function Hashtag() {
   const [posts, setPosts] = useState([]);
   const { token } = useContext(UserContext);
   const hashtag = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setLoading(true);
-    axios.get(`${ROUTES.HASTAGS_ROUTE}/${hashtag.hashtag}`, config)
-      .then(res => {
-        setPosts(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: err.response.data.message
-        });
-        setLoading(false);
+    if (!token) {
+      Swal.fire({
+        position: 'center',
+        background: '#151515',
+        icon: 'warning',
+        title: 'Please login with your account.',
+        showConfirmButton: false,
+        timer: 1200
       });
+      navigate('/');
+    } else {
+      setLoading(true);
+      axios.get(`${ROUTES.HASTAGS_ROUTE}/${hashtag.hashtag}`, config)
+        .then(res => {
+          setPosts(res.data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.response.data.message
+          });
+          setLoading(false);
+        });
+    }
   }, [hashtag]);
 
   const config = {

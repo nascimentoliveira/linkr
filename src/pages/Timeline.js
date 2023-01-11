@@ -1,5 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ThreeDots } from 'react-loader-spinner';
+import Swal from "sweetalert2";
 import axios from 'axios';
 import styled from 'styled-components';
 
@@ -16,6 +18,7 @@ export default function Timeline() {
   const [posts, setPosts] = useState([]);
   const [render, setRender] = useState(true)
   const { token } = useContext(UserContext);
+  const navigate = useNavigate();
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -29,7 +32,20 @@ export default function Timeline() {
   }
 
   useEffect(() => {
-    fetchData();
+    if (!token) {
+      navigate('/');
+      Swal.fire({
+        position: 'center',
+        background: '#151515',
+        icon: 'warning',
+        title: 'Please login with your account.',
+        showConfirmButton: false,
+        timer: 1200
+      });
+      
+    } else {
+      fetchData();
+    }
   }, [render]);
 
   return (

@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -13,6 +14,7 @@ export default function Sidebar({render}) {
   const { token } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const [topHashtags, setTopHashtags] = useState([]);
+  const navigate = useNavigate();
 
   const config = {
     headers: {
@@ -20,7 +22,7 @@ export default function Sidebar({render}) {
     }
   };
 
-  useEffect(() => {
+  async function fetchData() {
     setLoading(true);
     axios.get(ROUTES.HASTAGS_ROUTE, config)
       .then(res => {
@@ -35,7 +37,23 @@ export default function Sidebar({render}) {
         });
         setLoading(false);
       });
-  }, [render]);
+  }
+
+  useEffect(() => {
+      if (!token) {
+        Swal.fire({
+          position: 'center',
+          background: '#151515',
+          icon: 'warning',
+          title: 'Please login with your account.',
+          showConfirmButton: false,
+          timer: 1200
+        });
+        navigate('/');
+      } else {
+        fetchData();
+      }
+    }, [render]);
 
   if (loading) {
     return (

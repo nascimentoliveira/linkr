@@ -58,7 +58,7 @@ export default function NewPublish({setRender,render}) {
 
   return (
     <Container>
-      <img src={user.picture} alt={`${user.username} photo`} />
+      <img src={user?.picture} alt={`${user?.username} photo`} />
       <div>
         <Message>What are you going to share today?</Message>
         <Form onSubmit={newPost}>

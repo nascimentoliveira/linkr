@@ -1,6 +1,7 @@
 import axios from "axios";
 import styled from "styled-components";
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { ThreeDots } from "react-loader-spinner";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar.js";
@@ -24,6 +25,7 @@ export default function UserPosts() {
   const { user, token } = useContext(UserContext);
   const myPage = user?.userId === Number(id);
   const { username, picture } = userPage;
+  const navigate = useNavigate();
 
   const config = {
     headers: {
@@ -79,7 +81,11 @@ export default function UserPosts() {
   }
 
   useEffect(() => {
-    fetchData();
+    if (!token) {
+      navigate('/');
+    } else {
+      fetchData();
+    }
   }, []);
 
   return (

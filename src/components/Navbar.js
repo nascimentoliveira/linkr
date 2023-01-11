@@ -10,7 +10,7 @@ import ROUTES from "../constants.js";
 import UserContext from "../contexts/userContext.js";
 
 export default function Navbar() {
-  const { user } = useContext(UserContext);
+  const { user, setUser, setToken } = useContext(UserContext);
   const [showLogout, setshowLogout] = useState(false);
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -42,6 +42,8 @@ export default function Navbar() {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem("Linkr");
+        setUser();
+        setToken();
         navigate("/");
       } else {
         setshowLogout(false);
@@ -83,7 +85,7 @@ export default function Navbar() {
         onClick={() => setshowLogout(!showLogout)}
       >
         {showLogout ? <SlArrowUp /> : <SlArrowDown />}
-        <img src={user.picture} alt={`${user.username} photo`} />
+        <img src={user?.picture} alt={`${user?.username} photo`} />
         {showLogout ? (
           <Logout title="Logout" onClick={logout}>
             <button>Logout</button>
