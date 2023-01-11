@@ -59,7 +59,7 @@ export default function Timeline() {
               posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)
             )}
           </Posts>
-          <Sidebar />
+          <Sidebar render={render}/>
         </section>
       </View>
     </Container>

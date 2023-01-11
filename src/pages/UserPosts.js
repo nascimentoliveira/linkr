@@ -22,7 +22,7 @@ export default function UserPosts() {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const { id } = useParams();
   const { user, token } = useContext(UserContext);
-  const myPage = user.userId === Number(id);
+  const myPage = user?.userId === Number(id);
   const { username, picture } = userPage;
 
   const config = {
