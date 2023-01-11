@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ThreeDots } from 'react-loader-spinner';
+import InfiniteScroll from 'react-infinite-scroller';
 import Swal from "sweetalert2";
 import axios from 'axios';
 import styled from 'styled-components';
@@ -12,6 +12,7 @@ import View from '../components/View.js';
 import routes from '../constants.js';
 import UserContext from '../contexts/userContext.js';
 import Sidebar from '../components/Sidebar.js';
+import Spinner from '../components/Spinner.js';
 
 export default function Timeline() {
   const [loading, setLoading] = useState(true);
@@ -19,7 +20,7 @@ export default function Timeline() {
   const [render, setRender] = useState(true);
   const { token } = useContext(UserContext);
   const navigate = useNavigate();
-  
+
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -58,24 +59,22 @@ export default function Timeline() {
           <section>
             <Posts>
               <NewPublish setRender={setRender} render={render} />
-              {loading ? (
+              <InfiniteScroll
+                pageStart={0}
+                loadMore={fetchData}
+                hasMore={true}
+                loader={
                 <Loading>
-                  <ThreeDots
-                    height='100'
-                    width='150'
-                    radius='9'
-                    color='#fff'
-                    ariaLabel='three-dots-loading'
-                    wrapperStyle={{}}
-                    wrapperClassName=''
-                    visible={true}
-                  />
-                </Loading>
-              ) : posts.length === 0 ? (
-                <h6>There are no posts yet.</h6>
-              ) : (
-                posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)
-              )}
+                  <Spinner color='#6D6D6D'/>
+                  <p>Loading more posts</p>
+                </Loading>}
+              >
+                {loading ? <></> : posts.length === 0 ? (
+                  <h6>There are no posts yet.</h6>
+                ) : (
+                  posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)
+                )}
+              </InfiniteScroll>
             </Posts>
             <Sidebar render={render} />
           </section>
@@ -84,7 +83,6 @@ export default function Timeline() {
     );
   }
 }
-
 
 const Container = styled.article`
   width: 100%;
@@ -103,7 +101,15 @@ const Container = styled.article`
 
 const Loading = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  padding-bottom: 100px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 26px;
+  color: #6D6D6D;
 `;
 
 const Posts = styled.div`

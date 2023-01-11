@@ -361,27 +361,27 @@ export default function PostCard({ post, render, setRender }) {
             </Modal>
           </Icons>
         </EditRem>
-        <ReactTagify
-          tagStyle={tagStyle}
-          tagClicked={(tag, e) => {
-            navigate(`/hashtag/${tag.substr(1).replace(/[^\w\s\']|_/g, '')}`);
-            e.stopPropagation();
-          }}
-        >
-          {edit ? (
-            <textarea
-              name="message"
-              ref={nameRef}
-              type="text"
-              value={message}
-              onKeyDown={submit}
-              onChange={(e) => setMessage(e.target.value)}
-              disabled={promiseReturned ? true : false}
-            />
-          ) : (
+        {edit ? (
+          <textarea
+            name="message"
+            ref={nameRef}
+            type="text"
+            value={message}
+            onKeyDown={submit}
+            onChange={(e) => setMessage(e.target.value)}
+            disabled={promiseReturned ? true : false}
+          />
+        ) : (
+          <ReactTagify
+            tagStyle={tagStyle}
+            tagClicked={(tag, e) => {
+              navigate(`/hashtag/${tag.substr(1).replace(/[^\w\s\']|_/g, '')}`);
+              e.stopPropagation();
+            }}
+          >
             <h2>{text}</h2>
-          )}
-        </ReactTagify>
+          </ReactTagify>
+        )}
         <UrlBox onClick={(e) => openInNewTab(url)}>
           <UrlInfos>
             <h3>{title}</h3>
