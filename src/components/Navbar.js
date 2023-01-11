@@ -15,7 +15,6 @@ export default function Navbar() {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const navigate = useNavigate();
-  console.log(searchResult);
   const config = {
     headers: {
       authorization: `Bearer ${token}`,
