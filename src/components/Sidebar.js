@@ -8,7 +8,7 @@ import UserContext from '../contexts/userContext.js';
 import Hashtag from './Hashtag.js';
 import Spinner from './Spinner.js';
 
-export default function Sidebar() {
+export default function Sidebar({render}) {
 
   const { token } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
@@ -35,7 +35,7 @@ export default function Sidebar() {
         });
         setLoading(false);
       });
-  }, []);
+  }, [render]);
 
   if (loading) {
     return (

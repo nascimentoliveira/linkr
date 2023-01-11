@@ -16,7 +16,6 @@ export default function Timeline() {
   const [posts, setPosts] = useState([]);
   const [render, setRender] = useState(true)
   const { token } = useContext(UserContext);
-
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -25,7 +24,6 @@ export default function Timeline() {
 
   async function fetchData() {
     const { data } = await axios.get(routes.TIMELINE_ROUTE,config);
-    console.log(data)
     setPosts(data);
     setLoading(false);
   }
@@ -39,7 +37,7 @@ export default function Timeline() {
       <Navbar />
       <View>
         <h1>timeline</h1>
-        <div>
+        <section>
           <Posts>
             <NewPublish setRender={setRender} render={render} />
             {loading ? (
@@ -58,11 +56,11 @@ export default function Timeline() {
             ) : posts.length === 0 ? (
               <h6>There are no posts yet.</h6>
             ) : (
-              posts.map((p) => <PostCard post={p} render={render} setRender={setRender} user={user} key={p.id} />)
+              posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)
             )}
           </Posts>
-          <Sidebar />
-        </div>
+          <Sidebar render={render}/>
+        </section>
       </View>
     </Container>
   );
