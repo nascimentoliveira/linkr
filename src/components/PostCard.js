@@ -62,7 +62,7 @@ export default function PostCard({ post, render, setRender}) {
     const promise = axios.get(`${routes.URL}/likes`);
 
     promise.then(({ data }) => {
-      console.log(data)
+
       setAllLikes(data);
     });
 
@@ -99,7 +99,6 @@ export default function PostCard({ post, render, setRender}) {
     setPromiseReturned(true);
 
     promise.then((response) => {
-      console.log(response);
       setMessage(response.data);
       setEdit(false);
       setPromiseReturned(false);
@@ -118,7 +117,6 @@ export default function PostCard({ post, render, setRender}) {
       setSelecionado(false);
     }
   }, [likesFilter]);
-  console.log(likesFilter);
   useEffect(() => {
     const postId = id;
     const promise = axios.get(`${routes.URL}/likes/count/${postId}`);
@@ -390,7 +388,7 @@ export default function PostCard({ post, render, setRender}) {
             <p>{description}</p>
             <h4>{url}</h4>
           </UrlInfos>
-          <img src={image} alt="Url Image" />
+          <img src={image} alt="Url" />
         </UrlBox>
       </Infos>
     </Container>

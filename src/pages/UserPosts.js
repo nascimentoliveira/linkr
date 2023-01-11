@@ -17,7 +17,9 @@ export default function UserPosts() {
   const [picture, setPicture] = useState();
   const [follows, setFollows] = useState();
   const { id } = useParams();
-  const { token } = useContext(UserContext);
+  const { user, token } = useContext(UserContext);
+  const myId = user.id;
+  console.log(follows);
 
   const config = {
     headers: {
@@ -42,9 +44,16 @@ export default function UserPosts() {
     }
   }
 
+  async function follow() {
+    const { data } = await axios.get(`${routes.URL}/follow/${id}`, config);
+    console.log(data);
+  }
+
+  async function unfollow() {}
+
   useEffect(() => {
     fetchData();
-  }, []);
+  });
 
   return (
     <Container>
@@ -53,10 +62,14 @@ export default function UserPosts() {
         {loading ? null : (
           <Header>
             <div>
-              <img src={picture} />
+              <img src={picture} alt="user"/>
               <h1>{username ? username + "`s posts" : null}</h1>
             </div>
-            <Button>Follow</Button>
+            {id === myId ? null : (
+              <Button follows={follows} onClick={follows ? unfollow : follow}>
+                {follows ? "Unfollow" : "Follow"}
+              </Button>
+            )}
           </Header>
         )}
         <section>
@@ -118,8 +131,8 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 40px;
-  margin-bottom: 20px;
+  margin-top: 20px;
+  margin-bottom: 10px;
   > div {
     display: flex;
     align-items: center;
@@ -157,63 +170,6 @@ const Button = styled.button`
   font-size: 14px;
   line-height: 17px;
   color: #ffffff;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  margin-right: 7px;
-  &:hover {
-    filter: brightness(130%);
-  }
-
-  &:disabled {
-    filter: grayscale(60%);
-    cursor: default;
-  }
-`;
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 40px;
-  margin-bottom: 20px;
-  > div {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 80%;
-    padding-left:20px
-  }
-  img {
-    width: 53px;
-    height: 53px;
-    border-radius: 26.5px;
-    object-fit: cover;
-    margin-right: 20px;
-  }
-    h1 {
-    padding: 43px 0px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 700;
-    font-size: 43px;
-    line-height: 64px;
-    color: #FFFFFF;
-  }
-  @media (max-width:610px){
-    margin:0
-  }
-`;
-
-const Button = styled.button`
-  width: 112px;
-  height: 31px;
-  background-color: #1877F2;
-  border-radius: 5px;
-  font-family: 'Lato', sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 17px;
-  color: #FFFFFF;
   border: none;
   outline: none;
   cursor: pointer;
