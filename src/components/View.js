@@ -4,7 +4,6 @@ const View = styled.main`
   padding-top: 60px;
   max-width: 950px;
   width: 100%;
-
   > h1 {
     padding: 43px 0px;
     font-family: 'Oswald', sans-serif;
@@ -14,7 +13,7 @@ const View = styled.main`
     color: #FFFFFF;
   }
 
-  > div {
+  > section {
     display: flex;
     justify-content: space-between;
   }
