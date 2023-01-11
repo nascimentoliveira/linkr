@@ -16,6 +16,7 @@ import PostCard from '../components/PostCard.js';
 export default function Hashtag() {
 
   const [loading, setLoading] = useState(true);
+  const [render, setRender] = useState(true);
   const [posts, setPosts] = useState([]);
   const { token } = useContext(UserContext);
   const hashtag = useParams();
@@ -72,7 +73,7 @@ export default function Hashtag() {
             <Posts>
               <Spinner color='#FFFFFF' size='80' />
             </Posts>
-            <Sidebar />
+            <Sidebar render={render} />
           </div>
         </View>
       </Container>
@@ -83,14 +84,14 @@ export default function Hashtag() {
         <Navbar />
         <View>
           <h1>{'# ' + hashtag.hashtag}</h1>
-          <div>
+          <section>
             <Posts>
               {posts?.map(post =>
                 <PostCard post={post} key={post.id} />
               )}
             </Posts>
-            <Sidebar />
-          </div>
+            <Sidebar render={render} />
+          </section>
         </View>
       </Container>
     );

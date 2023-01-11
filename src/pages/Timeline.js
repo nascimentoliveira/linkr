@@ -16,7 +16,7 @@ import Sidebar from '../components/Sidebar.js';
 export default function Timeline() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
-  const [render, setRender] = useState(true)
+  const [render, setRender] = useState(true);
   const { token } = useContext(UserContext);
   const navigate = useNavigate();
   

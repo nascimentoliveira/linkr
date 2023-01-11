@@ -11,6 +11,7 @@ const View = styled.main`
     font-size: 43px;
     line-height: 64px;
     color: #FFFFFF;
+    word-break: break-all;
   }
 
   > section {
