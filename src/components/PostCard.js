@@ -10,9 +10,10 @@ import { FaTrash } from "react-icons/fa";
 import { GoPencil } from "react-icons/go";
 import { Tooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
+import Modal from "react-modal";
 import UserContext from "../contexts/userContext";
 
-export default function PostCard({ post }) {
+export default function PostCard({ post, render, setRender, user}) {
   const {
     id,
     text,
@@ -30,9 +31,14 @@ export default function PostCard({ post }) {
   const [allLikes, setAllLikes] = useState([]);
   const [namesLike, setNamesLike] = useState([]);
   const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [notEdit, setNotEdit] = useState(false);
-  const { token } = useContext(UserContext)
+  const [message, setMessage] = useState(text);
+  const [oldMessage, setOldMessage] = useState("");
+  const [promiseReturned, setPromiseReturned] = useState(false);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
+
+  const { token } = useContext(UserContext);
   const navigate = useNavigate();
 
   const tagStyle = {
@@ -56,6 +62,7 @@ export default function PostCard({ post }) {
     const promise = axios.get(`${routes.URL}/likes`);
 
     promise.then(({ data }) => {
+      console.log(data)
       setAllLikes(data);
     });
 
@@ -65,14 +72,44 @@ export default function PostCard({ post }) {
   }, []);
 
   let likesFilter = allLikes.find(
-    (like) => like.postId === id && like.userId === 2
+    (like) => like.postId === id && like.userId === user.userId
   );
 
-  useEffect(() => {
-    if (edit) {
-      // inputRef.current.focus();
+  const nameRef = useRef(null);
+  function focus() {
+    setOldMessage(message);
+    nameRef.current.focus();
+    setMessage(message);
+  }
+
+  function submit(e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      updateMessage();
+    } else if (e.keyCode === 27) {
+      setMessage(oldMessage);
+      setEdit(false);
     }
-  }, [edit, notEdit]);
+  }
+
+  function updateMessage() {
+    const obj = { text: message };
+    console.log("entrei");
+    const promise = axios.put(`${routes.URL}/editpost/${id}`, obj, config);
+    setPromiseReturned(true);
+
+    promise.then((response) => {
+      console.log(response);
+      setMessage(response.data);
+      setEdit(false);
+      setPromiseReturned(false);
+      setRender(!render);
+    });
+    promise.catch((error) => {
+      alert("Deu algum erro, não foi possivel salvar as alterações...");
+      setEdit(true);
+    });
+  }
 
   useEffect(() => {
     if (likesFilter) {
@@ -81,7 +118,7 @@ export default function PostCard({ post }) {
       setSelecionado(false);
     }
   }, [likesFilter]);
-
+  console.log(likesFilter);
   useEffect(() => {
     const postId = id;
     const promise = axios.get(`${routes.URL}/likes/count/${postId}`);
@@ -141,22 +178,32 @@ export default function PostCard({ post }) {
   }, [namesLike]);
 
   function like(postId) {
-    const promise = axios.post(`${routes.URL}/likes/${postId}`, postId,config,);
+    const promise = axios.post(`${routes.URL}/likes/${postId}`, postId, config);
+    // if (loading) {
+    //   return;
+    // }
+    setLoading(true);
     promise.then(() => {
       setSelecionado(true);
+      // setLoading(false);
     });
     promise.catch((e) => {
+      // setLoading(false);
       console.error(e);
     });
   }
 
   function dislike(postId) {
     const promise = axios.delete(`${routes.URL}/dislikes/${postId}`, config);
-
+    // if (loading) {
+    //   return;
+    // }
     promise.then(() => {
       setSelecionado(false);
+      // setLoading(false);
     });
     promise.catch((e) => {
+      // setLoading(false);
       console.error(e);
     });
   }
@@ -169,24 +216,68 @@ export default function PostCard({ post }) {
     navigate(`/user/${userId}`);
   }
 
-  return (
-      <Container>
-        <Left>
-          <img src={picture} alt="User" onClick={()=>goToProfile(userId)} />
+  function deletePost() {
+    const promise = axios.delete(`${routes.URL}/deletepost/${id}`, config);
+    promise.then((response) => {
+      toggleModalDelete();
+      setRender(!render);
+    });
+    promise.catch((error) => {
+      alert("an error has ocurred, unable to delete the post...");
+      toggleModalDelete();
+    });
+  }
+  function toggleModalDelete() {
+    setIsOpenDelete(!isOpenDelete);
+  }
 
-          <Likes>
-            <HeartIcon
-              onClick={() => {
-                if (selecionado === false) {
-                  like(id);
-                } else if (selecionado === true) {
-                  dislike(id);
-                }
-              }}
-              color={selecionado === false ? white : red}
-            >
-              <TiHeartFullOutline></TiHeartFullOutline>
-            </HeartIcon>
+  const customStyles = {
+    overlay: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: "rgba(255, 255, 255, 0.9)",
+      zIndex: 100,
+    },
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "597px",
+      height: "262px",
+      background: "#333333",
+      borderRadius: "50px",
+      textAlign: "center",
+      color: "white",
+      paddingLeft: "100px",
+      paddingRight: "100px",
+      fontSize: "34px",
+    },
+  };
+
+  return (
+    <Container>
+      <Left>
+        <img src={picture} alt="User" onClick={() => goToProfile(userId)} />
+
+        <Likes>
+          <HeartIcon
+            onClick={() => {
+              if (selecionado === false) {
+                setTimeout(like(id), 1000);
+              } else if (selecionado === true) {
+                setTimeout(dislike(id), 1000);
+              }
+            }}
+            color={selecionado === false ? white : red}
+          >
+            <TiHeartFullOutline></TiHeartFullOutline>
+          </HeartIcon>
 
           <TooltipWrapper>
             <a id="custom-inline-styles"> {countLikes} likes </a>
@@ -200,41 +291,109 @@ export default function PostCard({ post }) {
         </Likes>
       </Left>
 
-        <Infos>
+      <Infos>
+        <EditRem>
+          <h1 onClick={() => goToProfile(userId)}>{username}</h1>
 
-          <EditRem>
-            <h1 onClick={()=>goToProfile(userId)}>{username}</h1>
-
-            <Icons>
-              <GoPencil
-                style={{ cursor: "pointer", color: "white" }}
-                onClick={() => setEdit(!edit)}
-              ></GoPencil>
-              <FaTrash
-                style={{ cursor: "pointer", color: "white" }}
-                // onClick={() => {}}
-              ></FaTrash>
-            </Icons>
-          </EditRem>
-          <ReactTagify
-            tagStyle={tagStyle}
-            tagClicked={(tag, e) => {
-              navigate(`/hashtag/${tag.substr(1)}`);
-              e.stopPropagation();
-            }}
-          >
-            <h2>{text}</h2>
-          </ReactTagify>
-          <UrlBox onClick={(e) => openInNewTab(url)}>
-            <UrlInfos>
-              <h3>{title}</h3>
-              <p>{description}</p>
-              <h4>{url}</h4>
-            </UrlInfos>
-            <img src={image} alt="Url Image" />
-          </UrlBox>
-        </Infos>
-      </Container>
+          <Icons>
+            <GoPencil
+              style={{ cursor: "pointer", color: "white" }}
+              onClick={() => {
+                if (edit === false) {
+                  setEdit(!edit);
+                  setTimeout(focus, 100);
+                } else {
+                  setEdit(false);
+                  setMessage(oldMessage);
+                }
+              }}
+            ></GoPencil>
+            <FaTrash
+              style={{ cursor: "pointer", color: "white" }}
+              onClick={() => {toggleModalDelete()}}
+            ></FaTrash>
+            <Modal
+              isOpen={isOpenDelete}
+              onRequestClose={() =>
+                toggleModalDelete(setIsOpenDelete, isOpenDelete)
+              }
+              style={customStyles}
+            >
+              <div style={{ marginTop: "40px" }}>
+                Are you sure you want to delete this post?
+              </div>
+              <button
+                onClick={() => toggleModalDelete(setIsOpenDelete, isOpenDelete)}
+                style={{
+                  width: "134px",
+                  height: "37px",
+                  marginTop: "40px",
+                  marginRight: "25px",
+                  borderRadius: "5px",
+                  background: "#ffffff",
+                  color: "#1877F2",
+                  textDecoration: "none",
+                  fontFamily: "Lato",
+                  fontSize: "18px",
+                  fontWeight: "700",
+                  cursor: "pointer",
+                  border: "none",
+                }}
+              >
+                No, go back
+              </button>
+              <button
+                onClick={() => deletePost()}
+                style={{
+                  width: "134px",
+                  height: "37px",
+                  marginTop: "40px",
+                  borderRadius: "5px",
+                  background: "#1877F2",
+                  color: "#ffffff",
+                  textDecoration: "none",
+                  fontFamily: "Lato",
+                  fontSize: "18px",
+                  fontWeight: "700",
+                  cursor: "pointer",
+                  border: "none",
+                }}
+              >
+                Yes, delete it
+              </button>
+            </Modal>
+          </Icons>
+        </EditRem>
+        <ReactTagify
+          tagStyle={tagStyle}
+          tagClicked={(tag, e) => {
+            navigate(`/hashtag/${tag.substr(1)}`);
+            e.stopPropagation();
+          }}
+        ></ReactTagify>
+        {edit ? (
+          <textarea
+            name="message"
+            ref={nameRef}
+            type="text"
+            value={message}
+            onKeyDown={submit}
+            onChange={(e) => setMessage(e.target.value)}
+            disabled={promiseReturned ? true : false}
+          />
+        ) : (
+          <h2>{text}</h2>
+        )}
+        <UrlBox onClick={(e) => openInNewTab(url)}>
+          <UrlInfos>
+            <h3>{title}</h3>
+            <p>{description}</p>
+            <h4>{url}</h4>
+          </UrlInfos>
+          <img src={image} alt="Url Image" />
+        </UrlBox>
+      </Infos>
+    </Container>
   );
 }
 
@@ -299,6 +458,24 @@ const Infos = styled.div`
   span {
     padding: 0;
     margin-bottom: 5px;
+  }
+  textarea {
+    width: 100%;
+    height: 44px;
+    padding-left: 10px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #4c4c4c;
+    border-radius: 7px;
+    resize: none;
+    overflow: hidden;
   }
 `;
 

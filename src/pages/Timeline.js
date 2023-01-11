@@ -58,7 +58,7 @@ export default function Timeline() {
             ) : posts.length === 0 ? (
               <h6>There are no posts yet.</h6>
             ) : (
-              posts.map((p) => <PostCard post={p} key={p.id} />)
+              posts.map((p) => <PostCard post={p} render={render} setRender={setRender} user={user} key={p.id} />)
             )}
           </Posts>
           <Sidebar />
