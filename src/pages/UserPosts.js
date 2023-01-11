@@ -14,6 +14,7 @@ export default function UserPosts() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
   const [username, setUsername] = useState();
+  const [follows,setFollows] = useState();
   const { id } = useParams();
   const { token } = useContext(UserContext);
 
@@ -28,11 +29,13 @@ export default function UserPosts() {
       `${routes.URL}/user/${id}`,
       config
     );
+    const {posts,follows} = data;
     if (status === 204) {
       setLoading(false);
     } else {
-    setPosts(data);
-    setUsername(data[0].username);
+    setPosts(posts);
+    setUsername(posts[0].username);
+    setFollows(follows)
     setLoading(false);
     }
   }

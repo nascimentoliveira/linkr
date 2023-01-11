@@ -13,7 +13,7 @@ import "react-tooltip/dist/react-tooltip.css";
 import Modal from "react-modal";
 import UserContext from "../contexts/userContext";
 
-export default function PostCard({ post, render, setRender, user}) {
+export default function PostCard({ post, render, setRender}) {
   const {
     id,
     text,
@@ -38,7 +38,7 @@ export default function PostCard({ post, render, setRender, user}) {
   const [promiseReturned, setPromiseReturned] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
 
-  const { token } = useContext(UserContext);
+  const { user, token } = useContext(UserContext);
   const navigate = useNavigate();
 
   const tagStyle = {
