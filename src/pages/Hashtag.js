@@ -21,6 +21,23 @@ export default function Hashtag() {
   const hashtag = useParams();
   const navigate = useNavigate();
 
+  async function fetchData() {
+    setLoading(true);
+    axios.get(`${ROUTES.HASTAGS_ROUTE}/${hashtag.hashtag}`, config)
+      .then(res => {
+        setPosts(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.message
+        });
+        setLoading(false);
+      });
+  }
+
   useEffect(() => {
     if (!token) {
       Swal.fire({
@@ -33,20 +50,7 @@ export default function Hashtag() {
       });
       navigate('/');
     } else {
-      setLoading(true);
-      axios.get(`${ROUTES.HASTAGS_ROUTE}/${hashtag.hashtag}`, config)
-        .then(res => {
-          setPosts(res.data);
-          setLoading(false);
-        })
-        .catch((err) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.response.data.message
-          });
-          setLoading(false);
-        });
+      fetchData();
     }
   }, [hashtag]);
 
@@ -56,7 +60,9 @@ export default function Hashtag() {
     }
   };
 
-  if (loading) {
+  if (!token) {
+    return;
+  } else if (loading) {
     return (
       <Container>
         <Navbar />
@@ -64,7 +70,7 @@ export default function Hashtag() {
           <h1>{'# ' + hashtag.hashtag}</h1>
           <div>
             <Posts>
-              <Spinner color='#FFFFFF' size='80'/>
+              <Spinner color='#FFFFFF' size='80' />
             </Posts>
             <Sidebar />
           </div>

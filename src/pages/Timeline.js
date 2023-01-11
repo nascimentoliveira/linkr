@@ -26,7 +26,7 @@ export default function Timeline() {
   };
 
   async function fetchData() {
-    const { data } = await axios.get(routes.TIMELINE_ROUTE,config);
+    const { data } = await axios.get(routes.TIMELINE_ROUTE, config);
     setPosts(data);
     setLoading(false);
   }
@@ -42,45 +42,48 @@ export default function Timeline() {
         showConfirmButton: false,
         timer: 1200
       });
-      
+
     } else {
       fetchData();
     }
   }, [render]);
 
-  return (
-    <Container>
-      <Navbar />
-      <View>
-        <h1>timeline</h1>
-        <section>
-          <Posts>
-            <NewPublish setRender={setRender} render={render} />
-            {loading ? (
-              <Loading>
-                <ThreeDots
-                  height='100'
-                  width='150'
-                  radius='9'
-                  color='#fff'
-                  ariaLabel='three-dots-loading'
-                  wrapperStyle={{}}
-                  wrapperClassName=''
-                  visible={true}
-                />
-              </Loading>
-            ) : posts.length === 0 ? (
-              <h6>There are no posts yet.</h6>
-            ) : (
-              posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)
-            )}
-          </Posts>
-          <Sidebar render={render}/>
-        </section>
-      </View>
-    </Container>
-  );
+  if (token) {
+    return (
+      <Container>
+        <Navbar />
+        <View>
+          <h1>timeline</h1>
+          <section>
+            <Posts>
+              <NewPublish setRender={setRender} render={render} />
+              {loading ? (
+                <Loading>
+                  <ThreeDots
+                    height='100'
+                    width='150'
+                    radius='9'
+                    color='#fff'
+                    ariaLabel='three-dots-loading'
+                    wrapperStyle={{}}
+                    wrapperClassName=''
+                    visible={true}
+                  />
+                </Loading>
+              ) : posts.length === 0 ? (
+                <h6>There are no posts yet.</h6>
+              ) : (
+                posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)
+              )}
+            </Posts>
+            <Sidebar render={render} />
+          </section>
+        </View>
+      </Container>
+    );
+  }
 }
+
 
 const Container = styled.article`
   width: 100%;

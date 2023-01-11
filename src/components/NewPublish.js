@@ -1,4 +1,5 @@
 import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -6,11 +7,12 @@ import Swal from 'sweetalert2';
 import ROUTES from '../constants';
 import UserContext from '../contexts/userContext.js';
 
-export default function NewPublish({setRender,render}) {
+export default function NewPublish({ setRender, render }) {
 
   const [formEnabled, setFormEnabled] = useState(true);
   const [form, setForm] = useState({ url: '', text: '' });
   const { user, token } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const config = {
     headers: {
@@ -26,7 +28,7 @@ export default function NewPublish({setRender,render}) {
   function newPost(e) {
     e.preventDefault();
     setFormEnabled(false);
-    
+
     if (!form.text) {
       delete form.text;
     }
@@ -56,42 +58,44 @@ export default function NewPublish({setRender,render}) {
       });
   }
 
-  return (
-    <Container>
-      <img src={user?.picture} alt={`${user?.username} photo`} />
-      <div>
-        <Message>What are you going to share today?</Message>
-        <Form onSubmit={newPost}>
-          <Url
-            type='url'
-            placeholder='http://...'
-            name='url'
-            value={form.url}
-            onChange={handleForm}
-            disabled={!formEnabled}
-            required
-          />
-          
-          <Post 
-            type='text'
-            placeholder='Awesome article about #javascript'
-            name='text'
-            value={form.text}
-            onChange={handleForm}
-            disabled={!formEnabled}
-          />
+  if (token) {
+    return (
+      <Container>
+        <img src={user?.picture} alt={`${user?.username} photo`} />
+        <div>
+          <Message>What are you going to share today?</Message>
+          <Form onSubmit={newPost}>
+            <Url
+              type='url'
+              placeholder='http://...'
+              name='url'
+              value={form.url}
+              onChange={handleForm}
+              disabled={!formEnabled}
+              required
+            />
 
-          <Button 
-            type='submit' 
-            title={formEnabled ? 'Publish' : 'Publishing...'}
-            disabled={!formEnabled}
-          >
-            {formEnabled ? 'Publish' : 'Publishing...'}
-          </Button>
-        </Form>
-      </div>
-    </Container>
-  );
+            <Post
+              type='text'
+              placeholder='Awesome article about #javascript'
+              name='text'
+              value={form.text}
+              onChange={handleForm}
+              disabled={!formEnabled}
+            />
+
+            <Button
+              type='submit'
+              title={formEnabled ? 'Publish' : 'Publishing...'}
+              disabled={!formEnabled}
+            >
+              {formEnabled ? 'Publish' : 'Publishing...'}
+            </Button>
+          </Form>
+        </div>
+      </Container>
+    );
+  }
 }
 
 const Container = styled.section`

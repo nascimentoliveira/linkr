@@ -83,61 +83,72 @@ export default function UserPosts() {
   useEffect(() => {
     if (!token) {
       navigate('/');
+      Swal.fire({
+        position: 'center',
+        background: '#151515',
+        icon: 'warning',
+        title: 'Please login with your account.',
+        showConfirmButton: false,
+        timer: 1200
+      });
     } else {
       fetchData();
     }
   }, []);
 
-  return (
-    <Container>
-      <Navbar />
-      <View>
-        {loading ? null : (
-          <Header>
-            <div>
-              <img src={picture} alt="user" />
-              <h1>
-                {myPage ? "My posts" : username ? username + "`s posts" : null}
-              </h1>
-            </div>
-            {myPage ? null : (
-              <Button
-                follows={follows}
-                onClick={follows ? unfollow : follow}
-                disabled={buttonDisabled}
-              >
-                {follows ? "Unfollow" : "Follow"}
-              </Button>
-            )}
-          </Header>
-        )}
-        <section>
-          <Posts>
-            {loading ? (
-              <Loading>
-                <ThreeDots
-                  height="100"
-                  width="150"
-                  radius="9"
-                  color="#fff"
-                  ariaLabel="three-dots-loading"
-                  wrapperStyle={{}}
-                  wrapperClassName=""
-                  visible={true}
-                />
-              </Loading>
-            ) : posts.length === 0 ? (
-              <h6>There are no posts yet.</h6>
-            ) : (
-              posts.map((p) => <PostCard post={p} key={p.id} />)
-            )}
-          </Posts>
-          <Sidebar />
-        </section>
-      </View>
-    </Container>
-  );
+  if (token) {
+    return (
+      <Container>
+        <Navbar />
+        <View>
+          {loading ? null : (
+            <Header>
+              <div>
+                <img src={picture} alt="user" />
+                <h1>
+                  {myPage ? "My posts" : username ? username + "`s posts" : null}
+                </h1>
+              </div>
+              {myPage ? null : (
+                <Button
+                  follows={follows}
+                  onClick={follows ? unfollow : follow}
+                  disabled={buttonDisabled}
+                >
+                  {follows ? "Unfollow" : "Follow"}
+                </Button>
+              )}
+            </Header>
+          )}
+          <section>
+            <Posts>
+              {loading ? (
+                <Loading>
+                  <ThreeDots
+                    height="100"
+                    width="150"
+                    radius="9"
+                    color="#fff"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClassName=""
+                    visible={true}
+                  />
+                </Loading>
+              ) : posts.length === 0 ? (
+                <h6>There are no posts yet.</h6>
+              ) : (
+                posts.map((p) => <PostCard post={p} key={p.id} />)
+              )}
+            </Posts>
+            <Sidebar />
+          </section>
+        </View>
+      </Container>
+    );
+  }
 }
+
 const Container = styled.article`
   width: 100%;
   display: flex;

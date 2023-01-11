@@ -9,7 +9,7 @@ import UserContext from '../contexts/userContext.js';
 import Hashtag from './Hashtag.js';
 import Spinner from './Spinner.js';
 
-export default function Sidebar({render}) {
+export default function Sidebar({ render }) {
 
   const { token } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
@@ -40,28 +40,30 @@ export default function Sidebar({render}) {
   }
 
   useEffect(() => {
-      if (!token) {
-        Swal.fire({
-          position: 'center',
-          background: '#151515',
-          icon: 'warning',
-          title: 'Please login with your account.',
-          showConfirmButton: false,
-          timer: 1200
-        });
-        navigate('/');
-      } else {
-        fetchData();
-      }
-    }, [render]);
+    if (!token) {
+      Swal.fire({
+        position: 'center',
+        background: '#151515',
+        icon: 'warning',
+        title: 'Please login with your account.',
+        showConfirmButton: false,
+        timer: 1200
+      });
+      navigate('/');
+    } else {
+      fetchData();
+    }
+  }, [render]);
 
-  if (loading) {
+  if (!token) {
+    return;
+  } else if (loading) {
     return (
       <Container>
         <h1>trending</h1>
         <hr />
         <HashtagsList load={loading}>
-          <Spinner color='#333333'/>
+          <Spinner color='#333333' />
         </HashtagsList>
       </Container>
     );
