@@ -74,7 +74,7 @@ export default function Hashtag() {
   };
 
   const loader =
-    <Loading key={Math.random()}>
+    <Loading key={0}>
       <OvalSpinner />
       <p>Loading more posts</p>
     </Loading>;

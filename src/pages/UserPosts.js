@@ -79,7 +79,7 @@ export default function UserPosts() {
   }, [render]);
 
   const loader = (
-    <Loading key={Math.random()}>
+    <Loading key={0}>
       <OvalSpinner />
       <p>Loading more posts</p>
     </Loading>
@@ -127,7 +127,7 @@ export default function UserPosts() {
               </InfiniteScroll>
               {hasMore ? <></> : endMessage}
             </Posts>
-            <Sidebar />
+            <Sidebar render={render} setRender={setRender}/>
           </section>
         </View>
       </Container>
