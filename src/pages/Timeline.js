@@ -11,6 +11,7 @@ import View from '../components/View.js';
 import ROUTES from '../constants.js';
 import UserContext from '../contexts/userContext.js';
 import Sidebar from '../components/Sidebar.js';
+import LoadMore from '../components/LoadMore.js';
 import { OvalSpinner } from '../components/Spinner.js';
 import { POSTS_PER_PAGE } from '../constants.js';
 
@@ -94,6 +95,7 @@ export default function Timeline() {
           <section>
             <Posts>
               <NewPublish setRender={setRender} render={render} />
+              <LoadMore />
               <InfiniteScroll
                 loadMore={fetchData}
                 hasMore={hasMore}
