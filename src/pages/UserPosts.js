@@ -2,8 +2,8 @@ import axios from "axios";
 import styled from "styled-components";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import { ThreeDots } from "react-loader-spinner";
 import { useParams } from "react-router-dom";
+import InfiniteScroll from 'react-infinite-scroller';
 import Navbar from "../components/Navbar.js";
 import View from "../components/View.js";
 import PostCard from "../components/PostCard.js";
@@ -11,6 +11,8 @@ import Sidebar from "../components/Sidebar.js";
 import routes from "../constants.js";
 import UserContext from "../contexts/userContext.js";
 import Swal from "sweetalert2";
+import { OvalSpinner } from '../components/Spinner.js';
+import { POSTS_PER_PAGE } from '../constants.js';
 
 export default function UserPosts() {
   const [loading, setLoading] = useState(true);
@@ -21,6 +23,9 @@ export default function UserPosts() {
   });
   const [follows, setFollows] = useState();
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [render, setRender] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
+  const [pageNumber, setPageNumber] = useState(0);
   const { id } = useParams();
   const { user, token } = useContext(UserContext);
   const myPage = user?.userId === Number(id);
@@ -33,21 +38,27 @@ export default function UserPosts() {
     },
   };
 
-  async function fetchData() {
-    const { data, status } = await axios.get(
-      `${routes.URL}/user/${id}`,
-      config
-    );
-    const { posts, follows } = data;
-    if (status === 204) {
-      setLoading(false);
-    } else {
-      setPosts(posts);
-      const { username, picture } = posts[0];
-      setUserPage({ username, picture });
-      setFollows(follows);
-      setLoading(false);
-    }
+  function fetchData() {
+    axios.get(`${routes.URL}/user/${id}?page=${pageNumber}&offset=${POSTS_PER_PAGE}`, config)
+      .then(res => {
+        if (res.data.posts.length < POSTS_PER_PAGE) {
+          setHasMore(false);
+        }
+        setPosts([...posts, ...res.data.posts]);
+        const { username, picture } = posts[0];
+        setUserPage({ username, picture });
+        setFollows(res.data.follows);
+        setPageNumber(pageNumber + 1);
+        setLoading(false);
+      })
+      .catch(err => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response?.data.message
+        });
+        setLoading(false);
+      });
   }
 
   function follow() {
@@ -81,6 +92,7 @@ export default function UserPosts() {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!token) {
       navigate('/');
       Swal.fire({
@@ -92,16 +104,35 @@ export default function UserPosts() {
         timer: 1200
       });
     } else {
-      fetchData();
+      setLoading(true);
+      setPosts([]);
+      setHasMore(true);
+      setPageNumber(0);
     }
-  }, []);
+  }, [render]);
+
+  const loader =
+    <Loading key={Math.random()}>
+      <OvalSpinner />
+      <p>Loading more posts</p>
+    </Loading>;
+
+  const noPosts =
+    <Loading>
+      <h6>There are no posts yet.</h6>
+    </Loading>;
+
+  const endMessage =
+    <Loading>
+      <h6>Yay! You have seen it all</h6>
+    </Loading>;
 
   if (token) {
     return (
       <Container>
         <Navbar />
         <View>
-          {loading ? null : (
+          {loading ? <Header></Header> : (
             <Header>
               <div>
                 <img src={picture} alt="user" />
@@ -122,24 +153,20 @@ export default function UserPosts() {
           )}
           <section>
             <Posts>
-              {loading ? (
-                <Loading>
-                  <ThreeDots
-                    height="100"
-                    width="150"
-                    radius="9"
-                    color="#fff"
-                    ariaLabel="three-dots-loading"
-                    wrapperStyle={{}}
-                    wrapperClassName=""
-                    visible={true}
-                  />
-                </Loading>
-              ) : posts.length === 0 ? (
-                <h6>There are no posts yet.</h6>
-              ) : (
-                posts.map((p) => <PostCard post={p} key={p.id} />)
-              )}
+              <InfiniteScroll
+                loadMore={fetchData}
+                hasMore={hasMore}
+                loader={loader}
+              >
+                {
+                  loading ? <></> :
+                    (posts.length === 0 ?
+                      noPosts :
+                      posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)
+                    )
+                }
+              </InfiniteScroll>
+              {hasMore ? <></> : endMessage}
             </Posts>
             <Sidebar />
           </section>
@@ -163,11 +190,17 @@ const Container = styled.article`
     color: #ffffff;
   }
 `;
-
 const Loading = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  margin-top: 100px;
+  padding-bottom: 100px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 26px;
+  color: #6D6D6D;
 `;
 
 const Posts = styled.div`

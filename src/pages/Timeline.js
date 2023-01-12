@@ -40,11 +40,11 @@ export default function Timeline() {
         setPageNumber(pageNumber + 1);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(err => {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: err.response.data.message
+          text: err.response?.data.message
         });
         setLoading(false);
       });

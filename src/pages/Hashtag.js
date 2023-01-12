@@ -28,7 +28,6 @@ export default function Hashtag() {
   const navigate = useNavigate();
 
   function fetchData() {
-    console.log('aqui')
     axios.get(`${ROUTES.HASTAGS_ROUTE}/${hashtag.hashtag}?page=${pageNumber}&offset=${POSTS_PER_PAGE}`, config)
       .then(res => {
         if (res.data.length < POSTS_PER_PAGE) {
@@ -38,11 +37,11 @@ export default function Hashtag() {
         setPageNumber(pageNumber + 1);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(err => {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: err.response.data.message
+          text: err.response?.data.message
         });
         setLoading(false);
       });
