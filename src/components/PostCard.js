@@ -12,6 +12,7 @@ import { Tooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import Modal from "react-modal";
 import UserContext from "../contexts/userContext";
+import Comments from "./Comments";
 
 export default function PostCard({ post, render, setRender }) {
   const {
@@ -23,6 +24,7 @@ export default function PostCard({ post, render, setRender }) {
     title,
     description,
     image,
+    comments,
     userId,
   } = post;
 
@@ -37,6 +39,8 @@ export default function PostCard({ post, render, setRender }) {
   const [oldMessage, setOldMessage] = useState("");
   const [promiseReturned, setPromiseReturned] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const [comment, setComment] = useState(comments);
+  /* const [showComments, setShowComments] = useState(false);  */
 
   const { user, token } = useContext(UserContext);
   const navigate = useNavigate();
@@ -391,6 +395,7 @@ export default function PostCard({ post, render, setRender }) {
           <img src={image} alt="Url" />
         </UrlBox>
       </Infos>
+      <Comments /* show={showComments} postId={postId} */ setComment={setComment}/>
     </Container>
   );
 }

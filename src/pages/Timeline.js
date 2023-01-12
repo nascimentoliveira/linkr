@@ -4,7 +4,6 @@ import InfiniteScroll from 'react-infinite-scroller';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import styled from 'styled-components';
-
 import Navbar from '../components/Navbar.js';
 import NewPublish from '../components/NewPublish.js';
 import PostCard from '../components/PostCard.js';
@@ -12,7 +11,7 @@ import View from '../components/View.js';
 import ROUTES from '../constants.js';
 import UserContext from '../contexts/userContext.js';
 import Sidebar from '../components/Sidebar.js';
-import Spinner from '../components/Spinner.js';
+import { OvalSpinner } from '../components/Spinner.js';
 import { POSTS_PER_PAGE } from '../constants.js';
 
 export default function Timeline() {
@@ -23,7 +22,7 @@ export default function Timeline() {
   const [pageNumber, setPageNumber] = useState(0);
   const { token } = useContext(UserContext);
   const navigate = useNavigate();
-  
+
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -40,11 +39,11 @@ export default function Timeline() {
         setPageNumber(pageNumber + 1);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(err => {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: err.response.data.message
+          text: err.response?.data.message
         });
         setLoading(false);
       });
@@ -67,7 +66,7 @@ export default function Timeline() {
 
   const loader =
     <Loading key={Math.random()}>
-      <Spinner color='#6D6D6D' />
+      <OvalSpinner />
       <p>Loading more posts</p>
     </Loading>;
 
@@ -105,7 +104,7 @@ export default function Timeline() {
               </InfiniteScroll>
               {hasMore ? <></> : endMessage}
             </Posts>
-            <Sidebar render={render} setRender={setRender}/>
+            <Sidebar render={render} setRender={setRender} />
           </section>
         </View>
       </Container>
