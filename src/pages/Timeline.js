@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroller';
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2';
 import axios from 'axios';
 import styled from 'styled-components';
 
@@ -9,17 +9,20 @@ import Navbar from '../components/Navbar.js';
 import NewPublish from '../components/NewPublish.js';
 import PostCard from '../components/PostCard.js';
 import View from '../components/View.js';
-import routes from '../constants.js';
+import ROUTES from '../constants.js';
 import UserContext from '../contexts/userContext.js';
 import Sidebar from '../components/Sidebar.js';
 import Spinner from '../components/Spinner.js';
+import { POSTS_PER_PAGE } from '../constants.js';
 
 export default function Timeline() {
   const [loading, setLoading] = useState(true);
+  const [pageNumber, setPageNumber] = useState(0);
   const [posts, setPosts] = useState([]);
   const [render, setRender] = useState(true);
   const { token } = useContext(UserContext);
   const navigate = useNavigate();
+  const [hasMore, setHasMore] = useState(true);
 
   const config = {
     headers: {
@@ -27,13 +30,28 @@ export default function Timeline() {
     }
   };
 
-  async function fetchData() {
-    const { data } = await axios.get(routes.TIMELINE_ROUTE, config);
-    setPosts(data);
-    setLoading(false);
+  function fetchData() {
+    axios.get(`${ROUTES.TIMELINE_ROUTE}/?page=${pageNumber}&offset=${POSTS_PER_PAGE}`, config)
+      .then(res => {
+        if (res.data.length < POSTS_PER_PAGE) {
+          setHasMore(false);
+        }
+        setPosts([...posts, ...res.data]);
+        setPageNumber(pageNumber + 1);
+        setLoading(false);
+      })
+      .catch((err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.message
+        });
+        setLoading(false);
+      });
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!token) {
       navigate('/');
       Swal.fire({
@@ -44,11 +62,24 @@ export default function Timeline() {
         showConfirmButton: false,
         timer: 1200
       });
-
-    } else {
-      fetchData();
     }
   }, [render]);
+
+  const loader =
+    <Loading key={Math.random()}>
+      <Spinner color='#6D6D6D' />
+      <p>Loading more posts</p>
+    </Loading>;
+
+  const noPosts =
+    <Loading>
+      <h6>There are no posts yet.</h6>
+    </Loading>;
+
+  const endMessage =
+    <Loading>
+      <h6>Yay! You have seen it all</h6>
+    </Loading>;
 
   if (token) {
     return (
@@ -60,21 +91,19 @@ export default function Timeline() {
             <Posts>
               <NewPublish setRender={setRender} render={render} />
               <InfiniteScroll
-                pageStart={0}
                 loadMore={fetchData}
-                hasMore={true}
-                loader={
-                <Loading>
-                  <Spinner color='#6D6D6D'/>
-                  <p>Loading more posts</p>
-                </Loading>}
+                hasMore={hasMore}
+                loader={loader}
               >
-                {loading ? <></> : posts.length === 0 ? (
-                  <h6>There are no posts yet.</h6>
-                ) : (
-                  posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)
-                )}
+                {
+                  loading ? <></> :
+                    (posts.length === 0 ?
+                      noPosts :
+                      posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)
+                    )
+                }
               </InfiniteScroll>
+              {hasMore ? <></> : endMessage}
             </Posts>
             <Sidebar render={render} />
           </section>
