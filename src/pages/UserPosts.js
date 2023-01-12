@@ -52,14 +52,14 @@ export default function UserPosts() {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: err.response?.data.message,
+          text: err.response.data.message,
         });
         setLoading(false);
       });
   }
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({top: 0, behavior: 'smooth'});
     if (!token) {
       navigate("/");
       Swal.fire({
@@ -110,24 +110,11 @@ export default function UserPosts() {
                 hasMore={hasMore}
                 loader={loader}
               >
-                {loading ? (
-                  <></>
-                ) : posts.length === 0 ? (
-                  noPosts
-                ) : (
-                  posts.map((p) => (
-                    <PostCard
-                      post={p}
-                      render={render}
-                      setRender={setRender}
-                      key={p.id}
-                    />
-                  ))
-                )}
+                {posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)}
               </InfiniteScroll>
-              {hasMore ? <></> : endMessage}
+              {loading ? <></> : posts.length === 0 ? noPosts : !hasMore ? endMessage : <></>}
             </Posts>
-            <Sidebar render={render} setRender={setRender}/>
+            <Sidebar render={render} setRender={setRender} />
           </section>
         </View>
       </Container>

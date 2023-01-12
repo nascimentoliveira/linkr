@@ -1,5 +1,4 @@
 import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -12,7 +11,6 @@ export default function NewPublish({ setRender, render }) {
   const [formEnabled, setFormEnabled] = useState(true);
   const [form, setForm] = useState({ url: '', text: '' });
   const { user, token } = useContext(UserContext);
-  const navigate = useNavigate();
 
   const config = {
     headers: {

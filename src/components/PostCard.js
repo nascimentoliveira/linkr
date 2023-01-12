@@ -378,9 +378,9 @@ export default function PostCard({ post, render, setRender }) {
         ) : (
           <ReactTagify
             tagStyle={tagStyle}
-            tagClicked={(tag, e) => {
-              navigate(`/hashtag/${tag.substr(1).replace(/[^\w\s\']|_/g, '')}`);
-              e.stopPropagation();
+            tagClicked={tag => {
+              navigate(`/hashtag/${tag.substring(1).replace(/[^\w\s\']|_/g, '')}`);
+              setRender(!render);
             }}
           >
             <h2>{text}</h2>
