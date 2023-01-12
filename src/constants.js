@@ -22,3 +22,5 @@ const ROUTES = {
 };
 
 export default ROUTES;
+
+export const POSTS_PER_PAGE = 10;
