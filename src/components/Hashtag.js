@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-export default function Hashtag({ hashtag }) {
+export default function Hashtag({ hashtag, render, setRender }) {
   return (
     <Link to={`/hashtag/${hashtag.hashtag}`}>
-      <Container title={`View posts with #${hashtag.hashtag}`}>
+      <Container
+        title={`View posts with #${hashtag.hashtag}`}
+        onClick={() => setRender(!render)}
+      >
         <p>{'# ' + hashtag.hashtag}</p>
       </Container>
     </Link>

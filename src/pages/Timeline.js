@@ -17,13 +17,13 @@ import { POSTS_PER_PAGE } from '../constants.js';
 
 export default function Timeline() {
   const [loading, setLoading] = useState(true);
-  const [pageNumber, setPageNumber] = useState(0);
   const [posts, setPosts] = useState([]);
   const [render, setRender] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
+  const [pageNumber, setPageNumber] = useState(0);
   const { token } = useContext(UserContext);
   const navigate = useNavigate();
-  const [hasMore, setHasMore] = useState(true);
-
+  
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -105,7 +105,7 @@ export default function Timeline() {
               </InfiniteScroll>
               {hasMore ? <></> : endMessage}
             </Posts>
-            <Sidebar render={render} />
+            <Sidebar render={render} setRender={setRender}/>
           </section>
         </View>
       </Container>

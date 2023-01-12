@@ -9,7 +9,7 @@ import UserContext from '../contexts/userContext.js';
 import Hashtag from './Hashtag.js';
 import Spinner from './Spinner.js';
 
-export default function Sidebar({ render }) {
+export default function Sidebar({ render, setRender }) {
 
   const { token } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
@@ -74,7 +74,12 @@ export default function Sidebar({ render }) {
         <hr />
         <HashtagsList load={loading}>
           {topHashtags.map(hashtag =>
-            <Hashtag hashtag={hashtag} key={hashtag.id} />
+            <Hashtag 
+              key={hashtag.id}
+              hashtag={hashtag} 
+              render={render}
+              setRender={setRender}
+            />
           )}
         </HashtagsList>
       </Container>
