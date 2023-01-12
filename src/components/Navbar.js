@@ -72,8 +72,10 @@ export default function Navbar() {
           type="text"
           onChange={(e) => setSearch(e.target.value)}
           minLength={3}
+          value={search}
           debounceTimeout={300}
           placeholder={"Search for people and friends"}
+          onBlur={(e) => setSearch("")}
         />
         <ul>
           {searchResult.length != 0
@@ -82,7 +84,7 @@ export default function Navbar() {
                   <SearchResult onClick={() => goToProfile(id)} key={id}>
                     <img src={picture} alt="User" />
                     {username}
-                    {follows? <p>• following</p> : null}
+                    {follows ? <p>• following</p> : null}
                   </SearchResult>
                 );
               })
