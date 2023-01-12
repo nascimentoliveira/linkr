@@ -11,6 +11,7 @@ const SIGN_UP_ROUTE = 'http://localhost:4000/signup';
 const TIMELINE_ROUTE = 'http://localhost:4000/timeline';
 const HASTAGS_ROUTE = 'http://localhost:4000/hashtag';
 const URL = 'http://localhost:4000';
+const COMMENTS = 'http://localhost:4000/comments';
 
 const ROUTES = {
   SIGN_UP_ROUTE,
@@ -18,7 +19,8 @@ const ROUTES = {
   POSTS_ROUTE,
   TIMELINE_ROUTE,
   HASTAGS_ROUTE,
-  URL
+  URL,
+  COMMENTS
 };
 
 export default ROUTES;
