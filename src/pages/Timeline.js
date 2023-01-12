@@ -4,7 +4,6 @@ import InfiniteScroll from 'react-infinite-scroller';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import styled from 'styled-components';
-
 import Navbar from '../components/Navbar.js';
 import NewPublish from '../components/NewPublish.js';
 import PostCard from '../components/PostCard.js';
