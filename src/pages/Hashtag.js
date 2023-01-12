@@ -9,10 +9,10 @@ import Swal from 'sweetalert2';
 import ROUTES from '../constants.js';
 import View from '../components/View.js';
 import Navbar from '../components/Navbar.js';
-import Spinner from '../components/Spinner.js';
 import Sidebar from '../components/Sidebar.js';
 import UserContext from '../contexts/userContext.js';
 import PostCard from '../components/PostCard.js';
+import { OvalSpinner } from '../components/Spinner.js';
 import { POSTS_PER_PAGE } from '../constants.js';
 
 export default function Hashtag() {
@@ -28,7 +28,6 @@ export default function Hashtag() {
   const navigate = useNavigate();
 
   function fetchData() {
-    console.log('aqui')
     axios.get(`${ROUTES.HASTAGS_ROUTE}/${hashtag.hashtag}?page=${pageNumber}&offset=${POSTS_PER_PAGE}`, config)
       .then(res => {
         if (res.data.length < POSTS_PER_PAGE) {
@@ -38,11 +37,11 @@ export default function Hashtag() {
         setPageNumber(pageNumber + 1);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(err => {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: err.response.data.message
+          text: err.response?.data.message
         });
         setLoading(false);
       });
@@ -76,7 +75,7 @@ export default function Hashtag() {
 
   const loader =
     <Loading key={Math.random()}>
-      <Spinner color='#6D6D6D' />
+      <OvalSpinner />
       <p>Loading more posts</p>
     </Loading>;
 
