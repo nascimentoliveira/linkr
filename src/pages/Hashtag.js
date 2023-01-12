@@ -9,10 +9,10 @@ import Swal from 'sweetalert2';
 import ROUTES from '../constants.js';
 import View from '../components/View.js';
 import Navbar from '../components/Navbar.js';
-import Spinner from '../components/Spinner.js';
 import Sidebar from '../components/Sidebar.js';
 import UserContext from '../contexts/userContext.js';
 import PostCard from '../components/PostCard.js';
+import { OvalSpinner } from '../components/Spinner.js';
 import { POSTS_PER_PAGE } from '../constants.js';
 
 export default function Hashtag() {
@@ -76,7 +76,7 @@ export default function Hashtag() {
 
   const loader =
     <Loading key={Math.random()}>
-      <Spinner color='#6D6D6D' />
+      <OvalSpinner />
       <p>Loading more posts</p>
     </Loading>;
 
