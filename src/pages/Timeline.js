@@ -83,7 +83,7 @@ export default function Timeline() {
   if (token) {
     return (
       <Container>
-        <Navbar />
+        <Navbar setRender={setRender} render={render}/>
         <View>
           <h1>timeline</h1>
           <section>

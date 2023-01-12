@@ -6,7 +6,7 @@ import routes from "../constants";
 import UserContext from "../contexts/userContext";
 
 export default function UserHeader({ header, loading }) {
-  const { username, picture, id, follows } = header;
+  const { username, picture, id, follows } = header
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const { user, token } = useContext(UserContext);
   const myPage = user?.userId === Number(id);

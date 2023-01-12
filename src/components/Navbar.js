@@ -9,7 +9,7 @@ import ROUTES from "../constants.js";
 
 import UserContext from "../contexts/userContext.js";
 
-export default function Navbar() {
+export default function Navbar({render,setRender}) {
   const { user, setUser, token, setToken } = useContext(UserContext);
   const [showLogout, setshowLogout] = useState(false);
   const [search, setSearch] = useState("");
@@ -61,6 +61,8 @@ export default function Navbar() {
 
   function goToProfile(id) {
     navigate(`/user/${id}`);
+    setRender(!render)
+    setSearch("")
   }
 
   return (
@@ -75,7 +77,6 @@ export default function Navbar() {
           value={search}
           debounceTimeout={300}
           placeholder={"Search for people and friends"}
-          onBlur={(e) => setSearch("")}
         />
         <ul>
           {searchResult.length != 0

@@ -94,7 +94,7 @@ export default function Hashtag() {
   } else {
     return (
       <Container>
-        <Navbar />
+        <Navbar setRender={setRender} render={render}/>
         <View>
           <h1>{'# ' + hashtag.hashtag}</h1>
           <section>
