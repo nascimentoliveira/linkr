@@ -19,6 +19,7 @@ export default function Timeline() {
   const [posts, setPosts] = useState([]);
   const [render, setRender] = useState(true);
   const [hasMore, setHasMore] = useState(true);
+  const [message,setMessage] = useState("");
   const [pageNumber, setPageNumber] = useState(0);
   const { token } = useContext(UserContext);
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ export default function Timeline() {
           setHasMore(false);
         }
         setPosts([...posts, ...res.data]);
+        setMessage(res.data.message)
         setPageNumber(pageNumber + 1);
         setLoading(false);
       })
@@ -72,7 +74,7 @@ export default function Timeline() {
 
   const noPosts =
     <Loading>
-      <h6>There are no posts yet.</h6>
+      <h6>{message}</h6>
     </Loading>;
 
   const endMessage =
