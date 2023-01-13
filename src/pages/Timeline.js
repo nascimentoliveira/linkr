@@ -11,11 +11,13 @@ import View from '../components/View.js';
 import ROUTES from '../constants.js';
 import UserContext from '../contexts/userContext.js';
 import Sidebar from '../components/Sidebar.js';
+import LoadMore from '../components/LoadMore.js';
 import { OvalSpinner } from '../components/Spinner.js';
 import { POSTS_PER_PAGE } from '../constants.js';
 
 export default function Timeline() {
   const [loading, setLoading] = useState(true);
+  const [lastRefresh, setLastRefresh] = useState(new Date().toISOString());
   const [posts, setPosts] = useState([]);
   const [render, setRender] = useState(true);
   const [hasMore, setHasMore] = useState(true);
@@ -30,15 +32,19 @@ export default function Timeline() {
   };
 
   function fetchData() {
-    axios.get(`${ROUTES.TIMELINE_ROUTE}/?page=${pageNumber}&offset=${POSTS_PER_PAGE}`, config)
-      .then(res => {
-        if (res.data.posts.length < POSTS_PER_PAGE) {
-          setHasMore(false);
-        } 
-        setPosts([...posts, ...res.data.posts]);
-        setPageNumber(pageNumber + 1);
-        setLoading(false);
-      })
+    axios.get(
+      `${ROUTES.TIMELINE_ROUTE}/`+
+      `?offset=${posts.length}&`+
+      `more=${POSTS_PER_PAGE}`,
+      config
+    ).then(res => {
+      if (res.data.posts.length < POSTS_PER_PAGE) {
+        setHasMore(false);
+      }
+      setPosts([...posts, ...res.data.posts]);
+      setPageNumber(pageNumber + 1);
+      setLoading(false);
+    })
       .catch(err => {
         Swal.fire({
           icon: 'error',
@@ -50,7 +56,7 @@ export default function Timeline() {
   }
 
   useEffect(() => {
-    window.scrollTo({top: 0, behavior: 'smooth'});
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     if (!token) {
       navigate('/');
       Swal.fire({
@@ -67,6 +73,7 @@ export default function Timeline() {
       setHasMore(true);
       setPageNumber(0);
     }
+    setLastRefresh(new Date().toISOString());
   }, [render]);
 
   const loader =
@@ -94,6 +101,12 @@ export default function Timeline() {
           <section>
             <Posts>
               <NewPublish setRender={setRender} render={render} />
+              <LoadMore
+                lastRefresh={lastRefresh}
+                setLastRefresh={setLastRefresh}
+                posts={posts}
+                setPosts={setPosts}
+              />
               <InfiniteScroll
                 loadMore={fetchData}
                 hasMore={hasMore}
