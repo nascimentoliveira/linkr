@@ -6,13 +6,12 @@ import { ReactTagify } from "react-tagify";
 import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router";
 import { TiHeartFullOutline } from "react-icons/ti";
-import { FaTrash } from "react-icons/fa";
 import { GoPencil } from "react-icons/go";
 import { Tooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
-import Modal from "react-modal";
 import UserContext from "../contexts/userContext";
 import Comments from "./Comments";
+import DeletePost from "./DeletePost.js";
 
 export default function PostCard({ post, render, setRender }) {
   const {
@@ -38,7 +37,6 @@ export default function PostCard({ post, render, setRender }) {
   const [message, setMessage] = useState(text);
   const [oldMessage, setOldMessage] = useState("");
   const [promiseReturned, setPromiseReturned] = useState(false);
-  const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [comment, setComment] = useState(comments);
   /* const [showComments, setShowComments] = useState(false);  */
 
@@ -217,50 +215,6 @@ export default function PostCard({ post, render, setRender }) {
     navigate(`/user/${userId}`);
   }
 
-  function deletePost() {
-    const promise = axios.delete(`${routes.URL}/deletepost/${id}`, config);
-    promise.then((response) => {
-      toggleModalDelete();
-      setRender(!render);
-    });
-    promise.catch((error) => {
-      alert("an error has ocurred, unable to delete the post...");
-      toggleModalDelete();
-    });
-  }
-  function toggleModalDelete() {
-    setIsOpenDelete(!isOpenDelete);
-  }
-
-  const customStyles = {
-    overlay: {
-      position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: "rgba(255, 255, 255, 0.9)",
-      zIndex: 100,
-    },
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      width: "597px",
-      height: "262px",
-      background: "#333333",
-      borderRadius: "50px",
-      textAlign: "center",
-      color: "white",
-      paddingLeft: "100px",
-      paddingRight: "100px",
-      fontSize: "34px",
-    },
-  };
-
   return (
     <Container>
       <Left>
@@ -309,60 +263,7 @@ export default function PostCard({ post, render, setRender }) {
                 }
               }}
             ></GoPencil>
-            <FaTrash
-              style={{ cursor: "pointer", color: "white" }}
-              onClick={() => { toggleModalDelete() }}
-            ></FaTrash>
-            <Modal
-              isOpen={isOpenDelete}
-              onRequestClose={() =>
-                toggleModalDelete(setIsOpenDelete, isOpenDelete)
-              }
-              style={customStyles}
-            >
-              <div style={{ marginTop: "40px" }}>
-                Are you sure you want to delete this post?
-              </div>
-              <button
-                onClick={() => toggleModalDelete(setIsOpenDelete, isOpenDelete)}
-                style={{
-                  width: "134px",
-                  height: "37px",
-                  marginTop: "40px",
-                  marginRight: "25px",
-                  borderRadius: "5px",
-                  background: "#ffffff",
-                  color: "#1877F2",
-                  textDecoration: "none",
-                  fontFamily: "Lato",
-                  fontSize: "18px",
-                  fontWeight: "700",
-                  cursor: "pointer",
-                  border: "none",
-                }}
-              >
-                No, go back
-              </button>
-              <button
-                onClick={() => deletePost()}
-                style={{
-                  width: "134px",
-                  height: "37px",
-                  marginTop: "40px",
-                  borderRadius: "5px",
-                  background: "#1877F2",
-                  color: "#ffffff",
-                  textDecoration: "none",
-                  fontFamily: "Lato",
-                  fontSize: "18px",
-                  fontWeight: "700",
-                  cursor: "pointer",
-                  border: "none",
-                }}
-              >
-                Yes, delete it
-              </button>
-            </Modal>
+            {userId === user.userId ? <DeletePost id={id} render={render} setRender={setRender} /> : <></>}
           </Icons>
         </EditRem>
         {edit ? (
@@ -395,7 +296,7 @@ export default function PostCard({ post, render, setRender }) {
           <img src={image} alt="Url" />
         </UrlBox>
       </Infos>
-      <Comments /* show={showComments} postId={postId} */ setComment={setComment}/>
+      <Comments /* show={showComments} postId={postId} */ setComment={setComment} />
     </Container>
   );
 }
