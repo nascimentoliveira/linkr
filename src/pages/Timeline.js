@@ -41,7 +41,6 @@ export default function Timeline() {
         config
       )
       .then((res) => {
-        console.log(res.data);
         if (res.data.posts.length < POSTS_PER_PAGE) {
           setHasMore(false);
         }
