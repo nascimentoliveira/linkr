@@ -7,7 +7,7 @@ import Comment from "./Comment";
 import axios from "axios";
 import ROUTES from "../constants";
 
-export default function Comments({show, postId, notify, setComment}) {
+export default function Comments({show, postId, setComment}) {
     const {image, token} = useContext(UserContext);
     const [myComment, setMyComment] = useState("");
     const [load, setLoad] = useState(false);
@@ -23,12 +23,12 @@ export default function Comments({show, postId, notify, setComment}) {
     },[show])
     async function getComments(){
         try {
-            const result = await axios.get(ROUTES.COMMENTS`${postId}`, config);
+            const result = await axios.get(`${ROUTES.COMMENTS}/${postId}`, config);
             setComments(result.data);
             setComment(result.data.length);
         } catch (e) {
             console.log(e);
-            notify("An error occured while trying to get comments, please refresh the page");
+            alert("An error occured while trying to get comments, please refresh the page");
         }
     }
     async function sendComment(e){
@@ -39,24 +39,24 @@ export default function Comments({show, postId, notify, setComment}) {
             text: myComment
         }
         try {
-            await axios.post(ROUTES.COMMENTS`${postId}`, body, config);
+            await axios.post(`${ROUTES.COMMENTS}/${postId}`, body, config);
             setLoad(false);
             setMyComment("");
             getComments();
         } catch (e) {
             console.log(e);
-            notify("An error occured while trying to send comment, please refresh the page");
+            alert("An error occured while trying to send comment, please refresh the page");
         }
     };
     function renderComments(){
         if(comments){
-            return comments.map(({isPostAuthor, follow, username, picture, text})=>
+            return comments.map(({isPostAuthor, follow, username, picture, comment})=>
                 <Comment 
                     follow={follow}
                     isPostAuthor={isPostAuthor}
                     name={username} 
                     profileImg={picture} 
-                    text={text}
+                    comment={comment}
                 />
             )
         }
@@ -92,13 +92,14 @@ const Container = styled.div`
     flex-direction: column;
     width: 100%;
     background-color: #1E1E1E;
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
     padding: 13px 25px;
     padding-bottom: 25px;
-    border-radius: 0px 0px 16px 16px;
+    border-radius: 16px;
     box-sizing: border-box;
     padding-top: 10px;
-    margin-top: -10px;
+    margin-left: 10px;
+    
     img{
         width: 45px;
         border-radius: 50%;
