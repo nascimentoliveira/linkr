@@ -11,6 +11,7 @@ import { Tooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import UserContext from "../contexts/userContext";
 import Comments from "./Comments";
+import { AiOutlineComment } from "react-icons/ai"
 import DeletePost from "./DeletePost.js";
 
 export default function PostCard({ post, render, setRender }) {
@@ -25,6 +26,7 @@ export default function PostCard({ post, render, setRender }) {
     image,
     comments,
     userId,
+    postId
   } = post;
 
   const [selecionado, setSelecionado] = useState(false);
@@ -38,7 +40,7 @@ export default function PostCard({ post, render, setRender }) {
   const [oldMessage, setOldMessage] = useState("");
   const [promiseReturned, setPromiseReturned] = useState(false);
   const [comment, setComment] = useState(comments);
-  /* const [showComments, setShowComments] = useState(false);  */
+  const [showComments, setShowComments] = useState(false);
 
   const { user, token } = useContext(UserContext);
   const navigate = useNavigate();
@@ -216,91 +218,107 @@ export default function PostCard({ post, render, setRender }) {
   }
 
   return (
-    <Container>
-      <Left>
-        <img src={picture} alt="User" onClick={() => goToProfile(userId)} />
+    <Container comments={showComments}>
+      <Box1>
+        <Left>
+          <img src={picture} alt="User" onClick={() => goToProfile(userId)} />
 
-        <Likes>
-          <HeartIcon
-            onClick={() => {
-              if (selecionado === false) {
-                setTimeout(like(id), 1000);
-              } else if (selecionado === true) {
-                setTimeout(dislike(id), 1000);
-              }
-            }}
-            color={selecionado === false ? white : red}
-          >
-            <TiHeartFullOutline></TiHeartFullOutline>
-          </HeartIcon>
-
-          <TooltipWrapper>
-            <a id="custom-inline-styles"> {countLikes} likes </a>
-          </TooltipWrapper>
-          <Tooltip
-            anchorId="custom-inline-styles"
-            place="top"
-            style={{ color: "white", fontSize: "12px" }}
-            content={countLikes ? `${result}` : null}
-          />
-        </Likes>
-      </Left>
-
-      <Infos>
-        <EditRem>
-          <h1 onClick={() => goToProfile(userId)}>{username}</h1>
-
-          <Icons>
-            <GoPencil
-              style={{ cursor: "pointer", color: "white" }}
+          <Likes>
+            <HeartIcon
               onClick={() => {
-                if (edit === false) {
-                  setEdit(!edit);
-                  setTimeout(focus, 100);
-                } else {
-                  setEdit(false);
-                  setMessage(oldMessage);
+                if (selecionado === false) {
+                  setTimeout(like(id), 1000);
+                } else if (selecionado === true) {
+                  setTimeout(dislike(id), 1000);
                 }
               }}
-            ></GoPencil>
-            {userId === user.userId ? <DeletePost id={id} render={render} setRender={setRender} /> : <></>}
-          </Icons>
-        </EditRem>
-        {edit ? (
-          <textarea
-            name="message"
-            ref={nameRef}
-            type="text"
-            value={message}
-            onKeyDown={submit}
-            onChange={(e) => setMessage(e.target.value)}
-            disabled={promiseReturned ? true : false}
-          />
-        ) : (
-          <ReactTagify
-            tagStyle={tagStyle}
-            tagClicked={tag => {
-              navigate(`/hashtag/${tag.substring(1).replace(/[^\w\s\']|_/g, '')}`);
-              setRender(!render);
-            }}
-          >
-            <h2>{text}</h2>
-          </ReactTagify>
-        )}
-        <UrlBox onClick={(e) => openInNewTab(url)}>
-          <UrlInfos>
-            <h3>{title}</h3>
-            <p>{description}</p>
-            <h4>{url}</h4>
-          </UrlInfos>
-          <img src={image} alt="Url" />
-        </UrlBox>
-      </Infos>
-      <Comments /* show={showComments} postId={postId} */ setComment={setComment} />
+              color={selecionado === false ? white : red}
+            >
+              <TiHeartFullOutline></TiHeartFullOutline>
+            </HeartIcon>
+
+            <TooltipWrapper>
+              <a id="custom-inline-styles"> {countLikes} likes </a>
+            </TooltipWrapper>
+            <Tooltip
+              anchorId="custom-inline-styles"
+              place="top"
+              style={{ color: "white", fontSize: "12px" }}
+              content={countLikes ? `${result}` : null}
+            />
+            <div className="comment" onClick={() => setShowComments(!showComments)}>
+              <AiOutlineComment color="#fff" size={30} />
+              <h6>{comment} comments</h6>
+            </div>
+          </Likes>
+
+        </Left>
+        <Infos>
+          <EditRem>
+            <h1 onClick={() => goToProfile(userId)}>{username}</h1>
+
+            <Icons>
+              <GoPencil
+                style={{ cursor: "pointer", color: "white" }}
+                onClick={() => {
+                  if (edit === false) {
+                    setEdit(!edit);
+                    setTimeout(focus, 100);
+                  } else {
+                    setEdit(false);
+                    setMessage(oldMessage);
+                  }
+                }}
+              ></GoPencil>
+              {userId === user.userId ? <DeletePost id={id} render={render} setRender={setRender} /> : <></>}
+            </Icons>
+          </EditRem>
+          {edit ? (
+            <textarea
+              name="message"
+              ref={nameRef}
+              type="text"
+              value={message}
+              onKeyDown={submit}
+              onChange={(e) => setMessage(e.target.value)}
+              disabled={promiseReturned ? true : false}
+            />
+          ) : (
+            <ReactTagify
+              tagStyle={tagStyle}
+              tagClicked={tag => {
+                navigate(`/hashtag/${tag.substring(1).replace(/[^\w\s\']|_/g, '')}`);
+                setRender(!render);
+              }}
+            >
+              <h2>{text}</h2>
+            </ReactTagify>
+          )}
+          <UrlBox onClick={(e) => openInNewTab(url)}>
+            <UrlInfos>
+              <h3>{title}</h3>
+              <p>{description}</p>
+              <h4>{url}</h4>
+            </UrlInfos>
+            <img src={image} alt="Url" />
+          </UrlBox>
+        </Infos>
+      </Box1>
+      <Box2>
+        <Comments show={showComments} postId={id} setComment={setComment}></Comments>
+      </Box2>
     </Container>
   );
 }
+const Box1 = styled.div`
+  display: flex;
+  flex-direction: row;
+`
 
+const Box2 = styled.div`
+  display: flex;
+  flex-direction: row;
+`
 const Left = styled.div`
   display: flex;
   flex-direction: column;
@@ -309,7 +327,23 @@ const Left = styled.div`
   color: #c0c0c0;
   font-size: 22px;
   font-weight: 900;
-  margin-bottom: 140px;
+  margin-bottom: ${props => props.comments ? "0px" : "140px"};
+
+  .comment{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        margin-top: 20px;
+        
+        h6{
+            width: 60px;  
+            height:20px ;
+            font-size: 14px;
+            position: absolute;
+        }
+    }
 
   img {
     width: 53px;
@@ -392,8 +426,10 @@ const Container = styled.section`
   font-weight: 400;
   margin-bottom: 30px;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   padding: 20px 20px 20px 5px;
+  position: relative;
   h1 {
     color: white;
     font-size: 19px;
