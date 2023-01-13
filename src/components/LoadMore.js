@@ -10,7 +10,6 @@ import UserContext from '../contexts/userContext.js';
 import ROUTES from '../constants.js';
 
 export default function LoadMore({ lastRefresh, setLastRefresh, posts, setPosts }) {
-
   const [newPosts, setNewPosts] = useState([]);
   const { token } = useContext(UserContext);
   const navigate = useNavigate();
@@ -53,7 +52,7 @@ export default function LoadMore({ lastRefresh, setLastRefresh, posts, setPosts 
   }, 15000);
 
   return (
-    newPosts.length > 0 ?
+    newPosts?.length > 0 ?
       <Container onClick={() => {
         setPosts([...newPosts, ...posts]);
         setNewPosts([]);
