@@ -100,9 +100,9 @@ export default function UserPosts() {
   if (token) {
     return (
       <Container>
-        <Navbar />
+        <Navbar setRender={setRender} render={render}/>
         <View>
-          {loading ? <></> : <UserHeader header={header} />}
+          {loading ? <LoadHeader></LoadHeader> : <UserHeader header={header} />}
           <section>
             <Posts>
               <InfiniteScroll
@@ -156,3 +156,9 @@ const Posts = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+const LoadHeader = styled.div`
+  margin-top: 20px;
+  margin-bottom: 10px;
+  height: 150px;
+`
