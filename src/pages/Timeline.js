@@ -32,10 +32,10 @@ export default function Timeline() {
   function fetchData() {
     axios.get(`${ROUTES.TIMELINE_ROUTE}/?page=${pageNumber}&offset=${POSTS_PER_PAGE}`, config)
       .then(res => {
-        if (res.data.length < POSTS_PER_PAGE) {
+        if (res.data.posts.length < POSTS_PER_PAGE) {
           setHasMore(false);
-        }
-        setPosts([...posts, ...res.data]);
+        } 
+        setPosts([...posts, ...res.data.posts]);
         setPageNumber(pageNumber + 1);
         setLoading(false);
       })
@@ -43,14 +43,14 @@ export default function Timeline() {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: err.response?.data.message
+          text: err.response.data.message
         });
         setLoading(false);
       });
   }
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({top: 0, behavior: 'smooth'});
     if (!token) {
       navigate('/');
       Swal.fire({
@@ -61,11 +61,16 @@ export default function Timeline() {
         showConfirmButton: false,
         timer: 1200
       });
+    } else {
+      setLoading(true);
+      setPosts([]);
+      setHasMore(true);
+      setPageNumber(0);
     }
   }, [render]);
 
   const loader =
-    <Loading key={Math.random()}>
+    <Loading key={0}>
       <OvalSpinner />
       <p>Loading more posts</p>
     </Loading>;
@@ -94,15 +99,9 @@ export default function Timeline() {
                 hasMore={hasMore}
                 loader={loader}
               >
-                {
-                  loading ? <></> :
-                    (posts.length === 0 ?
-                      noPosts :
-                      posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)
-                    )
-                }
+                {posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)}
               </InfiniteScroll>
-              {hasMore ? <></> : endMessage}
+              {loading ? <></> : posts.length === 0 ? noPosts : !hasMore ? endMessage : <></>}
             </Posts>
             <Sidebar render={render} setRender={setRender} />
           </section>

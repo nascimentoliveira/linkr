@@ -65,7 +65,12 @@ export default function Navbar() {
 
   return (
     <Container>
-      <Logo onClick={() => navigate("/timeline")}>linkr</Logo>
+      <Logo onClick={() => {
+        navigate("/timeline");
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      }}>
+        linkr
+      </Logo>
       <SearchArea>
         <DebounceInput
           element={InputArea}
@@ -78,14 +83,14 @@ export default function Navbar() {
         <ul>
           {searchResult.length != 0
             ? searchResult.map(({ id, picture, username, follows }) => {
-                return (
-                  <SearchResult onClick={() => goToProfile(id)} key={id}>
-                    <img src={picture} alt="User" />
-                    {username}
-                    {follows? <p>• following</p> : null}
-                  </SearchResult>
-                );
-              })
+              return (
+                <SearchResult onClick={() => goToProfile(id)} key={id}>
+                  <img src={picture} alt="User" />
+                  {username}
+                  {follows ? <p>• following</p> : null}
+                </SearchResult>
+              );
+            })
             : null}
         </ul>
       </SearchArea>
