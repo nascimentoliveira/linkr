@@ -52,14 +52,14 @@ export default function UserPosts() {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: err.response?.data.message,
+          text: err.response.data.message,
         });
         setLoading(false);
       });
   }
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({top: 0, behavior: 'smooth'});
     if (!token) {
       navigate("/");
       Swal.fire({
@@ -79,7 +79,7 @@ export default function UserPosts() {
   }, [render]);
 
   const loader = (
-    <Loading key={Math.random()}>
+    <Loading key={0}>
       <OvalSpinner />
       <p>Loading more posts</p>
     </Loading>
@@ -100,9 +100,9 @@ export default function UserPosts() {
   if (token) {
     return (
       <Container>
-        <Navbar />
+        <Navbar setRender={setRender} render={render}/>
         <View>
-          {loading ? <></> : <UserHeader header={header} />}
+          {loading ? <LoadHeader></LoadHeader> : <UserHeader header={header} />}
           <section>
             <Posts>
               <InfiniteScroll
@@ -110,24 +110,11 @@ export default function UserPosts() {
                 hasMore={hasMore}
                 loader={loader}
               >
-                {loading ? (
-                  <></>
-                ) : posts.length === 0 ? (
-                  noPosts
-                ) : (
-                  posts.map((p) => (
-                    <PostCard
-                      post={p}
-                      render={render}
-                      setRender={setRender}
-                      key={p.id}
-                    />
-                  ))
-                )}
+                {posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)}
               </InfiniteScroll>
-              {hasMore ? <></> : endMessage}
+              {loading ? <></> : posts.length === 0 ? noPosts : !hasMore ? endMessage : <></>}
             </Posts>
-            <Sidebar />
+            <Sidebar render={render} setRender={setRender} />
           </section>
         </View>
       </Container>
@@ -169,3 +156,9 @@ const Posts = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+const LoadHeader = styled.div`
+  margin-top: 20px;
+  margin-bottom: 10px;
+  height: 150px;
+`

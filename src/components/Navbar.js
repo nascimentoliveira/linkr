@@ -9,7 +9,7 @@ import ROUTES from "../constants.js";
 
 import UserContext from "../contexts/userContext.js";
 
-export default function Navbar() {
+export default function Navbar({render,setRender}) {
   const { user, setUser, token, setToken } = useContext(UserContext);
   const [showLogout, setshowLogout] = useState(false);
   const [search, setSearch] = useState("");
@@ -61,17 +61,25 @@ export default function Navbar() {
 
   function goToProfile(id) {
     navigate(`/user/${id}`);
+    setRender(!render)
+    setSearch("")
   }
 
   return (
     <Container>
-      <Logo onClick={() => navigate("/timeline")}>linkr</Logo>
+      <Logo onClick={() => {
+        navigate("/timeline");
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      }}>
+        linkr
+      </Logo>
       <SearchArea>
         <DebounceInput
           element={InputArea}
           type="text"
           onChange={(e) => setSearch(e.target.value)}
           minLength={3}
+          value={search}
           debounceTimeout={300}
           placeholder={"Search for people and friends"}
         />
@@ -82,7 +90,7 @@ export default function Navbar() {
                   <SearchResult onClick={() => goToProfile(id)} key={id}>
                     <img src={picture} alt="User" />
                     {username}
-                    {follows? <p>• following</p> : null}
+                    {follows ? <p>• following</p> : null}
                   </SearchResult>
                 );
               })

@@ -93,6 +93,10 @@ const Container = styled.aside`
   background: #171717;
   border-radius: 16px;
   cursor: default;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 120px;
+  z-index: 2;
 
   h1 {
     font-family: 'Oswald', sans-serif;

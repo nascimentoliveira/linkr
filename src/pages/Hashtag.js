@@ -24,16 +24,16 @@ export default function Hashtag() {
   const [hasMore, setHasMore] = useState(true);
   const [pageNumber, setPageNumber] = useState(0);
   const { token } = useContext(UserContext);
-  
+
   const navigate = useNavigate();
 
   function fetchData() {
     axios.get(`${ROUTES.HASTAGS_ROUTE}/${hashtag.hashtag}?page=${pageNumber}&offset=${POSTS_PER_PAGE}`, config)
       .then(res => {
-        if (res.data.length < POSTS_PER_PAGE) {
+        if (res.data.posts.length < POSTS_PER_PAGE) {
           setHasMore(false);
         }
-        setPosts([...posts, ...res.data]);
+        setPosts([...posts, ...res.data.posts]);
         setPageNumber(pageNumber + 1);
         setLoading(false);
       })
@@ -41,14 +41,14 @@ export default function Hashtag() {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: err.response?.data.message
+          text: err.response.data.message
         });
         setLoading(false);
       });
   }
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({top: 0, behavior: 'smooth'});
     if (!token) {
       Swal.fire({
         position: 'center',
@@ -74,7 +74,7 @@ export default function Hashtag() {
   };
 
   const loader =
-    <Loading key={Math.random()}>
+    <Loading key={0}>
       <OvalSpinner />
       <p>Loading more posts</p>
     </Loading>;
@@ -94,7 +94,7 @@ export default function Hashtag() {
   } else {
     return (
       <Container>
-        <Navbar />
+        <Navbar setRender={setRender} render={render}/>
         <View>
           <h1>{'# ' + hashtag.hashtag}</h1>
           <section>
@@ -104,15 +104,9 @@ export default function Hashtag() {
                 hasMore={hasMore}
                 loader={loader}
               >
-                {
-                  loading ? <></> :
-                    (posts.length === 0 ?
-                      noPosts :
-                      posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)
-                    )
-                }
+                {posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)}
               </InfiniteScroll>
-              {hasMore ? <></> : endMessage}
+              {loading ? <></> : posts.length === 0 ? noPosts : !hasMore ? endMessage : <></>}
             </Posts>
             <Sidebar render={render} setRender={setRender} />
           </section>
