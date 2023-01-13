@@ -10,6 +10,7 @@ const SIGN_IN_ROUTE = 'http://localhost:4000/';
 const SIGN_UP_ROUTE = 'http://localhost:4000/signup';
 const TIMELINE_ROUTE = 'http://localhost:4000/timeline';
 const HASTAGS_ROUTE = 'http://localhost:4000/hashtag';
+const POST_DELETE_ROUTE = 'http://localhost:4000/deletepost';
 const URL = 'http://localhost:4000';
 const COMMENTS = 'http://localhost:4000/comments';
 
@@ -19,6 +20,7 @@ const ROUTES = {
   POSTS_ROUTE,
   TIMELINE_ROUTE,
   HASTAGS_ROUTE,
+  POST_DELETE_ROUTE,
   URL,
   COMMENTS
 };
