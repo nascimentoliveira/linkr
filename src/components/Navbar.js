@@ -67,7 +67,12 @@ export default function Navbar({render,setRender}) {
 
   return (
     <Container>
-      <Logo onClick={() => navigate("/timeline")}>linkr</Logo>
+      <Logo onClick={() => {
+        navigate("/timeline");
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      }}>
+        linkr
+      </Logo>
       <SearchArea>
         <DebounceInput
           element={InputArea}

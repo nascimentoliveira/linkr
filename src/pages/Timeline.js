@@ -11,11 +11,13 @@ import View from '../components/View.js';
 import ROUTES from '../constants.js';
 import UserContext from '../contexts/userContext.js';
 import Sidebar from '../components/Sidebar.js';
+import LoadMore from '../components/LoadMore.js';
 import { OvalSpinner } from '../components/Spinner.js';
 import { POSTS_PER_PAGE } from '../constants.js';
 
 export default function Timeline() {
   const [loading, setLoading] = useState(true);
+  const [lastRefresh, setLastRefresh] = useState(new Date().toISOString());
   const [posts, setPosts] = useState([]);
   const [render, setRender] = useState(true);
   const [hasMore, setHasMore] = useState(true);
@@ -31,28 +33,32 @@ export default function Timeline() {
   };
 
   function fetchData() {
-    axios.get(`${ROUTES.TIMELINE_ROUTE}/?page=${pageNumber}&offset=${POSTS_PER_PAGE}`, config)
-      .then(res => {
-        if (res.data.length < POSTS_PER_PAGE) {
-          setHasMore(false);
-        }
-        setPosts([...posts, ...res.data]);
+    axios.get(
+      `${ROUTES.TIMELINE_ROUTE}/`+
+      `?offset=${posts.length}&`+
+      `more=${POSTS_PER_PAGE}`,
+      config
+    ).then(res => {
+      if (res.data.posts.length < POSTS_PER_PAGE) {
+        setHasMore(false);
+      }
+      setPosts([...posts, ...res.data.posts]);
         setMessage(res.data.message)
-        setPageNumber(pageNumber + 1);
-        setLoading(false);
-      })
+      setPageNumber(pageNumber + 1);
+      setLoading(false);
+    })
       .catch(err => {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: err.response?.data.message
+          text: err.response.data.message
         });
         setLoading(false);
       });
   }
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     if (!token) {
       navigate('/');
       Swal.fire({
@@ -63,11 +69,17 @@ export default function Timeline() {
         showConfirmButton: false,
         timer: 1200
       });
+    } else {
+      setLoading(true);
+      setPosts([]);
+      setHasMore(true);
+      setPageNumber(0);
     }
+    setLastRefresh(new Date().toISOString());
   }, [render]);
 
   const loader =
-    <Loading key={Math.random()}>
+    <Loading key={0}>
       <OvalSpinner />
       <p>Loading more posts</p>
     </Loading>;
@@ -91,20 +103,20 @@ export default function Timeline() {
           <section>
             <Posts>
               <NewPublish setRender={setRender} render={render} />
+              <LoadMore
+                lastRefresh={lastRefresh}
+                setLastRefresh={setLastRefresh}
+                posts={posts}
+                setPosts={setPosts}
+              />
               <InfiniteScroll
                 loadMore={fetchData}
                 hasMore={hasMore}
                 loader={loader}
               >
-                {
-                  loading ? <></> :
-                    (posts.length === 0 ?
-                      noPosts :
-                      posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)
-                    )
-                }
+                {posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)}
               </InfiniteScroll>
-              {hasMore ? <></> : endMessage}
+              {loading ? <></> : posts.length === 0 ? noPosts : !hasMore ? endMessage : <></>}
             </Posts>
             <Sidebar render={render} setRender={setRender} />
           </section>
