@@ -11,6 +11,10 @@
 
 O Linkr é uma rede social que permite aos usuários compartilhar e descobrir links interessantes. Com o Linkr, os usuários podem criar posts contendo links para páginas de interesse e interagir com o conteúdo de outros usuários. A aplicação oferece recursos como seguir outros usuários, curtir e comentar em posts, visualizar posts com determinadas hashtags de interesse e acessar um feed personalizado com os posts dos outros usuários seguidos.
 
+> O código-fonte do back-end da aplicação está hospedado no GitHub em: [Linkr Back-end](https://github.com/nascimentoliveira/linkr-api)
+
+> Linkr atualmente pode ser experimentado em: [Linkr Live Demo](https://nascimentoliveira-linkr.vercel.app)
+
 ## Funcionalidades Principais
 
 - **Compartilhamento de links:** Os usuários podem criar posts contendo links que desejam compartilhar com a comunidade. Cada post inclui uma descrição opcional para fornecer contexto.
@@ -60,9 +64,27 @@ Linkr foi desenvolvido utilizando as seguintes tecnologias:
 
 - Linguagem de Programação: [Javascript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference).
 - Banco de Dados: [PostgreSQL](https://www.postgresql.org/about/).
-- Front-end: [React](https://react.dev/learn) e [Styled Components](https://styled-components.com/).
-- Back-end: [Node.js](https://nodejs.org/en/about).
-- Autenticação: [JWT](https://jwt.io/).
+- Front-end
+    - [React](https://react.dev/learn): Biblioteca JavaScript de código aberto para a construção de interfaces de usuário.
+    - [Axios](https://axios-http.com/ptbr/docs/intro): Biblioteca JavaScript para realizar requisições HTTP.
+    - [Styled Components](https://styled-components.com/): Biblioteca para escrever estilos CSS de forma dinâmica em componentes React.
+    - [React Dom](https://www.npmjs.com/package/react-dom): Biblioteca para renderização de componentes React no navegador.
+    - [Sweet Alert](https://sweetalert2.github.io/): Biblioteca JavaScript para exibir belas caixas de diálogo modais.
+    - [React Toastify](https://fkhadra.github.io/react-toastify/introduction): Biblioteca para exibir notificações e mensagens de toast na aplicação.
+    - [React Tagify](https://yaireo.github.io/tagify/): Biblioteca para criar tags e facilitar a entrada de dados relacionados a tags.
+    - [React Modal](https://reactcommunity.org/react-modal/): Biblioteca para criação e exibição de modais na aplicação.
+    - [React Infinite Scroller](https://www.npmjs.com/package/react-infinite-scroller): Biblioteca para implementar rolagem infinita em páginas longas.
+    - [React Loader Spinner](https://mhnpd.github.io/react-loader-spinner/): Biblioteca para exibir indicadores de carregamento de componentes na página.
+- Back-end
+    - [Node.js](https://nodejs.org/en/about): Plataforma de desenvolvimento JavaScript assíncrona baseada no motor V8 do Chrome.
+    - [Express](https://expressjs.com/pt-br/): Framework web rápido e minimalista para Node.js.
+    - [Dotenv](https://www.npmjs.com/package/dotenv): Pacote para carregar variáveis de ambiente a partir de um arquivo .env.
+    - [Bcrypt](https://www.npmjs.com/package/bcrypt): Biblioteca para criptografia de senhas.
+    - [Joi](https://joi.dev/): Biblioteca para validação de dados.
+    - [JWT](https://www.npmjs.com/package/jsonwebtoken): Biblioteca para geração e validação de tokens de autenticação.
+    - [Url Metadata](https://www.npmjs.com/package/url-metadata): Módulo para extrair metadados de uma URL, como título, descrição e imagem.
+
+Essas tecnologias foram escolhidas para proporcionar uma experiência de desenvolvimento moderna, eficiente e escalável.
 
 ## Instalação
 1. Clone o repositório do projeto:
@@ -104,11 +126,6 @@ Antes de começar, certifique-se de ter as seguintes ferramentas instaladas em s
 -   Node.js (versão 14 ou superior)
 -   NPM (versão 7 ou superior)
 
-## Repositório de Back-end e Deploy
-
-> O código-fonte do back-end da aplicação está hospedado no GitHub em: [Linkr Back-end](https://github.com/nascimentoliveira/linkr-api)
-
->Shortly atualmente pode ser experimentado em: [Linkr Live Demo](https://nascimentoliveira-linkr.vercel.app)
 
 ## Contribuição
 
