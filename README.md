@@ -14,6 +14,8 @@ O Linkr é uma rede social que permite aos usuários compartilhar e descobrir li
 > O código-fonte do back-end da aplicação está hospedado no GitHub em: [Linkr Back-end](https://github.com/nascimentoliveira/linkr-api)
 
 > Linkr atualmente pode ser experimentado em: [Linkr Live Demo](https://nascimentoliveira-linkr.vercel.app)
+>  
+>> *A primeira requisição ao Live Demo pode levar um pouco mais de tempo para carregar. Isso ocorre porque os servidores são ativados conforme necessário e podem levar alguns instantes para iniciar!*
 
 ## Funcionalidades Principais
 
@@ -34,7 +36,7 @@ O Linkr é uma rede social que permite aos usuários compartilhar e descobrir li
 
 1. Após iniciar a aplicação Linkr, você será direcionado para a página inicial. Se você já tem uma conta, faça login usando suas credenciais. Caso contrário, clique em `First time? Create an account!` para criar uma nova conta.
 
-2. Na página inicial, você verá o feed principal com os posts das pessoas que você segue. Role a página para baixo para ver mais posts. 
+2. Após o login, você verá o feed principal com os posts das pessoas que você segue. Role a página para baixo para ver mais posts. 
 
 3. Para a criação de post, insira a URL do link que deseja compartilhar no campo `http://...`. Você também pode adicionar uma descrição opcional para fornecer contexto sobre o link compartilhado.
 
@@ -92,34 +94,48 @@ Essas tecnologias foram escolhidas para proporcionar uma experiência de desenvo
     git clone https://github.com/nascimentoliveira/linkr.git
     ```
 
-2. Instale as dependências:
+2. Acesse o diretório do projeto.
+   ```bash
+   cd linkr
+   ```
+
+3. Instale as dependências:
     ```bash
     npm install
     ```
-3. Configure as variáveis de ambiente:  
-    Antes de executar a aplicação, é necessário configurar as variáveis de ambiente corretamente. Siga os passos abaixo:
 
+4. Configure as variáveis de ambiente:  
+    Antes de executar a aplicação, é necessário configurar as variáveis de ambiente corretamente. Siga os passos abaixo:
     -  Renomeie o arquivo `.env.example` para `.env`.
+
+        ```bash
+        mv .env.example .env
+        ```
+
     - Abra o arquivo `.env` em um editor de texto.
     - Procure a variável `APP_API_BASE_URL` e defina-a com a URL base da sua API. Exemplo:  
+
         ```bash
         APP_API_BASE_URL=http://localhost:8000/api
         ```
+
     - Verifique se existem outras variáveis de ambiente necessárias para o funcionamento da aplicação e defina-as de acordo com a sua configuração.
+
     - Salve o arquivo `.env`.
     
-    *Certifique-se de não compartilhar o arquivo `.env` contendo informações sensíveis, como senhas, chaves de API ou tokens de acesso. Mantenha-o seguro e fora do controle de versão do seu repositório.*
+    > ⚠️ *Certifique-se de não compartilhar o arquivo `.env` contendo informações sensíveis, como senhas, chaves de API ou tokens de acesso. Mantenha-o seguro e fora do controle de versão do seu repositório.*
 
     Após configurar as variáveis de ambiente, a aplicação estará pronta para ser executada.
 
-4. Execute o projeto:
+5. Execute o projeto:
     ```bash
     npm start
     ```
-5. A aplicação ficará disponível em:
+6. A aplicação ficará disponível em:
     ```bash
     http://localhost:3000
     ```
+
 ## Pré-requisitos
 
 Antes de começar, certifique-se de ter as seguintes ferramentas instaladas em seu computador:  
