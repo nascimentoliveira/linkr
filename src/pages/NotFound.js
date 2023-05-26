@@ -1,6 +1,7 @@
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
-import Navbar from '../components/Navbar';
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+
+import Navbar from "../components/Navbar";
 
 export default function NotFound() {
 
@@ -8,15 +9,15 @@ export default function NotFound() {
 
   async function alertError() {
     await (Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'This page was not found!',
+      icon: "error",
+      title: "Oops...",
+      text: "This page was not found!",
       showCancelButton: true,
       showConfirmButton: false,
-      cancelButtonText: 'Back to main page',
+      cancelButtonText: "Back to main page",
     })).then(result => {
       if (!result.isConfirmed) {
-        navigate('/');
+        navigate("/");
       }
     });
   }

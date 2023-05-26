@@ -4,16 +4,16 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroller";
+import Swal from "sweetalert2";
+
+import UserContext from "../contexts/userContext.js";
 import Navbar from "../components/Navbar.js";
 import View from "../components/View.js";
 import PostCard from "../components/PostCard.js";
 import Sidebar from "../components/Sidebar.js";
-import routes from "../constants.js";
-import UserContext from "../contexts/userContext.js";
-import Swal from "sweetalert2";
 import { OvalSpinner } from "../components/Spinner.js";
-import { POSTS_PER_PAGE } from "../constants.js";
 import UserHeader from "../components/UserHeader.js";
+import { POSTS_PER_PAGE } from "../constants.js";
 
 export default function UserPosts() {
   const [loading, setLoading] = useState(true);
@@ -36,7 +36,7 @@ export default function UserPosts() {
   function fetchData() {
     axios
       .get(
-        `${routes.URL}/user/${id}?page=${pageNumber}&offset=${POSTS_PER_PAGE}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/posts/user/${id}?page=${pageNumber}&offset=${POSTS_PER_PAGE}`,
         config
       )
       .then((res) => {
@@ -59,7 +59,7 @@ export default function UserPosts() {
   }
 
   useEffect(() => {
-    window.scrollTo({top: 0, behavior: 'smooth'});
+    window.scrollTo({ top: 0, behavior: "smooth" });
     if (!token) {
       navigate("/");
       Swal.fire({
@@ -100,7 +100,7 @@ export default function UserPosts() {
   if (token) {
     return (
       <Container>
-        <Navbar setRender={setRender} render={render}/>
+        <Navbar setRender={setRender} render={render} />
         <View>
           {loading ? <LoadHeader></LoadHeader> : <UserHeader header={header} />}
           <section>

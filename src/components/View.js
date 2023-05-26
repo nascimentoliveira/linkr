@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const View = styled.main`
   padding-top: 60px;
@@ -6,7 +6,7 @@ const View = styled.main`
   width: 100%;
   > h1 {
     padding: 43px 0px;
-    font-family: 'Oswald', sans-serif;
+    font-family: "Oswald", sans-serif;
     font-weight: 700;
     font-size: 43px;
     line-height: 64px;

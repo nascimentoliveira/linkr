@@ -5,11 +5,10 @@ import Swal from "sweetalert2";
 import { DebounceInput } from "react-debounce-input";
 import styled from "styled-components";
 import axios from "axios";
-import ROUTES from "../constants.js";
 
 import UserContext from "../contexts/userContext.js";
 
-export default function Navbar({render,setRender}) {
+export default function Navbar({ render, setRender }) {
   const { user, setUser, token, setToken } = useContext(UserContext);
   const [showLogout, setshowLogout] = useState(false);
   const [search, setSearch] = useState("");
@@ -30,11 +29,7 @@ export default function Navbar({render,setRender}) {
   }, [search]);
 
   async function searchUser() {
-    const { data } = await axios.post(
-      `${ROUTES.URL}/search`,
-      { search },
-      config
-    );
+    const { data } = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/search`, { search }, config);
     setSearchResult(data);
   }
 
@@ -69,7 +64,7 @@ export default function Navbar({render,setRender}) {
     <Container>
       <Logo onClick={() => {
         navigate("/timeline");
-        window.scrollTo({top: 0, behavior: 'smooth'});
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }}>
         linkr
       </Logo>
@@ -86,14 +81,14 @@ export default function Navbar({render,setRender}) {
         <ul>
           {searchResult.length != 0
             ? searchResult.map(({ id, picture, username, follows }) => {
-                return (
-                  <SearchResult onClick={() => goToProfile(id)} key={id}>
-                    <img src={picture} alt="User" />
-                    {username}
-                    {follows ? <p>• following</p> : null}
-                  </SearchResult>
-                );
-              })
+              return (
+                <SearchResult onClick={() => goToProfile(id)} key={id}>
+                  <img src={picture} alt="User" />
+                  {username}
+                  {follows ? <p>• following</p> : null}
+                </SearchResult>
+              );
+            })
             : null}
         </ul>
       </SearchArea>

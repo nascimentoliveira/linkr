@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export default function Hashtag({ hashtag, render, setRender }) {
   return (
@@ -8,14 +8,14 @@ export default function Hashtag({ hashtag, render, setRender }) {
         title={`View posts with #${hashtag.hashtag}`}
         onClick={() => setRender(!render)}
       >
-        <p>{'# ' + hashtag.hashtag}</p>
+        <p>{"# " + hashtag.hashtag}</p>
       </Container>
     </Link>
   );
 }
 
 const Container = styled.li`
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-weight: 700;
   font-size: 19px;
   line-height: 23px;

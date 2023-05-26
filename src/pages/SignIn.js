@@ -1,25 +1,24 @@
-import { useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import Swal from 'sweetalert2';
-import axios from 'axios';
+import { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import Swal from "sweetalert2";
+import axios from "axios";
 
-import Header from '../components/Header.js';
-import UserContext from '../contexts/userContext.js';
-import ROUTES from '../constants.js';
-import Spinner from '../components/Spinner.js';
+import UserContext from "../contexts/userContext.js";
+import Header from "../components/Header.js";
+import Spinner from "../components/Spinner.js";
 
 export default function Login() {
 
   const [formEnabled, setFormEnabled] = useState(true);
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [form, setForm] = useState({ email: "", password: "" });
   const { token, setToken, setUser } = useContext(UserContext);
   
   const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
-      navigate('/timeline');
+      navigate("/timeline");
     }
   }, []);
 
@@ -30,17 +29,17 @@ export default function Login() {
   }
 
   function checkForm() {
-    const emptyFields = Object.keys(form).filter(key => form[key].trim() === '');
+    const emptyFields = Object.keys(form).filter(key => form[key].trim() === "");
     if (emptyFields.length > 0) {
       const last = emptyFields.pop();
       Swal.fire({
-        icon: 'warning',
-        background: '#151515',
+        icon: "warning",
+        background: "#151515",
         text: (`
-        ${(emptyFields.length > 0 ? emptyFields.join(', ') + ' and ' : '') + last} 
-        ${emptyFields.length > 0 ? 'fields' : 'field'} 
+        ${(emptyFields.length > 0 ? emptyFields.join(", ") + " and " : "") + last} 
+        ${emptyFields.length > 0 ? "fields" : "field"} 
         needs to be filled`
-        .replace('email', 'e-mail'))
+        .replace("email", "e-mail"))
       });
       return false;
     } else {
@@ -52,24 +51,24 @@ export default function Login() {
     e.preventDefault();
     if (checkForm()) {
       setFormEnabled(false);
-      axios.post(ROUTES.SIGN_IN_ROUTE, form)
+      axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth`, form)
         .then(res => {
-          localStorage.setItem('Linkr', JSON.stringify(res.data));
+          localStorage.setItem("Linkr", JSON.stringify(res.data));
           setToken(res.data.token);
           delete res.data.token;
           setUser(res.data);
-          navigate('/timeline');
+          navigate("/timeline");
         })
         .catch(err => {
           Swal.fire({
-            icon: 'error',
-            background: '#151515',
-            title: 'Oops...',
+            icon: "error",
+            background: "#151515",
+            title: "Oops...",
             text: err.response.data.message
           });
           setForm({
             ...form,
-            password: ''
+            password: ""
           });
           setFormEnabled(true);
         });
@@ -79,35 +78,35 @@ export default function Login() {
   return (
     <Container>
       <Header />
-      <div className='right'>
+      <div className="right">
         <form onSubmit={signIn}>
           <input
-            type='email'
-            placeholder='e-mail'
-            name='email'
+            type="email"
+            placeholder="e-mail"
+            name="email"
             value={form.email}
             onChange={handleForm}
             disabled={!formEnabled}
           />
           <input
-            type='password'
-            placeholder='password'
-            name='password'
+            type="password"
+            placeholder="password"
+            name="password"
             value={form.password}
             onChange={handleForm}
             disabled={!formEnabled}
           />
 
           <button
-            type='submit'
-            title={formEnabled ? 'Send' : 'Connecting...'}
+            type="submit"
+            title={formEnabled ? "Send" : "Connecting..."}
             disabled={!formEnabled}
           >
             {formEnabled ? <h3>Sign In</h3> : <Spinner />}
           </button>
         </form>
-        <div className='back'>
-          <h1 onClick={() => navigate('/signup')}>
+        <div className="back">
+          <h1 onClick={() => navigate("/signup")}>
             First time? Create an account!
           </h1>
         </div>
@@ -127,7 +126,7 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     h1 {
-      font-family: 'Lato';
+      font-family: "Lato";
       font-style: normal;
       font-weight: 400;
       font-size: 17px;
@@ -156,13 +155,13 @@ const Container = styled.div`
       border-radius: 6px;
       border: none;
       font-size: 22px;
-      font-family: 'Oswald', sans-serif;
+      font-family: "Oswald", sans-serif;
       font-weight: 700;
       font-size: 22px;
       line-height: 40px;
 
       &::placeholder {
-        font-family: 'Oswald', sans-serif;
+        font-family: "Oswald", sans-serif;
         font-weight: 700;
         font-size: 22px;
         line-height: 33px;
@@ -196,7 +195,7 @@ const Container = styled.div`
     height: 8vh;
     border-radius: 6px;
     border: none;
-    font-family: 'Oswald', sans-serif;
+    font-family: "Oswald", sans-serif;
     font-weight: 700;
     font-size: 27px;
     line-height: 40px;

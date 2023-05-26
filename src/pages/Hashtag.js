@@ -1,19 +1,18 @@
-import { useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
-import InfiniteScroll from 'react-infinite-scroller';
-import axios from 'axios';
-import styled from 'styled-components';
-import Swal from 'sweetalert2';
+import { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import InfiniteScroll from "react-infinite-scroller";
+import axios from "axios";
+import styled from "styled-components";
+import Swal from "sweetalert2";
 
-import ROUTES from '../constants.js';
-import View from '../components/View.js';
-import Navbar from '../components/Navbar.js';
-import Sidebar from '../components/Sidebar.js';
-import UserContext from '../contexts/userContext.js';
-import PostCard from '../components/PostCard.js';
-import { OvalSpinner } from '../components/Spinner.js';
-import { POSTS_PER_PAGE } from '../constants.js';
+import UserContext from "../contexts/userContext.js";
+import View from "../components/View.js";
+import Navbar from "../components/Navbar.js";
+import Sidebar from "../components/Sidebar.js";
+import PostCard from "../components/PostCard.js";
+import { OvalSpinner } from "../components/Spinner.js";
+import { POSTS_PER_PAGE } from "../constants.js";
 
 export default function Hashtag() {
 
@@ -28,7 +27,7 @@ export default function Hashtag() {
   const navigate = useNavigate();
 
   function fetchData() {
-    axios.get(`${ROUTES.HASTAGS_ROUTE}/${hashtag.hashtag}?page=${pageNumber}&offset=${POSTS_PER_PAGE}`, config)
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/hashtags/${hashtag.hashtag}?page=${pageNumber}&offset=${POSTS_PER_PAGE}`, config)
       .then(res => {
         if (res.data.posts.length < POSTS_PER_PAGE) {
           setHasMore(false);
@@ -39,8 +38,8 @@ export default function Hashtag() {
       })
       .catch(err => {
         Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
+          icon: "error",
+          title: "Oops...",
           text: err.response.data.message
         });
         setLoading(false);
@@ -48,17 +47,17 @@ export default function Hashtag() {
   }
 
   useEffect(() => {
-    window.scrollTo({top: 0, behavior: 'smooth'});
+    window.scrollTo({ top: 0, behavior: "smooth" });
     if (!token) {
       Swal.fire({
-        position: 'center',
-        background: '#151515',
-        icon: 'warning',
-        title: 'Please login with your account.',
+        position: "center",
+        background: "#151515",
+        icon: "warning",
+        title: "Please login with your account.",
         showConfirmButton: false,
         timer: 1200
       });
-      navigate('/');
+      navigate("/");
     } else {
       setLoading(true);
       setPosts([]);
@@ -94,9 +93,9 @@ export default function Hashtag() {
   } else {
     return (
       <Container>
-        <Navbar setRender={setRender} render={render}/>
+        <Navbar setRender={setRender} render={render} />
         <View>
-          <h1>{'# ' + hashtag.hashtag}</h1>
+          <h1>{"# " + hashtag.hashtag}</h1>
           <section>
             <Posts>
               <InfiniteScroll
@@ -123,7 +122,7 @@ const Container = styled.article`
   align-items: center;
   h6 {
     padding: 43px 0px;
-    font-family: 'Oswald', sans-serif;
+    font-family: "Oswald", sans-serif;
     font-weight: 700;
     font-size: 43px;
     line-height: 64px;
@@ -137,7 +136,7 @@ const Loading = styled.div`
   align-items: center;
   justify-content: center;
   padding-bottom: 100px;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-weight: 400;
   font-size: 22px;
   line-height: 26px;

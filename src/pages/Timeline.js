@@ -1,15 +1,15 @@
 import { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import InfiniteScroll from "react-infinite-scroller";
 import Swal from "sweetalert2";
 import axios from "axios";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import InfiniteScroll from "react-infinite-scroller";
+
+import UserContext from "../contexts/userContext.js";
 import Navbar from "../components/Navbar.js";
 import NewPublish from "../components/NewPublish.js";
 import PostCard from "../components/PostCard.js";
 import View from "../components/View.js";
-import ROUTES from "../constants.js";
-import UserContext from "../contexts/userContext.js";
 import Sidebar from "../components/Sidebar.js";
 import LoadMore from "../components/LoadMore.js";
 import { OvalSpinner } from "../components/Spinner.js";
@@ -35,9 +35,9 @@ export default function Timeline() {
   function fetchData() {
     axios
       .get(
-        `${ROUTES.TIMELINE_ROUTE}/` +
-          `?offset=${posts.length}&` +
-          `more=${POSTS_PER_PAGE}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/posts` +
+        `?offset=${posts.length}&` +
+        `more=${POSTS_PER_PAGE}`,
         config
       )
       .then((res) => {

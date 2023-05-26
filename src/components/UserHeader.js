@@ -2,7 +2,7 @@ import styled from "styled-components";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useContext, useState } from "react";
-import routes from "../constants";
+
 import UserContext from "../contexts/userContext";
 
 export default function UserHeader({ header, loading }) {
@@ -20,7 +20,7 @@ export default function UserHeader({ header, loading }) {
   function follow() {
     setButtonDisabled(true);
     axios
-      .get(`${routes.URL}/follow/${id}`, config)
+      .get(`${process.env.REACT_APP_API_BASE_URL}/api/followers/${id}`, config)
       .then(setButtonDisabled(false), setFollowSwitch(true))
       .catch((err) =>
         Swal.fire({
@@ -35,7 +35,7 @@ export default function UserHeader({ header, loading }) {
   function unfollow() {
     setButtonDisabled(true);
     axios
-      .delete(`${routes.URL}/follow/${id}`, config)
+      .delete(`${process.env.REACT_APP_API_BASE_URL}/api/followers/${id}`, config)
       .then(setButtonDisabled(false), setFollowSwitch(false))
       .catch((err) =>
         Swal.fire({

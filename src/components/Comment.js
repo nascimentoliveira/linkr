@@ -1,25 +1,25 @@
 import styled from "styled-components";
 
 export default function Comment({ isPostAuthor, follow, name, profileImg, text }) {
-    
-    return (
-        <>
-            <Container>
-                <img src={profileImg} alt="" />
-                <div>
-                    <h4>
-                        {name}
-                        {isPostAuthor ? <span> • post's author</span>: null}
-                        {follow? <span> • following</span>: null}
-                        
-                    </h4>
-                    
-                    <h6>{text}</h6>
-                </div>
-            </Container>
-            <Bar/>
-        </>
-    );
+
+  return (
+    <>
+      <Container>
+        <img src={profileImg} alt="" />
+        <div>
+          <h4>
+            {name}
+            {isPostAuthor ? <span> • post's author</span> : null}
+            {follow ? <span> • following</span> : null}
+
+          </h4>
+
+          <h6>{text}</h6>
+        </div>
+      </Container>
+      <Bar />
+    </>
+  );
 };
 
 const Container = styled.div`

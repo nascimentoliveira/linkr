@@ -1,94 +1,93 @@
 import { useContext, useEffect, useState } from "react";
-import styled from "styled-components";
-import UserContext from "../contexts/userContext";
-
-import {IoPaperPlaneOutline} from "react-icons/io5"
-import Comment from "./Comment";
 import axios from "axios";
-import ROUTES from "../constants";
+import styled from "styled-components";
 
-export default function Comments({show, postId, setComment}) {
-    const {image, token} = useContext(UserContext);
-    const [myComment, setMyComment] = useState("");
-    const [load, setLoad] = useState(false);
-    const [comments, setComments] = useState("");
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    };
-    
-    useEffect(()=>{
-        if(!comments && show)  getComments();
-    },[show])
-    async function getComments(){
-        try {
-            const result = await axios.get(`${ROUTES.COMMENTS}/${postId}`, config);
-            setComments(result.data);
-            setComment(result.data.length);
-        } catch (e) {
-            console.log(e);
-            alert("An error occured while trying to get comments, please refresh the page");
-        }
-    }
-    async function sendComment(e){
-        e.preventDefault();
-        setLoad(true);
-        
-        const body = {
-            text: myComment
-        }
-        try {
-            await axios.post(`${ROUTES.COMMENTS}/${postId}`, body, config);
-            setLoad(false);
-            setMyComment("");
-            getComments();
-        } catch (e) {
-            console.log(e);
-            alert("An error occured while trying to send comment, please refresh the page");
-        }
-    };
-    function renderComments(){
-        if(comments){
-            return comments.map(({isPostAuthor, follow, username, picture, comment})=>
-                <Comment 
-                    follow={follow}
-                    isPostAuthor={isPostAuthor}
-                    name={username} 
-                    profileImg={picture} 
-                    comment={comment}
-                />
-            )
-        }
-    }
+import UserContext from "../contexts/userContext";
+import { IoPaperPlaneOutline } from "react-icons/io5"
+import Comment from "./Comment";
 
-    
-    
-    return(
-        <Container show={show}>
-            <CommentsBox>
-                {renderComments()}
-            </CommentsBox>
-            <CommentInputBox onSubmit={sendComment}>
-                <img src={image} alt="" />
-                <input 
-                    type="text" 
-                    placeholder="write a comment..."
-                    onChange={(e)=> setMyComment(e.target.value)}
-                    value={myComment}
-                    disabled={load}
-                    required
-                />
-                <button disabled={load}>
-                    <IoPaperPlaneOutline color="#fff" size={18}/>
-                </button>
-            </CommentInputBox>
-        </Container>
-    );
+export default function Comments({ show, postId, setComment }) {
+  const { image, token } = useContext(UserContext);
+  const [myComment, setMyComment] = useState("");
+  const [load, setLoad] = useState(false);
+  const [comments, setComments] = useState("");
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  useEffect(() => {
+    if (!comments && show) getComments();
+  }, [show])
+  async function getComments() {
+    try {
+      const result = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/comments/${postId}`, config);
+      setComments(result.data);
+      setComment(result.data.length);
+    } catch (e) {
+      console.log(e);
+      alert("An error occured while trying to get comments, please refresh the page");
+    }
+  }
+  async function sendComment(e) {
+    e.preventDefault();
+    setLoad(true);
+
+    const body = {
+      text: myComment
+    }
+    try {
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/comments/${postId}`, body, config);
+      setLoad(false);
+      setMyComment("");
+      getComments();
+    } catch (e) {
+      console.log(e);
+      alert("An error occured while trying to send comment, please refresh the page");
+    }
+  };
+  function renderComments() {
+    if (comments) {
+      return comments.map(({ isPostAuthor, follow, username, picture, comment }) =>
+        <Comment
+          follow={follow}
+          isPostAuthor={isPostAuthor}
+          name={username}
+          profileImg={picture}
+          comment={comment}
+        />
+      )
+    }
+  }
+
+
+
+  return (
+    <Container show={show}>
+      <CommentsBox>
+        {renderComments()}
+      </CommentsBox>
+      <CommentInputBox onSubmit={sendComment}>
+        <img src={image} alt="" />
+        <input
+          type="text"
+          placeholder="write a comment..."
+          onChange={(e) => setMyComment(e.target.value)}
+          value={myComment}
+          disabled={load}
+          required
+        />
+        <button disabled={load}>
+          <IoPaperPlaneOutline color="#fff" size={18} />
+        </button>
+      </CommentInputBox>
+    </Container>
+  );
 };
 
 const Container = styled.div`
-    display:${props => props.show? "flex": "none" };
+    display:${props => props.show ? "flex" : "none"};
     flex-direction: column;
     width: 100%;
     background-color: #1E1E1E;

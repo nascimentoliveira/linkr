@@ -1,15 +1,14 @@
-import { useState, useContext } from 'react';
-import styled from 'styled-components';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+import { useState, useContext } from "react";
+import styled from "styled-components";
+import axios from "axios";
+import Swal from "sweetalert2";
 
-import ROUTES from '../constants';
-import UserContext from '../contexts/userContext.js';
+import UserContext from "../contexts/userContext.js";
 
 export default function NewPublish({ setRender, render }) {
 
   const [formEnabled, setFormEnabled] = useState(true);
-  const [form, setForm] = useState({ url: '', text: '' });
+  const [form, setForm] = useState({ url: "", text: "" });
   const { user, token } = useContext(UserContext);
 
   const config = {
@@ -24,7 +23,7 @@ export default function NewPublish({ setRender, render }) {
   }
 
   function hashtagSeparator(str) {
-    return (str+' ').replace(/#/g, ' #').replace(/  #/g, ' #').replace(/ # /g, ' ').trim();
+    return (str + " ").replace(/#/g, " #").replace(/  #/g, " #").replace(/ # /g, " ").trim();
   }
 
   function newPost(e) {
@@ -35,25 +34,25 @@ export default function NewPublish({ setRender, render }) {
       delete form.text;
     }
 
-    axios.post(ROUTES.POSTS_ROUTE, { ...form, text: hashtagSeparator(form.text) }, config)
+    axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/posts`, { ...form, text: hashtagSeparator(form.text) }, config)
       .then(res => {
         Swal.fire({
-          position: 'center',
-          background: '#151515',
-          icon: 'success',
+          position: "center",
+          background: "#151515",
+          icon: "success",
           title: res.data.message,
           showConfirmButton: false,
           timer: 1500
         });
-        setForm({ url: '', text: '' });
+        setForm({ url: "", text: "" });
         setFormEnabled(true);
         setRender(!render)
       })
       .catch(err => {
         Swal.fire({
-          background: '#151515',
-          icon: 'error',
-          title: 'Oops...',
+          background: "#151515",
+          icon: "error",
+          title: "Oops...",
           text: err.response.data.message
         });
         setFormEnabled(true);
@@ -68,9 +67,9 @@ export default function NewPublish({ setRender, render }) {
           <Message>What are you going to share today?</Message>
           <Form onSubmit={newPost}>
             <Url
-              type='url'
-              placeholder='http://...'
-              name='url'
+              type="url"
+              placeholder="http://..."
+              name="url"
               value={form.url}
               onChange={handleForm}
               disabled={!formEnabled}
@@ -78,20 +77,20 @@ export default function NewPublish({ setRender, render }) {
             />
 
             <Post
-              type='text'
-              placeholder='Awesome article about #javascript'
-              name='text'
+              type="text"
+              placeholder="Awesome article about #javascript"
+              name="text"
               value={form.text}
               onChange={handleForm}
               disabled={!formEnabled}
             />
 
             <Button
-              type='submit'
-              title={formEnabled ? 'Publish' : 'Publishing...'}
+              type="submit"
+              title={formEnabled ? "Publish" : "Publishing..."}
               disabled={!formEnabled}
             >
-              {formEnabled ? 'Publish' : 'Publishing...'}
+              {formEnabled ? "Publish" : "Publishing..."}
             </Button>
           </Form>
         </div>
@@ -137,7 +136,7 @@ const Container = styled.section`
 `;
 
 const Message = styled.span`
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-weight: 300;
   font-size: 20px;
   line-height: 24px;
@@ -168,13 +167,13 @@ const Url = styled.input`
   padding: 8px 12px;
   border: none;
   outline: none;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-weight: 300;
   font-size: 15px;
   line-height: 18px;
 
   &::placeholder {
-    font-family: 'Lato', sans-serif;
+    font-family: "Lato", sans-serif;
     font-weight: 300;
     font-size: 15px;
     line-height: 18px;
@@ -204,13 +203,13 @@ const Post = styled.textarea`
   border: none;
   outline: none;
   resize: none;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-weight: 300;
   font-size: 15px;
   line-height: 18px;
 
   &::placeholder {
-    font-family: 'Lato', sans-serif;
+    font-family: "Lato", sans-serif;
     font-weight: 300;
     font-size: 15px;
     line-height: 18px;
@@ -235,7 +234,7 @@ const Button = styled.button`
   height: 31px;
   background-color: #1877F2;
   border-radius: 5px;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-weight: 700;
   font-size: 14px;
   line-height: 17px;

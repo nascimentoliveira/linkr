@@ -1,24 +1,23 @@
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import styled from 'styled-components';
-import Swal from 'sweetalert2';
-import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import styled from "styled-components";
+import Swal from "sweetalert2";
+import axios from "axios";
 
-import Header from '../components/Header.js';
-import ROUTES from '../constants.js';
-import Spinner from '../components/Spinner.js';
+import Header from "../components/Header.js";
+import Spinner from "../components/Spinner.js";
 
 export default function SignUp() {
 
   const [formEnabled, setFormEnabled] = useState(true);
-  const [form, setForm] = useState({ 
-    email: '', 
-    password: '',
-    username: '',
-    picture: ''
-   });
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    username: "",
+    picture: ""
+  });
 
-   function handleForm(e) {
+  function handleForm(e) {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value.trim() });
   }
@@ -26,17 +25,17 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   function checkForm() {
-    const emptyFields = Object.keys(form).filter(key => form[key].trim() === '');
+    const emptyFields = Object.keys(form).filter(key => form[key].trim() === "");
     if (emptyFields.length > 0) {
       const last = emptyFields.pop();
       Swal.fire({
-        icon: 'warning',
-        background: '#151515',
+        icon: "warning",
+        background: "#151515",
         text: (`
-        ${(emptyFields.length > 0 ? emptyFields.join(', ') + ' and ' : '') + last} 
-        ${emptyFields.length > 0 ? 'fields' : 'field'} 
+        ${(emptyFields.length > 0 ? emptyFields.join(", ") + " and " : "") + last} 
+        ${emptyFields.length > 0 ? "fields" : "field"} 
         needs to be filled`
-        .replace('email', 'e-mail'))
+          .replace("email", "e-mail"))
       });
       return false;
     } else {
@@ -47,81 +46,81 @@ export default function SignUp() {
   function signUp(e) {
     e.preventDefault();
     if (checkForm()) {
-      axios.post(ROUTES.SIGN_UP_ROUTE, form)
-      .then(res => {
-        Swal.fire({
-          position: 'center',
-          icon: 'success',
-          background: '#151515',
-          title: res.data.message,
-          showConfirmButton: false,
-          timer: 1500
+      axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/signup`, form)
+        .then(res => {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            background: "#151515",
+            title: res.data.message,
+            showConfirmButton: false,
+            timer: 1500
+          });
+          navigate("/");
+        })
+        .catch(err => {
+          Swal.fire({
+            icon: "error",
+            background: "#151515",
+            title: "Oops...",
+            text: err.response.data.message
+          });
+          setForm({
+            ...form,
+            password: ""
+          });
+          setFormEnabled(true);
         });
-        navigate('/');
-      })
-      .catch(err => {
-        Swal.fire({
-          icon: 'error',
-          background: '#151515',
-          title: 'Oops...',
-          text: err.response.data.message
-        });
-        setForm({
-          ...form,
-          password: ''
-        });
-        setFormEnabled(true);
-      });
     }
   }
 
   return (
     <Container>
       <Header />
-      <div className='right'>
+      <div className="right">
         <form onSubmit={signUp}>
           <input
-            type='email'
-            name='email'
-            placeholder='e-mail'
+            type="email"
+            name="email"
+            placeholder="e-mail"
             value={form.email}
             onChange={handleForm}
             disabled={!formEnabled}
           />
           <input
-            type='password'
-            name='password'
-            placeholder='password'
+            type="password"
+            name="password"
+            placeholder="password"
             value={form.password}
             onChange={handleForm}
             disabled={!formEnabled}
           />
           <input
-            type='text'
-            name='username'
-            placeholder='username'
+            type="text"
+            name="username"
+            placeholder="username"
             value={form.username}
             onChange={handleForm}
             disabled={!formEnabled}
           />
           <input
-            type='text'
-            name='picture'
-            placeholder='picture'
+            type="text"
+            name="picture"
+            placeholder="picture"
             value={form.picture}
             onChange={handleForm}
             disabled={!formEnabled}
           />
-          <button 
-            type='submit' 
-            title={formEnabled ? 'Send' : 'Subscribing...'}
+          <button
+            type="submit"
+            title={formEnabled ? "Send" : "Subscribing..."}
             disabled={!formEnabled}
           >
             {formEnabled ? <h3>Sign Up</h3> : <Spinner />}
           </button>
         </form>
-        <div className='back'>
-          <h1 onClick={() => navigate('/')}>Switch back to log in</h1>
+        <div className="back">
+          <h1 onClick={() => navigate("/")}>Switch back to log in</h1>
         </div>
       </div>
     </Container>
@@ -139,7 +138,7 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     h1 {
-      font-family: 'Lato', sans-serif;
+      font-family: "Lato", sans-serif;
       font-weight: 400;
       font-size: 17px;
       line-height: 20px;
@@ -168,13 +167,13 @@ const Container = styled.div`
       border-radius: 6px;
       border: none;
       font-size: 22px;
-      font-family: 'Oswald', sans-serif;
+      font-family: "Oswald", sans-serif;
       font-weight: 700;
       font-size: 22px;
       line-height: 40px;
 
       &::placeholder {
-        font-family: 'Oswald', sans-serif;
+        font-family: "Oswald", sans-serif;
         font-weight: 700;
         font-size: 22px;
         line-height: 33px;
@@ -208,7 +207,7 @@ const Container = styled.div`
     height: 8vh;
     border-radius: 6px;
     border: none;
-    font-family: 'Oswald', sans-serif;
+    font-family: "Oswald", sans-serif;
     font-weight: 700;
     font-size: 27px;
     line-height: 40px;

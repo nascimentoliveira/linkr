@@ -1,17 +1,16 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import styled from "styled-components";
 import axios from "axios";
-import routes from "../constants";
 import { ReactTagify } from "react-tagify";
 import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router";
 import { TiHeartFullOutline } from "react-icons/ti";
 import { GoPencil } from "react-icons/go";
 import { Tooltip, TooltipWrapper } from "react-tooltip";
+import { AiOutlineComment } from "react-icons/ai"
 import "react-tooltip/dist/react-tooltip.css";
+
 import UserContext from "../contexts/userContext";
 import Comments from "./Comments";
-import { AiOutlineComment } from "react-icons/ai"
 import DeletePost from "./DeletePost.js";
 
 export default function PostCard({ post, render, setRender }) {
@@ -63,7 +62,7 @@ export default function PostCard({ post, render, setRender }) {
   const white = "#C0C0C0";
 
   useEffect(() => {
-    const promise = axios.get(`${routes.URL}/likes`);
+    const promise = axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/likes`, config);
 
     promise.then(({ data }) => {
 
@@ -98,8 +97,7 @@ export default function PostCard({ post, render, setRender }) {
 
   function updateMessage() {
     const obj = { text: message };
-    console.log("entrei");
-    const promise = axios.put(`${routes.URL}/editpost/${id}`, obj, config);
+    const promise = axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/posts/${id}`, obj, config);
     setPromiseReturned(true);
 
     promise.then((response) => {
@@ -123,7 +121,7 @@ export default function PostCard({ post, render, setRender }) {
   }, [likesFilter]);
   useEffect(() => {
     const postId = id;
-    const promise = axios.get(`${routes.URL}/likes/count/${postId}`);
+    const promise = axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/likes/count/${postId}`, config);
 
     promise.then(({ data }) => {
       setCountLikes(data);
@@ -136,7 +134,7 @@ export default function PostCard({ post, render, setRender }) {
 
   useEffect(() => {
     const postId = id;
-    const promise = axios.get(`${routes.URL}/likes/${postId}`);
+    const promise = axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/likes/${postId}`, config);
 
     promise.then(({ data }) => {
       setNamesLike(data);
@@ -179,7 +177,7 @@ export default function PostCard({ post, render, setRender }) {
   }, [namesLike]);
 
   function like(postId) {
-    const promise = axios.post(`${routes.URL}/likes/${postId}`, postId, config);
+    const promise = axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/likes/${postId}`, postId, config);
     // if (loading) {
     //   return;
     // }
@@ -195,7 +193,7 @@ export default function PostCard({ post, render, setRender }) {
   }
 
   function dislike(postId) {
-    const promise = axios.delete(`${routes.URL}/dislikes/${postId}`, config);
+    const promise = axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/likes/${postId}`, config);
     // if (loading) {
     //   return;
     // }
@@ -287,7 +285,7 @@ export default function PostCard({ post, render, setRender }) {
             <ReactTagify
               tagStyle={tagStyle}
               tagClicked={tag => {
-                navigate(`/hashtag/${tag.substring(1).replace(/[^\w\s\']|_/g, '')}`);
+                navigate(`/hashtag/${tag.substring(1).replace(/[^\w\s\"]|_/g, "")}`);
                 setRender(!render);
               }}
             >

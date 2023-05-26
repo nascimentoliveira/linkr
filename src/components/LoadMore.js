@@ -1,13 +1,12 @@
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useState, useContext } from 'react';
-import { BiRefresh } from 'react-icons/bi';
-import Swal from 'sweetalert2';
-import axios from 'axios';
-import styled from 'styled-components';
-import useInterval from 'use-interval';
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { BiRefresh } from "react-icons/bi";
+import Swal from "sweetalert2";
+import axios from "axios";
+import styled from "styled-components";
+import useInterval from "use-interval";
 
-import UserContext from '../contexts/userContext.js';
-import ROUTES from '../constants.js';
+import UserContext from "../contexts/userContext.js";
 
 export default function LoadMore({ lastRefresh, setLastRefresh, posts, setPosts }) {
   const [newPosts, setNewPosts] = useState([]);
@@ -22,12 +21,12 @@ export default function LoadMore({ lastRefresh, setLastRefresh, posts, setPosts 
 
   useEffect(() => {
     if (!token) {
-      navigate('/');
+      navigate("/");
       Swal.fire({
-        position: 'center',
-        background: '#151515',
-        icon: 'warning',
-        title: 'Please login with your account.',
+        position: "center",
+        background: "#151515",
+        icon: "warning",
+        title: "Please login with your account.",
         showConfirmButton: false,
         timer: 1200
       });
@@ -36,7 +35,7 @@ export default function LoadMore({ lastRefresh, setLastRefresh, posts, setPosts 
 
   useInterval(() => {
     axios.get(
-      `${ROUTES.TIMELINE_ROUTE}/`+
+      `${process.env.REACT_APP_API_BASE_URL}/api/posts/` +
       `?lastRefresh=${lastRefresh}`,
       config
     ).then(res => {
@@ -44,8 +43,8 @@ export default function LoadMore({ lastRefresh, setLastRefresh, posts, setPosts 
     })
       .catch(err => {
         Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
+          icon: "error",
+          title: "Oops...",
           text: err.response.data.message
         });
       });
@@ -57,7 +56,7 @@ export default function LoadMore({ lastRefresh, setLastRefresh, posts, setPosts 
         setPosts([...newPosts, ...posts]);
         setNewPosts([]);
         setLastRefresh(new Date().toISOString());
-        window.scrollTo({ top: 250, behavior: 'smooth' });
+        window.scrollTo({ top: 250, behavior: "smooth" });
       }}>
         {`${newPosts.length} new posts, load more!`}
         <BiRefresh />
@@ -77,7 +76,7 @@ const Container = styled.button`
   background: #1877F2;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;

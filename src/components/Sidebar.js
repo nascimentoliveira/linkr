@@ -1,13 +1,12 @@
-import { useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+import { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import axios from "axios";
+import Swal from "sweetalert2";
 
-import ROUTES from '../constants.js';
-import UserContext from '../contexts/userContext.js';
-import Hashtag from './Hashtag.js';
-import Spinner from './Spinner.js';
+import UserContext from "../contexts/userContext.js";
+import Hashtag from "./Hashtag.js";
+import Spinner from "./Spinner.js";
 
 export default function Sidebar({ render, setRender }) {
 
@@ -24,15 +23,15 @@ export default function Sidebar({ render, setRender }) {
 
   async function fetchData() {
     setLoading(true);
-    axios.get(ROUTES.HASTAGS_ROUTE, config)
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/hashtags`, config)
       .then(res => {
         setTopHashtags(res.data);
         setLoading(false);
       })
       .catch((err) => {
         Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
+          icon: "error",
+          title: "Oops...",
           text: err.response.data.message
         });
         setLoading(false);
@@ -42,14 +41,14 @@ export default function Sidebar({ render, setRender }) {
   useEffect(() => {
     if (!token) {
       Swal.fire({
-        position: 'center',
-        background: '#151515',
-        icon: 'warning',
-        title: 'Please login with your account.',
+        position: "center",
+        background: "#151515",
+        icon: "warning",
+        title: "Please login with your account.",
         showConfirmButton: false,
         timer: 1200
       });
-      navigate('/');
+      navigate("/");
     } else {
       fetchData();
     }
@@ -63,20 +62,20 @@ export default function Sidebar({ render, setRender }) {
         <h1>trending</h1>
         <hr />
         <HashtagsList load={loading}>
-          <Spinner color='#333333' />
+          <Spinner color="#333333" />
         </HashtagsList>
       </Container>
     );
   } else {
     return (
       <Container>
-        <h1 title='Trending hashtags'>trending</h1>
+        <h1 title="Trending hashtags">trending</h1>
         <hr />
         <HashtagsList load={loading}>
           {topHashtags.map(hashtag =>
-            <Hashtag 
+            <Hashtag
               key={hashtag.id}
-              hashtag={hashtag} 
+              hashtag={hashtag}
               render={render}
               setRender={setRender}
             />
@@ -99,7 +98,7 @@ const Container = styled.aside`
   z-index: 2;
 
   h1 {
-    font-family: 'Oswald', sans-serif;
+    font-family: "Oswald", sans-serif;
     font-weight: 700;
     font-size: 27px;
     line-height: 40px;
@@ -115,7 +114,7 @@ const Container = styled.aside`
 
 const HashtagsList = styled.ul`
   padding: 17px 16px;
-  display: ${props => props.load ? 'flex' : 'default'};
-  justify-content: ${props => props.load ? 'center' : 'default'};
-  align-items: ${props => props.load ? 'center' : 'default'};
+  display: ${props => props.load ? "flex" : "default"};
+  justify-content: ${props => props.load ? "center" : "default"};
+  align-items: ${props => props.load ? "center" : "default"};
 `;
