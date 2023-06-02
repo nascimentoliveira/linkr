@@ -19,32 +19,37 @@ export default function UserHeader({ header, loading }) {
 
   function follow() {
     setButtonDisabled(true);
-    axios
-      .get(`${process.env.REACT_APP_API_BASE_URL}/api/followers/${id}`, config)
-      .then(setButtonDisabled(false), setFollowSwitch(true))
-      .catch((err) =>
+    console.log(config)
+    axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/followers/${id}`, {}, config)
+      .then((res) => {
+        setButtonDisabled(false);
+        setFollowSwitch(true);
+      })
+      .catch((err) => {
         Swal.fire({
           background: "#151515",
           icon: "error",
           title: "Oops...",
-          text: err.response.data.message,
-        })
-      );
+          text: err.response.data.error,
+        });
+      });
   }
 
   function unfollow() {
     setButtonDisabled(true);
-    axios
-      .delete(`${process.env.REACT_APP_API_BASE_URL}/api/followers/${id}`, config)
-      .then(setButtonDisabled(false), setFollowSwitch(false))
-      .catch((err) =>
+    axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/followers/${id}`, config)
+      .then((res) => {
+        setButtonDisabled(false);
+        setFollowSwitch(false)
+      })
+      .catch((err) => {
         Swal.fire({
           background: "#151515",
           icon: "error",
           title: "Oops...",
-          text: err.response.data.message,
-        })
-      );
+          text: err.response.data.error,
+        });
+      });
   }
   return (
     <Container>
@@ -115,9 +120,9 @@ const Button = styled.button`
   &:hover {
     filter: brightness(130%);
   }
-
   &:disabled {
     filter: grayscale(60%);
     cursor: default;
   }
 `;
+//

@@ -14,7 +14,6 @@ export default function Sidebar({ render, setRender }) {
   const [loading, setLoading] = useState(true);
   const [topHashtags, setTopHashtags] = useState([]);
   const navigate = useNavigate();
-
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -32,7 +31,7 @@ export default function Sidebar({ render, setRender }) {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: err.response.data.message
+          text: err.response.data.error
         });
         setLoading(false);
       });
@@ -96,7 +95,6 @@ const Container = styled.aside`
   position: -webkit-sticky;
   top: 120px;
   z-index: 2;
-
   h1 {
     font-family: "Oswald", sans-serif;
     font-weight: 700;
@@ -105,7 +103,6 @@ const Container = styled.aside`
     color: #FFFFFF;
     margin: 9px 18px;
   }
-
   hr {
     border: 1px solid #484848;
     margin: 0;
@@ -118,3 +115,4 @@ const HashtagsList = styled.ul`
   justify-content: ${props => props.load ? "center" : "default"};
   align-items: ${props => props.load ? "center" : "default"};
 `;
+//

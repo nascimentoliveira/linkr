@@ -29,7 +29,7 @@ export default function Navbar({ render, setRender }) {
   }, [search]);
 
   async function searchUser() {
-    const { data } = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/search`, { search }, config);
+    const { data } = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/users/search?username=${search}`, config);
     setSearchResult(data);
   }
 
@@ -55,7 +55,7 @@ export default function Navbar({ render, setRender }) {
   }
 
   function goToProfile(id) {
-    navigate(`/user/${id}`);
+    navigate(`/users/${id}`);
     setRender(!render)
     setSearch("")
   }
@@ -99,7 +99,7 @@ export default function Navbar({ render, setRender }) {
           onClick={() => setshowLogout(!showLogout)}
         >
           {showLogout ? <SlArrowUp /> : <SlArrowDown />}
-          <img src={user?.picture} alt={`${user?.username} photo`} />
+          <img src={user?.picture} alt={`${user?.username}`} />
           {showLogout ? (
             <Logout title="Logout" onClick={logout}>
               <button>Logout</button>
@@ -231,7 +231,6 @@ const Profile = styled.div`
     height: 53px;
     border-radius: 26.5px;
   }
-
   svg {
     color: #ffffff;
     font-size: 20px;
@@ -253,11 +252,9 @@ const Logout = styled.div`
   z-index: 2;
   animation: entry 1s ease 0s 1 normal forwards;
   cursor: pointer;
-
   &:hover {
     filter: brightness(130%);
   }
-
   button {
     width: 100%;
     font-family: "Lato", sans-serif;
@@ -269,7 +266,6 @@ const Logout = styled.div`
     border: none;
     background-color: transparent;
     cursor: pointer;
-
     &:hover {
       transform: scale(1.1);
     }
@@ -280,7 +276,6 @@ const Logout = styled.div`
       opacity: 0;
       transform: translateY(-20px);
     }
-
     100% {
       opacity: 1;
       transform: translateY(0);
@@ -297,3 +292,4 @@ const Close = styled.div`
   z-index: 1;
   cursor: default;
 `;
+//

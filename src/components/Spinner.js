@@ -1,6 +1,5 @@
 import { ThreeDots, Oval } from "react-loader-spinner";
 
-
 export default function Spinner({ size = "50", radius = "4", color = "#FFFFFF" }) {
   return (
     <ThreeDots
@@ -23,3 +22,4 @@ export function OvalSpinner() {
     />
   );
 }
+//

@@ -13,12 +13,10 @@ const View = styled.main`
     color: #FFFFFF;
     word-break: break-all;
   }
-
   > section {
     display: flex;
     justify-content: space-between;
   }
-
   ::-webkit-scrollbar {
     width: 1px;
   }
@@ -32,15 +30,12 @@ const View = styled.main`
     background: linear-gradient(left, #3e3e3e, #111, #000);
     box-shadow: inset 0 0 1px 1px #646464;
   }
-
   @media (max-width: 950px) {
     max-width: 610px;
     aside {
       display: none;
     }
-
   }
-
   @media (max-width: 610px) {
     padding-top: 122px;
     > h1 {
@@ -50,3 +45,4 @@ const View = styled.main`
 `;
 
 export default View;
+//

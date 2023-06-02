@@ -9,12 +9,10 @@ import Header from "../components/Header.js";
 import Spinner from "../components/Spinner.js";
 
 export default function Login() {
-
+  const navigate = useNavigate();
   const [formEnabled, setFormEnabled] = useState(true);
   const [form, setForm] = useState({ email: "", password: "" });
   const { token, setToken, setUser } = useContext(UserContext);
-  
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
@@ -39,7 +37,7 @@ export default function Login() {
         ${(emptyFields.length > 0 ? emptyFields.join(", ") + " and " : "") + last} 
         ${emptyFields.length > 0 ? "fields" : "field"} 
         needs to be filled`
-        .replace("email", "e-mail"))
+          .replace("email", "e-mail"))
       });
       return false;
     } else {
@@ -64,7 +62,7 @@ export default function Login() {
             icon: "error",
             background: "#151515",
             title: "Oops...",
-            text: err.response.data.message
+            text: err.response.data.error
           });
           setForm({
             ...form,
@@ -185,7 +183,6 @@ const Container = styled.div`
       box-shadow: 0 0 0px 45px #F2F2F2 inset;
     }
   }
-
   button {
     display: flex;
     justify-content: center;
@@ -205,7 +202,6 @@ const Container = styled.div`
     line-height: 33px;
     cursor: pointer;
   }
-
   &:hover {
     filter: brightness(130%);
   }
@@ -231,3 +227,4 @@ const Container = styled.div`
     }
 }
 `;
+//

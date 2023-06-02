@@ -10,37 +10,33 @@ import UserContext from "../contexts/userContext.js";
 import View from "../components/View.js";
 import Navbar from "../components/Navbar.js";
 import Sidebar from "../components/Sidebar.js";
-import PostCard from "../components/PostCard.js";
+import Post from "../components/Post/Post.js";
 import { OvalSpinner } from "../components/Spinner.js";
 import { POSTS_PER_PAGE } from "../constants.js";
 
 export default function Hashtag() {
-
+  const navigate = useNavigate();
   const hashtag = useParams();
   const [loading, setLoading] = useState(true);
   const [render, setRender] = useState(true);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
-  const [pageNumber, setPageNumber] = useState(0);
   const { token } = useContext(UserContext);
 
-  const navigate = useNavigate();
-
-  function fetchData() {
-    axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/hashtags/${hashtag.hashtag}?page=${pageNumber}&offset=${POSTS_PER_PAGE}`, config)
+  function getHashtagsPosts() {
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/hashtags/${hashtag.hashtag}?&offset=${posts.length}&more=${POSTS_PER_PAGE}`, config)
       .then(res => {
         if (res.data.posts.length < POSTS_PER_PAGE) {
           setHasMore(false);
         }
         setPosts([...posts, ...res.data.posts]);
-        setPageNumber(pageNumber + 1);
         setLoading(false);
       })
       .catch(err => {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: err.response.data.message
+          text: err.response.data.error
         });
         setLoading(false);
       });
@@ -62,7 +58,6 @@ export default function Hashtag() {
       setLoading(true);
       setPosts([]);
       setHasMore(true);
-      setPageNumber(0);
     }
   }, [render]);
 
@@ -78,15 +73,25 @@ export default function Hashtag() {
       <p>Loading more posts</p>
     </Loading>;
 
-  const noPosts =
-    <Loading>
-      <h6>There are no posts yet.</h6>
-    </Loading>;
-
-  const endMessage =
-    <Loading>
-      <h6>Yay! You have seen it all</h6>
-    </Loading>;
+const finalMessage = () => {
+  if (loading) {
+    return <></>;
+  }
+  if (posts.length === 0) {
+    return (
+      <Loading>
+        <h6>There are no posts yet.</h6>
+      </Loading>
+    );
+  }
+  if (!hasMore) {
+    return (
+      <Loading>
+        <h6>Yay! You have seen it all</h6>
+      </Loading>
+    );
+  }
+}
 
   if (!token) {
     return;
@@ -99,13 +104,20 @@ export default function Hashtag() {
           <section>
             <Posts>
               <InfiniteScroll
-                loadMore={fetchData}
+                loadMore={getHashtagsPosts}
                 hasMore={hasMore}
                 loader={loader}
               >
-                {posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)}
+                {posts.map((post) => (
+                  <Post
+                    post={post}
+                    render={render}
+                    setRender={setRender}
+                    key={post.id}
+                  />
+                ))}
               </InfiniteScroll>
-              {loading ? <></> : posts.length === 0 ? noPosts : !hasMore ? endMessage : <></>}
+              {finalMessage}
             </Posts>
             <Sidebar render={render} setRender={setRender} />
           </section>
@@ -151,3 +163,4 @@ const Posts = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+//

@@ -8,7 +8,7 @@ import Header from "../components/Header.js";
 import Spinner from "../components/Spinner.js";
 
 export default function SignUp() {
-
+  const navigate = useNavigate();
   const [formEnabled, setFormEnabled] = useState(true);
   const [form, setForm] = useState({
     email: "",
@@ -21,8 +21,6 @@ export default function SignUp() {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value.trim() });
   }
-
-  const navigate = useNavigate();
 
   function checkForm() {
     const emptyFields = Object.keys(form).filter(key => form[key].trim() === "");
@@ -63,7 +61,7 @@ export default function SignUp() {
             icon: "error",
             background: "#151515",
             title: "Oops...",
-            text: err.response.data.message
+            text: err.response.data.error
           });
           setForm({
             ...form,
@@ -150,14 +148,12 @@ const Container = styled.div`
       }
     }
   }
-
   form {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     margin-top: 40px;
-
     input {
       background-color: #ffffff;
       padding-left: 12px;
@@ -171,7 +167,6 @@ const Container = styled.div`
       font-weight: 700;
       font-size: 22px;
       line-height: 40px;
-
       &::placeholder {
         font-family: "Oswald", sans-serif;
         font-weight: 700;
@@ -179,7 +174,6 @@ const Container = styled.div`
         line-height: 33px;
         color: #9f9f9f;
       }
-
       &:focus {
       outline: none;
       font-weight: 400;
@@ -187,59 +181,56 @@ const Container = styled.div`
       line-height: 33px;
       color: #474747;
       background-color: #FFFFFF;
-    }
-    
-    &:disabled {
-      color: #AFAFAF;
-      background-color: #F2F2F2;
-      -webkit-text-fill-color: #AFAFAF;
-      -webkit-box-shadow: 0 0 0px 45px #F2F2F2 inset;
-      box-shadow: 0 0 0px 45px #F2F2F2 inset;
-    }
-  }
-
-  button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #1877f2;
-    width: 86%;
-    height: 8vh;
-    border-radius: 6px;
-    border: none;
-    font-family: "Oswald", sans-serif;
-    font-weight: 700;
-    font-size: 27px;
-    line-height: 40px;
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 22px;
-    line-height: 33px;
-    cursor: pointer;
-  }
-
-  &:hover {
-    filter: brightness(130%);
-  }
-}
-
-@media only screen and (min-width: 768px) {
-  flex-direction: row;
-  form {
-    width: 80%;
-    input {
-        width: 90%;
+      }
+      &:disabled {
+        color: #AFAFAF;
+        background-color: #F2F2F2;
+        -webkit-text-fill-color: #AFAFAF;
+        -webkit-box-shadow: 0 0 0px 45px #F2F2F2 inset;
+        box-shadow: 0 0 0px 45px #F2F2F2 inset;
+      }
     }
     button {
-        width: 90%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #1877f2;
+      width: 86%;
+      height: 8vh;
+      border-radius: 6px;
+      border: none;
+      font-family: "Oswald", sans-serif;
+      font-weight: 700;
+      font-size: 27px;
+      line-height: 40px;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 33px;
+      cursor: pointer;
+    }
+    &:hover {
+      filter: brightness(130%);
     }
   }
-  .right {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 50%;
+  @media only screen and (min-width: 768px) {
+    flex-direction: row;
+    form {
+      width: 80%;
+      input {
+          width: 90%;
+      }
+      button {
+          width: 90%;
+      }
+    }
+    .right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 50%;
+    }
   }
-}
 `;
+//

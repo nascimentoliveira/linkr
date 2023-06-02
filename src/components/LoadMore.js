@@ -12,7 +12,6 @@ export default function LoadMore({ lastRefresh, setLastRefresh, posts, setPosts 
   const [newPosts, setNewPosts] = useState([]);
   const { token } = useContext(UserContext);
   const navigate = useNavigate();
-
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -31,7 +30,7 @@ export default function LoadMore({ lastRefresh, setLastRefresh, posts, setPosts 
         timer: 1200
       });
     }
-  }, []);
+  }, [navigate, token]);
 
   useInterval(() => {
     axios.get(
@@ -45,7 +44,7 @@ export default function LoadMore({ lastRefresh, setLastRefresh, posts, setPosts 
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: err.response.data.message
+          text: err.response.data.error
         });
       });
   }, 15000);
@@ -89,18 +88,16 @@ const Container = styled.button`
   position: -webkit-sticky;
   top: 80px;
   z-index: 2;
-
   @media (max-width: 610px) {
     width: 95%;  
     top: 135px;
   }
-
   &:hover {
     filter: brightness(150%);
   }
-
   > svg {
     font-size: 28px;
     margin: 0px 14px;
   }
 `;
+//
