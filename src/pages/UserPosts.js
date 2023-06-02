@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 import UserContext from "../contexts/userContext.js";
 import Navbar from "../components/Navbar.js";
 import View from "../components/View.js";
-import PostCard from "../components/PostCard.js";
+import Post from "../components/Post/Post.js";
 import Sidebar from "../components/Sidebar.js";
 import { OvalSpinner } from "../components/Spinner.js";
 import UserHeader from "../components/UserHeader.js";
@@ -20,7 +20,6 @@ export default function UserPosts() {
   const [posts, setPosts] = useState([]);
   const [render, setRender] = useState(true);
   const [hasMore, setHasMore] = useState(true);
-  const [pageNumber, setPageNumber] = useState(0);
   const [header, setHeader] = useState({ username: "", picture: "", id: null });
   const { id } = useParams();
   const { token } = useContext(UserContext);
@@ -33,26 +32,21 @@ export default function UserPosts() {
     },
   };
 
-  function fetchData() {
-    axios
-      .get(
-        `${process.env.REACT_APP_API_BASE_URL}/api/posts/user/${id}?page=${pageNumber}&offset=${POSTS_PER_PAGE}`,
-        config
-      )
+  function getUserPosts() {
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/posts/users/${id}?offset=${posts.length}&more=${POSTS_PER_PAGE}`, config)
       .then((res) => {
         if (res.data.posts.length < POSTS_PER_PAGE) {
           setHasMore(false);
         }
         setHeader(res.data.header);
         setPosts([...posts, ...res.data.posts]);
-        setPageNumber(pageNumber + 1);
         setLoading(false);
       })
       .catch((err) => {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: err.response.data.message,
+          text: err.response.data.error,
         });
         setLoading(false);
       });
@@ -74,7 +68,6 @@ export default function UserPosts() {
       setLoading(true);
       setPosts([]);
       setHasMore(true);
-      setPageNumber(0);
     }
   }, [render]);
 
@@ -85,17 +78,25 @@ export default function UserPosts() {
     </Loading>
   );
 
-  const noPosts = (
-    <Loading>
-      <h6>There are no posts yet.</h6>
-    </Loading>
-  );
-
-  const endMessage = (
-    <Loading>
-      <h6>Yay! You have seen it all</h6>
-    </Loading>
-  );
+  const finalMessage = () => {
+    if (loading) {
+      return <></>;
+    }
+    if (posts.length === 0) {
+      return (
+        <Loading>
+          <h6>There are no posts yet.</h6>
+        </Loading>
+      );
+    }
+    if (!hasMore) {
+      return (
+        <Loading>
+          <h6>Yay! You have seen it all</h6>
+        </Loading>
+      );
+    }
+  }
 
   if (token) {
     return (
@@ -106,13 +107,20 @@ export default function UserPosts() {
           <section>
             <Posts>
               <InfiniteScroll
-                loadMore={fetchData}
+                loadMore={getUserPosts}
                 hasMore={hasMore}
                 loader={loader}
               >
-                {posts.map((p) => <PostCard post={p} render={render} setRender={setRender} key={p.id} />)}
+                {posts.map((post) => (
+                  <Post
+                    post={post}
+                    render={render}
+                    setRender={setRender}
+                    key={post.id}
+                  />
+                ))}
               </InfiniteScroll>
-              {loading ? <></> : posts.length === 0 ? noPosts : !hasMore ? endMessage : <></>}
+              {finalMessage}
             </Posts>
             <Sidebar render={render} setRender={setRender} />
           </section>
@@ -161,4 +169,5 @@ const LoadHeader = styled.div`
   margin-top: 20px;
   margin-bottom: 10px;
   height: 150px;
-`
+`;
+//

@@ -6,7 +6,6 @@ import Swal from "sweetalert2";
 import UserContext from "../contexts/userContext.js";
 
 export default function NewPublish({ setRender, render }) {
-
   const [formEnabled, setFormEnabled] = useState(true);
   const [form, setForm] = useState({ url: "", text: "" });
   const { user, token } = useContext(UserContext);
@@ -30,11 +29,12 @@ export default function NewPublish({ setRender, render }) {
     e.preventDefault();
     setFormEnabled(false);
 
-    if (!form.text) {
+    if (form.text.trim().length === 0) {
       delete form.text;
+    } else {
+      form.text = hashtagSeparator(form.text);
     }
-
-    axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/posts`, { ...form, text: hashtagSeparator(form.text) }, config)
+    axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/posts`, form, config)
       .then(res => {
         Swal.fire({
           position: "center",
@@ -53,7 +53,7 @@ export default function NewPublish({ setRender, render }) {
           background: "#151515",
           icon: "error",
           title: "Oops...",
-          text: err.response.data.message
+          text: err.response.data.error
         });
         setFormEnabled(true);
       });
@@ -62,7 +62,7 @@ export default function NewPublish({ setRender, render }) {
   if (token) {
     return (
       <Container>
-        <img src={user?.picture} alt={`${user?.username} photo`} />
+        <img src={user?.picture} alt={`${user?.username}`} />
         <div>
           <Message>What are you going to share today?</Message>
           <Form onSubmit={newPost}>
@@ -109,18 +109,15 @@ const Container = styled.section`
   justify-content: space-between;
   padding: 20px;
   margin-bottom: 30px;
-
   img {
     width: 50px;
     height: 50px;
     border-radius: 26.5px;
   }
-
   div {
     width: 100%;
     max-width: 500px;
   }
-
   @media (max-width: 610px) {
     border-radius: 0px;
     display: flex;
@@ -128,7 +125,6 @@ const Container = styled.section`
     align-items: center;
     justify-content: center;
     padding: 12px 15px;    
-
     img {
       display: none;
     }
@@ -141,7 +137,6 @@ const Message = styled.span`
   font-size: 20px;
   line-height: 24px;
   color: #707070;
-
   @media (max-width: 610px) {
     display: flex;
     flex-direction: column;
@@ -171,7 +166,6 @@ const Url = styled.input`
   font-weight: 300;
   font-size: 15px;
   line-height: 18px;
-
   &::placeholder {
     font-family: "Lato", sans-serif;
     font-weight: 300;
@@ -179,11 +173,9 @@ const Url = styled.input`
     line-height: 18px;
     color: #949494;
   }
-
   &:focus {
     outline: none;
   }
-  
   &:disabled {
     color: #AFAFAF;
     background-color: #F2F2F2;
@@ -207,7 +199,6 @@ const Post = styled.textarea`
   font-weight: 300;
   font-size: 15px;
   line-height: 18px;
-
   &::placeholder {
     font-family: "Lato", sans-serif;
     font-weight: 300;
@@ -215,11 +206,9 @@ const Post = styled.textarea`
     line-height: 18px;
     color: #949494;
   }
-
   &:focus {
     outline: none;
   }
-
   &:disabled {
     color: #AFAFAF;
     background-color: #F2F2F2;
@@ -242,13 +231,12 @@ const Button = styled.button`
   border: none;
   outline: none;
   cursor: pointer;
-
   &:hover {
     filter: brightness(130%);
   }
-
   &:disabled {
     filter: grayscale(60%);
     cursor: default;
   }
 `;
+//

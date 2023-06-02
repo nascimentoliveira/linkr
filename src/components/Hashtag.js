@@ -22,17 +22,15 @@ const Container = styled.li`
   color: #FFFFFF;
   margin: 5px 0px;
   transition: all .5s;
-
   > p {
     white-space: nowrap;
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
   &:hover {
     transform: translate(7px);
     text-decoration: underline;
   }
-
 `;
+//

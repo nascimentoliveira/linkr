@@ -8,7 +8,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import UserContext from "../contexts/userContext.js";
 import Navbar from "../components/Navbar.js";
 import NewPublish from "../components/NewPublish.js";
-import PostCard from "../components/PostCard.js";
+import Post from "../components/Post/Post.js";
 import View from "../components/View.js";
 import Sidebar from "../components/Sidebar.js";
 import LoadMore from "../components/LoadMore.js";
@@ -19,41 +19,33 @@ export default function Timeline() {
   const [loading, setLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState(new Date().toISOString());
   const [posts, setPosts] = useState([]);
+  const [followedUsers, setFollowedUsers] = useState();
   const [render, setRender] = useState(true);
   const [hasMore, setHasMore] = useState(true);
-  const [message, setMessage] = useState("");
-  const [pageNumber, setPageNumber] = useState(0);
   const { token } = useContext(UserContext);
   const navigate = useNavigate();
-
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
 
-  function fetchData() {
-    axios
-      .get(
-        `${process.env.REACT_APP_API_BASE_URL}/api/posts` +
-        `?offset=${posts.length}&` +
-        `more=${POSTS_PER_PAGE}`,
-        config
-      )
+  function getPosts() {
+    setLoading(true);
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/posts?offset=${posts.length}&more=${POSTS_PER_PAGE}`, config)
       .then((res) => {
         if (res.data.posts.length < POSTS_PER_PAGE) {
           setHasMore(false);
         }
         setPosts([...posts, ...res.data.posts]);
-        setMessage(res.data.message);
-        setPageNumber(pageNumber + 1);
+        setFollowedUsers(res.data.follow);
         setLoading(false);
       })
       .catch((err) => {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: err.response.data.message,
+          text: err.response.data.error,
         });
         setLoading(false);
       });
@@ -75,27 +67,42 @@ export default function Timeline() {
       setLoading(true);
       setPosts([]);
       setHasMore(true);
-      setPageNumber(0);
     }
     setLastRefresh(new Date().toISOString());
   }, [render]);
+
+  const finalMessage = () => {
+    if (loading) {
+      return <></>;
+    }
+    if (posts.length === 0) {
+      if (followedUsers === 0) {
+        return (
+          <Loading>
+            <h6>You don't follow anyone yet. Search for new friends!</h6>
+          </Loading>
+        );
+      } else {
+        return (
+          <Loading>
+            <h6>No posts found from your friends</h6>
+          </Loading>
+        );
+      }
+    }
+    if (!hasMore) {
+      return (
+        <Loading>
+          <h6>Yay! You have seen it all</h6>
+        </Loading>
+      );
+    }
+  }
 
   const loader = (
     <Loading key={0}>
       <OvalSpinner />
       <p>Loading more posts</p>
-    </Loading>
-  );
-
-  const noPosts = (
-    <Loading>
-      <h6>{message}</h6>
-    </Loading>
-  );
-
-  const endMessage = (
-    <Loading>
-      <h6>Yay! You have seen it all</h6>
     </Loading>
   );
 
@@ -115,28 +122,20 @@ export default function Timeline() {
                 setPosts={setPosts}
               />
               <InfiniteScroll
-                loadMore={fetchData}
+                loadMore={getPosts}
                 hasMore={hasMore}
                 loader={loader}
               >
-                {posts.map((p) => (
-                  <PostCard
-                    post={p}
+                {posts.map((post) => (
+                  <Post
+                    post={post}
                     render={render}
                     setRender={setRender}
-                    key={p.id}
+                    key={post.id}
                   />
                 ))}
               </InfiniteScroll>
-              {loading ? (
-                <></>
-              ) : posts.length === 0 ? (
-                noPosts
-              ) : !hasMore ? (
-                endMessage
-              ) : (
-                <></>
-              )}
+              {finalMessage()}
             </Posts>
             <Sidebar render={render} setRender={setRender} />
           </section>
@@ -181,3 +180,4 @@ const Posts = styled.div`
   display: flex;
   flex-direction: column;
 `;
+//
