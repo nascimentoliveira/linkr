@@ -30,6 +30,14 @@ export default function Text({ postId, rightStates }) {
     setLoading(true);
     axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/posts/${postId}`, body, config)
       .then((res) => {
+        Swal.fire({
+          position: "center",
+          background: "#151515",
+          icon: "success",
+          title: res.data.message,
+          showConfirmButton: false,
+          timer: 1500
+        });
         rightStates.setText(res.data.text);
         rightStates.setEditMode(false);
         setLoading(false);
