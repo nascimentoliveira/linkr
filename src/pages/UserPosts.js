@@ -120,7 +120,7 @@ export default function UserPosts() {
                   />
                 ))}
               </InfiniteScroll>
-              {finalMessage}
+              {finalMessage()}
             </Posts>
             <Sidebar render={render} setRender={setRender} />
           </section>

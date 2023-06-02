@@ -29,6 +29,7 @@ export default function Hashtag() {
         if (res.data.posts.length < POSTS_PER_PAGE) {
           setHasMore(false);
         }
+        console.log(res.data)
         setPosts([...posts, ...res.data.posts]);
         setLoading(false);
       })
@@ -73,25 +74,25 @@ export default function Hashtag() {
       <p>Loading more posts</p>
     </Loading>;
 
-const finalMessage = () => {
-  if (loading) {
-    return <></>;
+  const finalMessage = () => {
+    if (loading) {
+      return <></>;
+    }
+    if (posts.length === 0) {
+      return (
+        <Loading>
+          <h6>There are no posts yet.</h6>
+        </Loading>
+      );
+    }
+    if (!hasMore) {
+      return (
+        <Loading>
+          <h6>Yay! You have seen it all</h6>
+        </Loading>
+      );
+    }
   }
-  if (posts.length === 0) {
-    return (
-      <Loading>
-        <h6>There are no posts yet.</h6>
-      </Loading>
-    );
-  }
-  if (!hasMore) {
-    return (
-      <Loading>
-        <h6>Yay! You have seen it all</h6>
-      </Loading>
-    );
-  }
-}
 
   if (!token) {
     return;
@@ -117,7 +118,7 @@ const finalMessage = () => {
                   />
                 ))}
               </InfiniteScroll>
-              {finalMessage}
+              {finalMessage()}
             </Posts>
             <Sidebar render={render} setRender={setRender} />
           </section>
