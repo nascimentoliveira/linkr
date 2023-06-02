@@ -4,9 +4,9 @@ import Modal from "react-modal";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-import UserContext from "../contexts/userContext.js";
+import UserContext from "../../contexts/userContext";
 
-export default function DeletePost({ id, render, setRender }) {
+export default function Delete({ postId, postStates }) {
 
   const [altertOpen, setAltertOpen] = useState(false);
   const { token } = useContext(UserContext);
@@ -78,7 +78,7 @@ export default function DeletePost({ id, render, setRender }) {
   };
 
   function deletePost() {
-    axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/posts/${id}`, config)
+    axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/posts/${postId}`, config)
       .then(res => {
         setAltertOpen(!altertOpen);
         Swal.fire({
@@ -89,7 +89,7 @@ export default function DeletePost({ id, render, setRender }) {
           showConfirmButton: false,
           timer: 1500
         });
-        setRender(!render);
+        postStates.setRender(!postStates.render);
       })
       .catch(err => {
         setAltertOpen(!altertOpen);
@@ -97,7 +97,7 @@ export default function DeletePost({ id, render, setRender }) {
           background: "#151515",
           icon: "error",
           title: "Oops...",
-          text: err.response.data.message
+          text: err.response.data.error
         });
       });
   }
@@ -133,3 +133,4 @@ export default function DeletePost({ id, render, setRender }) {
     </>
   );
 }
+//
