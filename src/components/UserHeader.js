@@ -9,7 +9,7 @@ export default function UserHeader({ header, loading }) {
   const { username, picture, id, follows } = header
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const { user, token } = useContext(UserContext);
-  const myPage = user?.userId === Number(id);
+  const myPage = user?.id === Number(id);
   const [followSwitch, setFollowSwitch] = useState(follows);
   const config = {
     headers: {
