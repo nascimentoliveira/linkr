@@ -29,7 +29,6 @@ export default function Hashtag() {
         if (res.data.posts.length < POSTS_PER_PAGE) {
           setHasMore(false);
         }
-        console.log(res.data)
         setPosts([...posts, ...res.data.posts]);
         setLoading(false);
       })

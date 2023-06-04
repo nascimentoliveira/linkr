@@ -19,11 +19,18 @@ export default function UserHeader({ header, loading }) {
 
   function follow() {
     setButtonDisabled(true);
-    console.log(config)
     axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/followers/${id}`, {}, config)
       .then((res) => {
         setButtonDisabled(false);
         setFollowSwitch(true);
+        Swal.fire({
+          position: "center",
+          background: "#151515",
+          icon: "success",
+          title: res.data.message,
+          showConfirmButton: false,
+          timer: 1000,
+        });
       })
       .catch((err) => {
         Swal.fire({
@@ -32,6 +39,7 @@ export default function UserHeader({ header, loading }) {
           title: "Oops...",
           text: err.response.data.error,
         });
+        setButtonDisabled(false);
       });
   }
 
@@ -40,7 +48,15 @@ export default function UserHeader({ header, loading }) {
     axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/followers/${id}`, config)
       .then((res) => {
         setButtonDisabled(false);
-        setFollowSwitch(false)
+        setFollowSwitch(false);
+        Swal.fire({
+          position: "center",
+          background: "#151515",
+          icon: "success",
+          title: res.data.message,
+          showConfirmButton: false,
+          timer: 1000,
+        });
       })
       .catch((err) => {
         Swal.fire({
@@ -49,6 +65,7 @@ export default function UserHeader({ header, loading }) {
           title: "Oops...",
           text: err.response.data.error,
         });
+        setButtonDisabled(false);
       });
   }
   return (

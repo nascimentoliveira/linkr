@@ -4,7 +4,7 @@ import { AiOutlineComment } from "react-icons/ai"
 
 import Likes from "./Likes";
 
-export default function Left({ postId, userId, postUserPicture, postLikes, postLiked, postLikers, postComments, postStates }) {
+export default function Left({ postId, userId, postUserPicture, postLikes, postLiked, postLikers, postStates }) {
   const navigate = useNavigate();
   return (
     <LeftStyled>
@@ -22,7 +22,7 @@ export default function Left({ postId, userId, postUserPicture, postLikes, postL
       <CommentsButton
         onClick={() => postStates.setShowComments(!postStates.showComments)}>
         <AiOutlineComment color="#fff" size={30} />
-        <span>{postComments} {postComments.length > 1 ? "comments" : "comment"}</span>
+        <span>{postStates.comments.length} {postStates.comments.length > 1 ? "comments" : "comment"}</span>
       </CommentsButton>
     </LeftStyled>
   );

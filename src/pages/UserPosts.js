@@ -103,7 +103,7 @@ export default function UserPosts() {
       <Container>
         <Navbar setRender={setRender} render={render} />
         <View>
-          {loading ? <LoadHeader></LoadHeader> : <UserHeader header={header} />}
+          {loading ? <LoadHeader /> : <UserHeader header={header} />}
           <section>
             <Posts>
               <InfiniteScroll

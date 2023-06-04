@@ -38,7 +38,7 @@ export default function Timeline() {
           setHasMore(false);
         }
         setPosts([...posts, ...res.data.posts]);
-        setFollowedUsers(res.data.follow);
+        setFollowedUsers(res.data.follows);
         setLoading(false);
       })
       .catch((err) => {
@@ -76,7 +76,7 @@ export default function Timeline() {
       return <></>;
     }
     if (posts.length === 0) {
-      if (followedUsers === 0) {
+      if (!followedUsers) {
         return (
           <Loading>
             <h6>You don't follow anyone yet. Search for new friends!</h6>
@@ -164,6 +164,7 @@ const Loading = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   justify-content: center;
   padding-bottom: 100px;
   font-family: "Lato", sans-serif;

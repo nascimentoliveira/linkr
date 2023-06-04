@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Swal from "sweetalert2";
@@ -7,11 +7,10 @@ import UserContext from "../../contexts/userContext";
 import { IoPaperPlaneOutline } from "react-icons/io5"
 import Comment from "./Comment";
 
-export default function Comments({ postId, postUserId, postComments, showComments }) {
+export default function Comments({ postId, postStates }) {
   const { user, token } = useContext(UserContext);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(false);
-  const [comments, setComments] = useState(postComments);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -22,7 +21,6 @@ export default function Comments({ postId, postUserId, postComments, showComment
     e.preventDefault();
     setLoading(true);
     const body = {
-      userId: user.id,
       comment: newComment,
     }
     axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/comments/${postId}`, body, config)
@@ -37,7 +35,7 @@ export default function Comments({ postId, postUserId, postComments, showComment
         });
         setLoading(false);
         setNewComment("");
-        setComments(res.data.comments)
+        postStates.setComments(res.data.comments)
         setLoading(false);
       })
       .catch((err) => {
@@ -49,11 +47,10 @@ export default function Comments({ postId, postUserId, postComments, showComment
         setLoading(false);
       });
   }
-
   return (
-    <Container showComments={showComments}>
+    <Container showComments={postStates.showComments}>
       <div>
-        {comments.map((comment) => (
+        {postStates.comments.map((comment) => (
           <Comment
             key={comment.id}
             userId={comment.userId}

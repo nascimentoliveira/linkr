@@ -44,7 +44,7 @@ export default function SignUp() {
   function signUp(e) {
     e.preventDefault();
     if (checkForm()) {
-      axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/signup`, form)
+      axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/users`, form)
         .then(res => {
           Swal.fire({
             position: "center",

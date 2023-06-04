@@ -10,11 +10,14 @@ import Comments from "./Comments";
 export default function Post({ post, render, setRender }) {
 
   const [showComments, setShowComments] = useState(false);
+  const [comments, setComments] = useState(post.comments);
   const postStates = {
     render,
     setRender,
     showComments,
     setShowComments,
+    comments, 
+    setComments,
   };
 
   return (
@@ -27,8 +30,8 @@ export default function Post({ post, render, setRender }) {
           postLikes={post.likes}
           postLiked={post.liked}
           postLikers={post.likers}
-          postComments={post.comments.length}
           postStates={postStates}
+
         />
         <Right
           postId={post.id}
@@ -42,9 +45,7 @@ export default function Post({ post, render, setRender }) {
       <Box>
         <Comments
           postId={post.id}
-          postUserId={post.userId}
-          postComments={post.comments}
-          showComments={showComments}
+          postStates={postStates}
         />
       </Box>
     </PostStyled>
